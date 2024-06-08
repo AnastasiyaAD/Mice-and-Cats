@@ -1,11 +1,15 @@
 package at.ac.tuwien.foop.server;
 
+import at.ac.tuwien.foop.server.game.Configuration;
+import at.ac.tuwien.foop.server.game.GameManager;
+
 import java.io.IOException;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        System.out.println("Hello world!");
-        new Server(8008);
+        var config = new Configuration(60);
+        var gameManager = new GameManager();
+        new Server(8008, gameManager, config);
     }
 }

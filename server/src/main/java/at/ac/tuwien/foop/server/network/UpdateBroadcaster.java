@@ -1,6 +1,6 @@
 package at.ac.tuwien.foop.server.network;
 
-import at.ac.tuwien.foop.server.GameState;
+import at.ac.tuwien.foop.server.game.GameState;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -20,14 +20,20 @@ public class UpdateBroadcaster {
         clients.remove(clientHandler);
     }
 
-    public void broadcast(GameState state) throws JsonProcessingException {
-        String stateJson = convertStateToJson(state);
-        for (ClientManager client : clients) {
-            client.send(stateJson);
+    public void broadcast(GameState state) {
+        String stateJson = null;
+        try {
+            stateJson = convertStateToJson(state);
+            for (ClientManager client : clients) {
+                client.send(stateJson);
+            }
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
     }
 
     private String convertStateToJson(GameState state) throws JsonProcessingException {
+        // Assuming you're using Gson for JSON serialization
         return new ObjectMapper().writeValueAsString(state);
     }
 }
