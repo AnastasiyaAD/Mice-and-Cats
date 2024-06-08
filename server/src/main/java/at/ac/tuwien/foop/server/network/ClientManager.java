@@ -2,6 +2,7 @@ package at.ac.tuwien.foop.server.network;
 
 import at.ac.tuwien.foop.server.game.GameManager;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,7 +17,7 @@ import static at.ac.tuwien.foop.server.network.dto.HandshakeRequestDto.Handshake
 import static at.ac.tuwien.foop.server.network.dto.HandshakeRequestDto.Handshake.REGISTER;
 
 @AllArgsConstructor
-
+@Getter
 public class ClientManager implements Runnable {
 
     private Socket socket;
