@@ -2,6 +2,7 @@ package at.ac.tuwien.foop.server;
 
 import at.ac.tuwien.foop.server.game.Configuration;
 import at.ac.tuwien.foop.server.game.GameManager;
+import at.ac.tuwien.foop.server.network.dto.HandshakeRequestDto;
 
 import java.io.IOException;
 
@@ -11,5 +12,6 @@ public class Main {
         var config = new Configuration(60);
         var gameManager = new GameManager();
         new Server(8008, gameManager, config);
+        var hs = HandshakeRequestDto.registerHandshakeRequest();
     }
 }

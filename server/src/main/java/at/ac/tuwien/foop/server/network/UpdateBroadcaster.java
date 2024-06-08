@@ -1,6 +1,6 @@
 package at.ac.tuwien.foop.server.network;
 
-import at.ac.tuwien.foop.server.game.GameState;
+import at.ac.tuwien.foop.server.game.state.GameState;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -25,7 +25,7 @@ public class UpdateBroadcaster {
         try {
             stateJson = convertStateToJson(state);
             for (ClientManager client : clients) {
-                client.send(stateJson);
+                client.sendGameState(stateJson);
             }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);

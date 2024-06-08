@@ -1,8 +1,9 @@
 package at.ac.tuwien.foop.server.game;
 
+import at.ac.tuwien.foop.server.game.state.GameState;
 import at.ac.tuwien.foop.server.network.ClientManager;
 import at.ac.tuwien.foop.server.network.UpdateBroadcaster;
-import at.ac.tuwien.foop.server.network.dto.ActionRequest;
+import at.ac.tuwien.foop.server.network.dto.ActionRequestDto;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -10,15 +11,16 @@ public class GameManager {
 
     private final GameState gameState = new GameState();
     private final UpdateBroadcaster updateBroadcaster = new UpdateBroadcaster();
-    private final ConcurrentLinkedQueue<ActionRequest> actionQueue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<ActionRequestDto> actionQueue = new ConcurrentLinkedQueue<>();
 
 
-    public synchronized void queueAction(ActionRequest actionRequest) {
-        this.actionQueue.add(actionRequest);
+    public synchronized void queueAction(ActionRequestDto actionRequestDto) {
+        this.actionQueue.add(actionRequestDto);
     }
 
     public void registerClient(ClientManager clientManager) {
         this.updateBroadcaster.addClient(clientManager);
+        System.out.printf("Registered user %s, with clientId %s%n", clientManager.getUsername(), clientManager.getClientId());
     }
 
     public void updateGame() {
@@ -28,12 +30,12 @@ public class GameManager {
 
     private void processActions() {
         while (!this.actionQueue.isEmpty()) {
-            ActionRequest actionRequest = this.actionQueue.poll();
-            this.processActionHelper(actionRequest);
+            ActionRequestDto actionRequestDto = this.actionQueue.poll();
+            this.processActionHelper(actionRequestDto);
         }
     }
 
-    private void processActionHelper(ActionRequest actionRequest) {
+    private void processActionHelper(ActionRequestDto actionRequestDto) {
 
     }
 
