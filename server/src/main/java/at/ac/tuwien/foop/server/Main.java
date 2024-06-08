@@ -12,6 +12,5 @@ public class Main {
         var config = new Configuration(60);
         var gameManager = new GameManager();
         new Server(8008, gameManager, config);
-        var hs = HandshakeRequestDto.registerHandshakeRequest();
     }
 }
