@@ -61,5 +61,6 @@ public class Server {
             ClientManager clientHandler = new ClientManager(clientSocket, gameManager);
             clientThreadPool.execute(clientHandler);
         }
+        System.out.println("Stopping listening for connections...");
     }
 }
