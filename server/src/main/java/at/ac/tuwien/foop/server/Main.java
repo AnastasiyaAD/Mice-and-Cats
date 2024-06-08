@@ -11,6 +11,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         var config = new Configuration(60);
         var gameManager = new GameManager();
-        new Server(8008, gameManager, config);
+        var server = new Server(8008, gameManager, config);
+        server.start();
     }
 }

@@ -1,20 +1,21 @@
 package at.ac.tuwien.foop.server.game.state;
 
-import at.ac.tuwien.foop.server.network.ClientManager;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentHashMap.KeySetView;
 
 @Data
 public class GameState {
 
     private final GameField gameField = new GameField();
-    private final List<ClientManager> clientManagers = new ArrayList<>();
+    private final KeySetView<Mouse, Boolean> mice = ConcurrentHashMap.newKeySet();
     private LocalDateTime gameStart;
 
 
     public GameState() {
     }
+
+
 }

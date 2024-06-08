@@ -16,7 +16,6 @@ import java.util.UUID;
 import static at.ac.tuwien.foop.server.network.dto.HandshakeRequestDto.Handshake.READY;
 import static at.ac.tuwien.foop.server.network.dto.HandshakeRequestDto.Handshake.REGISTER;
 
-@AllArgsConstructor
 @Getter
 public class ClientManager implements Runnable {
 
@@ -26,12 +25,18 @@ public class ClientManager implements Runnable {
     private String username;
     private BufferedReader reader;
     private PrintWriter writer;
+    private boolean ready = false;
+
+    public ClientManager(Socket socket, GameManager gameManager) {
+        this.socket = socket;
+        this.gameManager = gameManager;
+    }
 
     public void sendGameState(String gameState) {
         try (var writer = new PrintWriter(socket.getOutputStream(), true)) {
             writer.println(gameState);
         } catch (IOException e) {
-            // TODO handle error
+            e.printStackTrace();
         }
     }
 
@@ -45,6 +50,7 @@ public class ClientManager implements Runnable {
             while (scanner.hasNextLine()) {
                 var actionJson = scanner.nextLine();
                 var actionRequest = DtoParser.parseActionRequest(actionJson);
+                actionRequest.setClientId(this.clientId);
                 gameManager.queueAction(actionRequest);
             }
         } catch (Exception e) {
@@ -58,7 +64,7 @@ public class ClientManager implements Runnable {
             this.writer = new PrintWriter(socket.getOutputStream(), true);
         } catch (IOException e) {
             // TODO: Ex handling
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -70,15 +76,17 @@ public class ClientManager implements Runnable {
                 throw new RuntimeException("Handshake fail! Expected REGISTER but got " + registerHandshake.getHandshake());
             }
             this.username = registerHandshake.getUsername();
+            this.gameManager.registerClient(this);
 
             var readyData = reader.readLine();
             registerHandshake = DtoParser.parseHandshake(readyData);
             if (registerHandshake.getHandshake() != READY) {
                 throw new RuntimeException("Handshake fail! Expected READY but got " + registerHandshake.getHandshake());
             }
-            this.gameManager.registerClient(this);
+            System.out.printf("Client %s ready!%n", this.clientId);
+            this.ready = true;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }

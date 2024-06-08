@@ -19,6 +19,7 @@ public class Server {
     private final ScheduledExecutorService gameTickExecutor;
     private final GameManager gameManager;
     private final Configuration configuration;
+    private boolean stop = false;
 
     public Server(int port, GameManager gameManager, Configuration configuration) throws IOException {
         this.serverSocket = new ServerSocket(port);
@@ -33,21 +34,29 @@ public class Server {
             try {
                 listenForClients();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         });
         clientListenerThread.start();
+        this.startGameTick();
+    }
 
+    public void stop() throws IOException {
+        System.out.println("Stopping server");
+        this.stop = true;
+        this.clientThreadPool.shutdown();
+        this.gameTickExecutor.close();
+        this.serverSocket.close();
     }
 
     private void startGameTick() {
-        var tickInterval = configuration.tickRate() / 1000;
+        var tickInterval = 1000 / configuration.tickRate();
         gameTickExecutor.scheduleAtFixedRate(gameManager::updateGame, 0, tickInterval, TimeUnit.MILLISECONDS);
     }
 
     private void listenForClients() throws IOException {
         System.out.println("Server started. Listening for connections...");
-        while (true) {
+        while (!this.stop) {
             Socket clientSocket = serverSocket.accept();
             ClientManager clientHandler = new ClientManager(clientSocket, gameManager);
             clientThreadPool.execute(clientHandler);
