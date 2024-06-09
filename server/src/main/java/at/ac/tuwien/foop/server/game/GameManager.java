@@ -5,11 +5,8 @@ import at.ac.tuwien.foop.server.game.state.Mouse;
 import at.ac.tuwien.foop.server.network.ClientManager;
 import at.ac.tuwien.foop.server.network.UpdateBroadcaster;
 import at.ac.tuwien.foop.server.network.dto.ActionRequestDto;
-import at.ac.tuwien.foop.server.network.dto.Direction;
-import at.ac.tuwien.foop.server.network.dto.HandshakeRequestDto;
 
 import java.time.LocalDateTime;
-import java.util.Vector;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class GameManager {
@@ -52,7 +49,7 @@ public class GameManager {
             var boundsX = bounds[0];
             var boundsY = bounds[1];
             if (x > boundsX || y > boundsY) {
-                m.setPos(new double[]{Math.max(x, boundsX), Math.max(y, boundsY)});
+                m.setPos(new double[]{Math.max(0, Math.min(x, boundsX)), Math.max(0, Math.min(y, boundsY))});
             }
         });
     }
