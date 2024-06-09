@@ -21,7 +21,7 @@ public class Mouse {
 
   /** Creates a new instance of Mouse */
   public Mouse() {
-    while (posiX < 70 | posiY < 54 | posiY > height - 54 | posiX > width - 54) {
+    while (posiX < 70 | posiY < 40 | posiY > height - 40 | posiX > width - 40) {
       posiX = (int) (Math.random() * width);
       posiY = (int) (Math.random() * height);
     }
@@ -105,8 +105,8 @@ public class Mouse {
     } else {
       int temp;
       temp = (int) (posiX + velocityX * posiX);
-      if (checkCollision(temp, posiY) == false && temp > width - 54 + 20) {
-        posiX = width - 54 + 20;
+      if (checkCollision(temp, posiY) == false && temp > width - 40 + 20) {
+        posiX = width - 40 + 20;
       } else if (checkCollision(temp, posiY) == false) {
         posiX = temp;
       }
@@ -126,8 +126,8 @@ public class Mouse {
     } else {
       int temp;
       temp = (int) (posiY - velocityY * posiY);
-      if (checkCollision(posiX, temp) == false && temp < 54) {
-        posiY = 54;
+      if (checkCollision(posiX, temp) == false && temp < 40) {
+        posiY = 40;
       } else if (checkCollision(posiX, temp) == false) {
         posiY = temp;
       }
@@ -147,8 +147,8 @@ public class Mouse {
     } else {
       int temp;
       temp = (int) (posiY + velocityY * posiY);
-      if (checkCollision(posiX, temp) == false && temp > height - 54 + 54) {
-        posiY = height - 54 + 54;
+      if (checkCollision(posiX, temp) == false && temp > height - 40 + 40) {
+        posiY = height - 40 + 40;
       } else if (checkCollision(posiX, temp) == false) {
         posiY = temp;
       }
@@ -183,29 +183,29 @@ public class Mouse {
         y = clientMice.get(i).getYposition();
         if (direction == 1) {
           if (
-            ((yP <= y + 54) && yP >= y) &&
-            ((xP <= x + 54 && xP >= x) || (xP + 54 >= x && xP + 54 <= x + 54))
+            ((yP <= y + 40) && yP >= y) &&
+            ((xP <= x + 40 && xP >= x) || (xP + 40 >= x && xP + 40 <= x + 40))
           ) {
             return true;
           }
         } else if (direction == 2) {
           if (
-            ((xP + 54 >= x) && xP + 54 <= x + 54) &&
-            ((yP <= y + 54 & yP >= y) || (yP + 54 >= y && yP + 54 <= y + 54))
+            ((xP + 40 >= x) && xP + 40 <= x + 40) &&
+            ((yP <= y + 40 & yP >= y) || (yP + 40 >= y && yP + 40 <= y + 40))
           ) {
             return true;
           }
         } else if (direction == 3) {
           if (
-            ((yP + 54 >= y) && yP + 54 <= y + 54) &&
-            ((xP <= x + 54 && xP >= x) || (xP + 54 >= x && xP + 54 <= x + 54))
+            ((yP + 40 >= y) && yP + 40 <= y + 40) &&
+            ((xP <= x + 40 && xP >= x) || (xP + 40 >= x && xP + 40 <= x + 40))
           ) {
             return true;
           }
         } else if (direction == 4) {
           if (
-            ((xP <= x + 54) && xP >= x) &&
-            ((yP <= y + 54 && yP >= y) || (yP + 54 >= y && yP + 54 <= y + 54))
+            ((xP <= x + 40) && xP >= x) &&
+            ((yP <= y + 40 && yP >= y) || (yP + 40 >= y && yP + 40 <= y + 40))
           ) {
             return true;
           }
