@@ -33,7 +33,7 @@ public class ClientManager implements Runnable {
         this.gameManager = gameManager;
     }
 
-    public void sendGameState(String gameState) {
+    public void sendData(String gameState) {
         try (var writer = new PrintWriter(socket.getOutputStream(), true)) {
             writer.println(gameState);
         } catch (IOException e) {

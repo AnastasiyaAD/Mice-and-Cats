@@ -1,6 +1,8 @@
 package at.ac.tuwien.foop.server.network;
 
+import at.ac.tuwien.foop.network.dto.GameStateDto;
 import at.ac.tuwien.foop.server.game.state.GameState;
+import at.ac.tuwien.foop.server.mapper.GameStateMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -29,18 +31,19 @@ public class UpdateBroadcaster {
     }
 
     public void broadcast(GameState state) {
-        String stateJson = null;
+        String stateJson;
+        var dto = GameStateMapper.toDto(state);
         try {
-            stateJson = convertStateToJson(state);
+            stateJson = convertStateToJson(dto);
             for (ClientManager client : clients) {
-                client.sendGameState(stateJson);
+                client.sendData(stateJson);
             }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
     }
 
-    private String convertStateToJson(GameState state) throws JsonProcessingException {
+    private String convertStateToJson(GameStateDto state) throws JsonProcessingException {
         // Assuming you're using Gson for JSON serialization
         return objectMapper.writeValueAsString(state);
     }
