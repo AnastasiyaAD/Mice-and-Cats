@@ -1,7 +1,7 @@
 package at.ac.tuwien.foop.server.network;
 
+import at.ac.tuwien.foop.network.dto.DtoParser;
 import at.ac.tuwien.foop.server.game.GameManager;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.io.BufferedReader;
@@ -13,15 +13,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.UUID;
 
-import static at.ac.tuwien.foop.server.network.dto.HandshakeRequestDto.Handshake.READY;
-import static at.ac.tuwien.foop.server.network.dto.HandshakeRequestDto.Handshake.REGISTER;
+import static at.ac.tuwien.foop.network.dto.HandshakeRequestDto.Handshake.READY;
+import static at.ac.tuwien.foop.network.dto.HandshakeRequestDto.Handshake.REGISTER;
+
 
 @Getter
 public class ClientManager implements Runnable {
 
-    private Socket socket;
-    private GameManager gameManager;
-    private UUID clientId = UUID.randomUUID();
+    private final Socket socket;
+    private final GameManager gameManager;
+    private final UUID clientId = UUID.randomUUID();
     private String username;
     private BufferedReader reader;
     private PrintWriter writer;

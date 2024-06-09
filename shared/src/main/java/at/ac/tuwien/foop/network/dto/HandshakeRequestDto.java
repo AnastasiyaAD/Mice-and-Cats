@@ -1,4 +1,4 @@
-package at.ac.tuwien.foop.server.network.dto;
+package at.ac.tuwien.foop.network.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -40,6 +40,6 @@ public class HandshakeRequestDto {
     public enum Handshake {
         REGISTER,
         FAIL_STATE,
-        READY;
+        READY
     }
 }

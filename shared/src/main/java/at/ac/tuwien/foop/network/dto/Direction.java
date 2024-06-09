@@ -1,4 +1,4 @@
-package at.ac.tuwien.foop.server.network.dto;
+package at.ac.tuwien.foop.network.dto;
 
 import lombok.Getter;
 

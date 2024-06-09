@@ -1,7 +1,5 @@
-package at.ac.tuwien.foop.server.network;
+package at.ac.tuwien.foop.network.dto;
 
-import at.ac.tuwien.foop.server.network.dto.ActionRequestDto;
-import at.ac.tuwien.foop.server.network.dto.HandshakeRequestDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

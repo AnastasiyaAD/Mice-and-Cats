@@ -1,8 +1,6 @@
 package at.ac.tuwien.foop.server;
 
 import at.ac.tuwien.foop.server.game.Configuration;
-import at.ac.tuwien.foop.server.game.GameManager;
-import at.ac.tuwien.foop.server.network.dto.HandshakeRequestDto;
 
 import java.io.IOException;
 

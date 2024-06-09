@@ -1,10 +1,10 @@
 package at.ac.tuwien.foop.server.game;
 
+import at.ac.tuwien.foop.network.dto.ActionRequestDto;
 import at.ac.tuwien.foop.server.game.state.GameState;
 import at.ac.tuwien.foop.server.game.state.Mouse;
 import at.ac.tuwien.foop.server.network.ClientManager;
 import at.ac.tuwien.foop.server.network.UpdateBroadcaster;
-import at.ac.tuwien.foop.server.network.dto.ActionRequestDto;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.ConcurrentLinkedQueue;

@@ -1,16 +1,14 @@
 package at.ac.tuwien.foop.server;
 
+import at.ac.tuwien.foop.network.dto.ActionRequestDto;
+import at.ac.tuwien.foop.network.dto.Direction;
+import at.ac.tuwien.foop.network.dto.HandshakeRequestDto;
 import at.ac.tuwien.foop.server.game.Configuration;
-import at.ac.tuwien.foop.server.game.GameManager;
 import at.ac.tuwien.foop.server.game.state.GameState;
 import at.ac.tuwien.foop.server.game.state.Mouse;
-import at.ac.tuwien.foop.server.network.dto.ActionRequestDto;
-import at.ac.tuwien.foop.server.network.dto.Direction;
-import at.ac.tuwien.foop.server.network.dto.HandshakeRequestDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
