@@ -40,10 +40,9 @@ class ServerTest {
 
     @Test
     void name() throws IOException {
-        var config = new Configuration(60);
-        var gameManager = new GameManager();
+        var config = new Configuration(60, 300, 320);
         int port = 8008;
-        var server = new Server(port, gameManager, config);
+        var server = new Server(port, config);
         server.start();
 
         var mapper = new ObjectMapper();
