@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -16,12 +17,16 @@ public class GameBoardPanel extends JPanel {
   private int height = 861;
   private static ArrayList<Mouse> mice;
   private boolean gameStatus;
+  int z = 0;
+  int y = 1;
+  int k = 0;
+  int l = 1;
 
   public GameBoardPanel(Mouse mouse, boolean gameStatus) {
     this.mouse = mouse;
     this.gameStatus = gameStatus;
     setSize(width, height);
-    setBounds(30, 0, width + 20, height);
+    setBounds(0, 0, width + 30, height + 20);
     addKeyListener(new InputManager(mouse));
     setFocusable(true);
 
@@ -35,19 +40,19 @@ public class GameBoardPanel extends JPanel {
   public void paintComponent(Graphics gr) {
     super.paintComponent(gr);
     Graphics2D g = (Graphics2D) gr;
-
     g.setColor(Color.BLACK);
     g.fillRect(0, 0, getWidth(), getHeight());
 
     g.drawImage(
       new ImageIcon("public/playing_field/Background_without.png").getImage(),
       60,
-      45,
+      33,
       null
     );
     g.setColor(Color.YELLOW);
-    g.setFont(new Font("Comic Sans MS", Font.BOLD, 25));
-    g.drawString("Mice and Cats in a Network Game", 255, 30);
+    g.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
+    g.drawString("Mice and Cats in a Network Game", 300, 30);
+
     if (gameStatus) {
       g.drawImage(
         mouse.getBuffImage(),
@@ -55,7 +60,17 @@ public class GameBoardPanel extends JPanel {
         mouse.getYposition(),
         this
       );
-
+      z = mouse.getXposition();
+      k = mouse.getYposition();
+      if (z != y || k != l) {
+        System.out.printf(
+          "x={%s}, y={%s}\n",
+          mouse.getXposition(),
+          mouse.getYposition()
+        );
+      }
+      y = mouse.getXposition();
+      l = mouse.getYposition();
       for (int i = 1; i < mice.size(); i++) {
         if (mice.get(i) != null) g.drawImage(
           mice.get(i).getBuffImage(),
@@ -65,7 +80,6 @@ public class GameBoardPanel extends JPanel {
         );
       }
     }
-
     repaint();
   }
 
