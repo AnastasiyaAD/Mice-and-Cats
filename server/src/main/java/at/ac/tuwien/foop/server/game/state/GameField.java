@@ -12,5 +12,5 @@ import lombok.Getter;
  */
 @Getter
 public class GameField {
-    private final int[] bounds = new int[]{800, 600};
+    private final int[] bounds = new int[]{1500, 1500};
 }

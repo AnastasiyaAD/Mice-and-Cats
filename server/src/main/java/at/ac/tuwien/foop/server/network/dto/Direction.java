@@ -13,11 +13,14 @@ public enum Direction {
     WEST(0, -1),
     NORTH_WEST(-1, -1);
 
-    private final int dirX;
-    private final int dirY;
+    private final double dirX;
+    private final double dirY;
 
-    Direction(int dirX, int dirY) {
-        this.dirX = dirX;
-        this.dirY = dirY;
+    Direction(int dx, int dy) {
+        double magnitude = Math.sqrt(dx * dx + dy * dy);
+        double normalizedDx = dx / magnitude;
+        double normalizedDy = dy / magnitude;
+        this.dirX = normalizedDx;
+        this.dirY = normalizedDy;
     }
 }

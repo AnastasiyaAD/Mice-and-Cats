@@ -5,13 +5,8 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode
 @Data
-public class Mouse {
-    private final String username;
-    private double[] pos = new double[]{0,0};
-
-    public Mouse(String username) {
-        this.username = username;
-    }
+public class Cat {
+    private double[] pos = new double[]{0, 0};
 
     public void move(double x, double y) {
         this.pos[0] += x;

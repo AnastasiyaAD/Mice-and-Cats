@@ -21,12 +21,12 @@ public class Server {
     private final Configuration configuration;
     private boolean stop = false;
 
-    public Server(int port, GameManager gameManager, Configuration configuration) throws IOException {
+    public Server(int port, Configuration configuration) throws IOException {
         this.serverSocket = new ServerSocket(port);
         this.configuration = configuration;
         this.clientThreadPool = Executors.newCachedThreadPool();
         this.gameTickExecutor = Executors.newScheduledThreadPool(1);
-        this.gameManager = gameManager;
+        this.gameManager = new GameManager(configuration);
     }
 
     public void start() {

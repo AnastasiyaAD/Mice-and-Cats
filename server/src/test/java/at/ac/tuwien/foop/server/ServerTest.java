@@ -2,10 +2,15 @@ package at.ac.tuwien.foop.server;
 
 import at.ac.tuwien.foop.server.game.Configuration;
 import at.ac.tuwien.foop.server.game.GameManager;
+import at.ac.tuwien.foop.server.game.state.GameState;
+import at.ac.tuwien.foop.server.game.state.Mouse;
 import at.ac.tuwien.foop.server.network.dto.ActionRequestDto;
 import at.ac.tuwien.foop.server.network.dto.Direction;
 import at.ac.tuwien.foop.server.network.dto.HandshakeRequestDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -13,12 +18,25 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
 
 class ServerTest {
 
+    @Test
+    void test() throws JsonProcessingException {
+        var gameState = new GameState();
+        gameState.setGameStart(LocalDateTime.now());
+        gameState.addMouse(UUID.randomUUID(), new Mouse("Test mouse 1"));
+        gameState.addMouse(UUID.randomUUID(), new Mouse("Test mouse 2"));
+        var objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules()
+                .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        System.out.println(objectMapper.writeValueAsString(gameState));
+    }
 
     @Test
     void name() throws IOException {
