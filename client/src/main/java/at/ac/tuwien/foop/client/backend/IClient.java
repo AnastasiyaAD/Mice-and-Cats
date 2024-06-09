@@ -6,7 +6,7 @@ public interface IClient {
     /**
      *
      */
-    public void connect(String host, int port);
+    public void connect(String host, int port) throws Exception;
     /**
      *
      */

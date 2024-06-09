@@ -1,5 +1,6 @@
 package at.ac.tuwien.foop.client;
 
+import at.ac.tuwien.foop.client.backend.Client;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,6 +9,7 @@ import java.awt.event.WindowListener;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -21,27 +23,30 @@ public class ClientGUI
 
   /** Creates a new instance of ClientGUI */
   private JLabel ipaddressLabel;
+  private JLabel usernameLabel;
   private JLabel portLabel;
-  private static JLabel scoreLabel;
 
   private JTextField ipaddressText;
+  private JTextField usernameText;
   private JTextField portText;
 
   private JButton registerButton;
 
+  private JButton readyButton;
+
   private JPanel registerPanel;
   public static JPanel gameStatusPanel;
-  // private Client client;
+  private Client client;
   private Mouse clientMouse;
-
-  private static int score;
 
   int width = 1400, height = 910;
   boolean isRunning = true;
   private GameBoardPanel boardPanel;
 
+  private String host;
+  private int port;
+
   public ClientGUI() {
-    score = 0;
     setTitle("Mice and Cats in a Network Game");
     setSize(width, height);
     setLocation(60, 100);
@@ -52,45 +57,56 @@ public class ClientGUI
     addWindowListener(this);
     registerPanel = new JPanel();
     registerPanel.setBackground(Color.YELLOW);
-    registerPanel.setSize(400, 140);
-    registerPanel.setBounds(880, 50, 400, 140);
+    registerPanel.setSize(400, 200);
+    registerPanel.setBounds(880, 40, 400, 200);
     registerPanel.setLayout(null);
 
     gameStatusPanel = new JPanel();
     gameStatusPanel.setBackground(Color.YELLOW);
     gameStatusPanel.setSize(400, 300);
-    gameStatusPanel.setBounds(880, 210, 400, 311);
+    gameStatusPanel.setBounds(880, 280, 400, 573);
     gameStatusPanel.setLayout(null);
 
     ipaddressLabel = new JLabel("IP address: ");
-    ipaddressLabel.setBounds(100, 25, 70, 25);
+    ipaddressLabel.setBounds(90, 25, 100, 25);
 
     portLabel = new JLabel("Port: ");
-    portLabel.setBounds(100, 55, 50, 25);
+    portLabel.setBounds(90, 55, 70, 25);
 
-    scoreLabel = new JLabel("Score : 0");
-    scoreLabel.setBounds(100, 90, 100, 25);
+    usernameLabel = new JLabel("Username: ");
+    usernameLabel.setBounds(90, 85, 70, 25);
 
     ipaddressText = new JTextField("localhost");
-    ipaddressText.setBounds(190, 25, 100, 25);
+    ipaddressText.setBounds(210, 25, 100, 25);
 
-    portText = new JTextField("11111");
-    portText.setBounds(190, 55, 100, 25);
+    portText = new JTextField("8008");
+    portText.setBounds(210, 55, 100, 25);
+
+    usernameText = new JTextField("User1");
+    usernameText.setBounds(210, 85, 100, 25);
 
     registerButton = new JButton("Register");
-    registerButton.setBounds(190, 100, 90, 25);
+    registerButton.setBounds(90, 130, 220, 25);
+
     registerButton.addActionListener(this);
     registerButton.setFocusable(true);
 
+    readyButton = new JButton("Ready");
+    readyButton.setBounds(90, 160, 220, 25);
+
+    readyButton.addActionListener(this);
+    readyButton.setEnabled(false);
+
     registerPanel.add(ipaddressLabel);
     registerPanel.add(portLabel);
+    registerPanel.add(usernameLabel);
     registerPanel.add(ipaddressText);
     registerPanel.add(portText);
+    registerPanel.add(usernameText);
     registerPanel.add(registerButton);
+    registerPanel.add(readyButton);
 
-    gameStatusPanel.add(scoreLabel);
-
-    // client=Client.getGameClient();
+    client = Client.getGameClient();
 
     clientMouse = new Mouse();
     boardPanel = new GameBoardPanel(clientMouse, false);
@@ -101,51 +117,75 @@ public class ClientGUI
     setVisible(true);
   }
 
-  public static int getScore() {
-    return score;
-  }
-
-  public static void setScore(int scoreParametar) {
-    score += scoreParametar;
-    scoreLabel.setText("Score : " + score);
-  }
-
   public void actionPerformed(ActionEvent e) {
     Object obj = e.getSource();
-
+    host = ipaddressText.getText();
+    port = Integer.parseInt(portText.getText());
     if (obj == registerButton) {
       registerButton.setEnabled(false);
+      readyButton.setFocusable(false);
+      try {
+        client.connect(host, port);
+        try {
+          Thread.sleep(500);
+        } catch (InterruptedException ex) {
+          ex.printStackTrace();
+        }
+        registerButton.setFocusable(false);
+        readyButton.setFocusable(true);
+        readyButton.setEnabled(true);
+      } catch (UnknownHostException ex) {
+        System.out.println("Unknown host: " + host);
+      } catch (IOException ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(
+          this,
+          "The Server is not running, try again later!",
+          "Mice and Cats in a Network Game",
+          JOptionPane.INFORMATION_MESSAGE
+        );
+        System.out.println("The Server is not running!");
+        registerButton.setEnabled(true);
+        readyButton.setEnabled(false);
+        client.register(usernameText.getText());
+      }
+    }
+    if (obj == readyButton) {
+      readyButton.setEnabled(false);
+      try {
+        client.initiateReady(usernameText.getText());
+        try {
+          Thread.sleep(500);
+        } catch (InterruptedException ex) {
+          ex.printStackTrace();
+        }
+      } catch (IOException ex) {
+        JOptionPane.showMessageDialog(
+          this,
+          "The Server is not handshaking, try again later!",
+          "Mice and Cats in a Network Game",
+          JOptionPane.INFORMATION_MESSAGE
+        );
+        System.out.println("The Server is not ready Handshake!");
+        readyButton.setEnabled(true);
+      }
 
+      // TODO: while (!allClientsReady()) {}
       boardPanel.setGameStatus(true);
       boardPanel.repaint();
-      try {
-        Thread.sleep(500);
-      } catch (InterruptedException ex) {
-        ex.printStackTrace();
-      }
-      //  new ClientRecivingThread(client.getSocket()).start();
-      registerButton.setFocusable(false);
       boardPanel.setFocusable(true);
-      {
-        // JOptionPane.showMessageDialog(
-        //   this,
-        //   "The Server is not running, try again later!",
-        //   "Mice and Cats in a Network Game",
-        //   JOptionPane.INFORMATION_MESSAGE
-        // );
-        // System.out.println("The Server is not running!");
-        registerButton.setEnabled(true);
-      }
     }
   }
 
   public void windowOpened(WindowEvent e) {}
 
   public void windowClosing(WindowEvent e) {
-    // int response=JOptionPane.showConfirmDialog(this,"Are you sure you want to exit ?","Mice and Cats in a Network Game!",JOptionPane.YES_NO_OPTION);
-
-    //  Client.getGameClient().sendToServer(new Protocol().ExitMessagePacket(clientMouse.getMouseID()));
-
+    JOptionPane.showConfirmDialog(
+      this,
+      "Are you sure you want to exit ?",
+      "Mice and Cats in a Network Game!",
+      JOptionPane.YES_NO_OPTION
+    );
   }
 
   public void windowClosed(WindowEvent e) {}
@@ -157,106 +197,4 @@ public class ClientGUI
   public void windowActivated(WindowEvent e) {}
 
   public void windowDeactivated(WindowEvent e) {}
-
-  public class ClientRecivingThread extends Thread {
-
-    // Socket clientSocket;
-    DataInputStream reader;
-
-    // public ClientRecivingThread(Socket clientSocket) {
-    //   this.clientSocket = clientSocket;
-    //   try {
-    //     reader = new DataInputStream(clientSocket.getInputStream());
-    //   } catch (IOException ex) {
-    //     ex.printStackTrace();
-    //   }
-    // }
-
-    public void run() {
-      while (isRunning) {
-        String sentence = "";
-        try {
-          sentence = reader.readUTF();
-        } catch (IOException ex) {
-          ex.printStackTrace();
-        }
-        if (sentence.startsWith("ID")) {
-          int id = Integer.parseInt(sentence.substring(2));
-          clientMouse.setMouseID(id);
-          System.out.println("My ID= " + id);
-        } else if (sentence.startsWith("NewClient")) {
-          int pos1 = sentence.indexOf(',');
-          int pos2 = sentence.indexOf('-');
-          int pos3 = sentence.indexOf('|');
-          int x = Integer.parseInt(sentence.substring(9, pos1));
-          int y = Integer.parseInt(sentence.substring(pos1 + 1, pos2));
-          int dir = Integer.parseInt(sentence.substring(pos2 + 1, pos3));
-          int id = Integer.parseInt(
-            sentence.substring(pos3 + 1, sentence.length())
-          );
-          if (id != clientMouse.getMouseID()) boardPanel.registerNewMouse(
-            new Mouse(x, y, dir, id)
-          );
-        } else if (sentence.startsWith("Update")) {
-          int pos1 = sentence.indexOf(',');
-          int pos2 = sentence.indexOf('-');
-          int pos3 = sentence.indexOf('|');
-          int x = Integer.parseInt(sentence.substring(6, pos1));
-          int y = Integer.parseInt(sentence.substring(pos1 + 1, pos2));
-          int dir = Integer.parseInt(sentence.substring(pos2 + 1, pos3));
-          int id = Integer.parseInt(
-            sentence.substring(pos3 + 1, sentence.length())
-          );
-
-          if (id != clientMouse.getMouseID()) {
-            boardPanel.getMouse(id).setXpoistion(x);
-            boardPanel.getMouse(id).setYposition(y);
-            boardPanel.getMouse(id).setDirection(dir);
-            boardPanel.repaint();
-          }
-        } else if (sentence.startsWith("Remove")) {
-          int id = Integer.parseInt(sentence.substring(6));
-
-          if (id == clientMouse.getMouseID()) {
-            int response = JOptionPane.showConfirmDialog(
-              null,
-              "Sorry, You are loss. Do you want to try again ?",
-              "Mice and Cats in a Network Game",
-              JOptionPane.OK_CANCEL_OPTION
-            );
-            if (response == JOptionPane.OK_OPTION) {
-              //client.closeAll();
-              setVisible(false);
-              dispose();
-
-              new ClientGUI();
-            } else {
-              System.exit(0);
-            }
-          } else {
-            boardPanel.removeMouse(id);
-          }
-        } else if (sentence.startsWith("Exit")) {
-          int id = Integer.parseInt(sentence.substring(4));
-
-          if (id != clientMouse.getMouseID()) {
-            boardPanel.removeMouse(id);
-          }
-        }
-      }
-
-      try {
-        reader.close();
-        // clientSocket.close();
-      } catch (IOException ex) {
-        ex.printStackTrace();
-      }
-    }
-  }
-
-//   @Override
-//   public void actionPerformed(ActionEvent e) {
-//     // TODO Auto-generated method stub
-
-//   }
 }
