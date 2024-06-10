@@ -134,6 +134,12 @@ public class ClientGUI
         registerButton.setFocusable(false);
         readyButton.setFocusable(true);
         readyButton.setEnabled(true);
+        client.register(usernameText.getText());
+        try {
+          Thread.sleep(500);
+        } catch (InterruptedException ex) {
+          ex.printStackTrace();
+        }
       } catch (UnknownHostException ex) {
         System.out.println("Unknown host: " + host);
       } catch (IOException ex) {
@@ -147,7 +153,6 @@ public class ClientGUI
         System.out.println("The Server is not running!");
         registerButton.setEnabled(true);
         readyButton.setEnabled(false);
-        client.register(usernameText.getText());
       }
     }
     if (obj == readyButton) {
