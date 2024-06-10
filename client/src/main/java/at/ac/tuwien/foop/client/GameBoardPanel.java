@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
+import at.ac.tuwien.foop.client.backend.InputManager;
+
 public class GameBoardPanel extends JPanel {
 
   /** Creates a new instance of GameBoardPanel */

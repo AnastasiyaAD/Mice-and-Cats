@@ -1,5 +1,6 @@
 package at.ac.tuwien.foop.client;
 
+import at.ac.tuwien.foop.network.dto.Direction;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -12,11 +13,23 @@ public class Mouse {
   private int mouseID;
   private int posiX = -1, posiY = -1;
   private int direction = 1;
-  private float velocityX = 0.03125f, velocityY = 0.03125f;
   private int width = 810, height = 812;
+  private Direction sDirection;
 
   public int getDirection() {
     return direction;
+  }
+
+  public Direction getServerDirection() {
+    sDirection =
+      switch (direction) {
+        case 1 -> Direction.NORTH;
+        case 2 -> Direction.WEST;
+        case 3 -> Direction.SOUTH;
+        case 4 -> Direction.EAST;
+        default -> Direction.NORTH;
+      };
+    return sDirection;
   }
 
   /** Creates a new instance of Mouse */
@@ -25,7 +38,7 @@ public class Mouse {
       posiX = (int) (Math.random() * width);
       posiY = (int) (Math.random() * height);
     }
-    loadImage(4);
+    loadImage(0);
   }
 
   public Mouse(int x, int y, int dir, int id) {
@@ -39,7 +52,8 @@ public class Mouse {
   public void loadImage(int a) {
     mouseImg = new Image[4];
     for (int i = a; i < mouseImg.length + a; i++) {
-      mouseImg[i - a] = new ImageIcon("public/rat_player/" + i + ".png").getImage();
+      mouseImg[i - a] =
+        new ImageIcon("public/rat_player/" + i + ".png").getImage();
     }
     ImageBuff =
       new BufferedImage(
@@ -71,88 +85,47 @@ public class Mouse {
   }
 
   public void moveLeft() {
-    if (direction == 1 | direction == 3) {
-      ImageBuff =
-        new BufferedImage(
-          mouseImg[3].getWidth(null),
-          mouseImg[3].getHeight(null),
-          BufferedImage.TYPE_INT_RGB
-        );
-      ImageBuff.createGraphics().drawImage(mouseImg[3], 0, 0, null);
-      direction = 4;
-    } else {
-      int temp;
-
-      temp = (int) (posiX - velocityX * posiX);
-      if (checkCollision(temp, posiY) == false && temp < 70) {
-        posiX = 70;
-      } else if (checkCollision(temp, posiY) == false) {
-        posiX = temp;
-      }
-    }
+    ImageBuff =
+      new BufferedImage(
+        mouseImg[3].getWidth(null),
+        mouseImg[3].getHeight(null),
+        BufferedImage.TYPE_INT_RGB
+      );
+    ImageBuff.createGraphics().drawImage(mouseImg[3], 0, 0, null);
+    direction = 4;
   }
 
   public void moveRight() {
-    if (direction == 1 | direction == 3) {
-      ImageBuff =
-        new BufferedImage(
-          mouseImg[1].getWidth(null),
-          mouseImg[1].getHeight(null),
-          BufferedImage.TYPE_INT_RGB
-        );
-      ImageBuff.createGraphics().drawImage(mouseImg[1], 0, 0, null);
-      direction = 2;
-    } else {
-      int temp;
-      temp = (int) (posiX + velocityX * posiX);
-      if (checkCollision(temp, posiY) == false && temp > width - 40 + 20) {
-        posiX = width - 40 + 20;
-      } else if (checkCollision(temp, posiY) == false) {
-        posiX = temp;
-      }
-    }
+    ImageBuff =
+      new BufferedImage(
+        mouseImg[1].getWidth(null),
+        mouseImg[1].getHeight(null),
+        BufferedImage.TYPE_INT_RGB
+      );
+    ImageBuff.createGraphics().drawImage(mouseImg[1], 0, 0, null);
+    direction = 2;
   }
 
   public void moveForward() {
-    if (direction == 2 | direction == 4) {
-      ImageBuff =
-        new BufferedImage(
-          mouseImg[0].getWidth(null),
-          mouseImg[0].getHeight(null),
-          BufferedImage.TYPE_INT_RGB
-        );
-      ImageBuff.createGraphics().drawImage(mouseImg[0], 0, 0, null);
-      direction = 1;
-    } else {
-      int temp;
-      temp = (int) (posiY - velocityY * posiY);
-      if (checkCollision(posiX, temp) == false && temp < 40) {
-        posiY = 40;
-      } else if (checkCollision(posiX, temp) == false) {
-        posiY = temp;
-      }
-    }
+    ImageBuff =
+      new BufferedImage(
+        mouseImg[0].getWidth(null),
+        mouseImg[0].getHeight(null),
+        BufferedImage.TYPE_INT_RGB
+      );
+    ImageBuff.createGraphics().drawImage(mouseImg[0], 0, 0, null);
+    direction = 1;
   }
 
   public void moveBackward() {
-    if (direction == 2 | direction == 4) {
-      ImageBuff =
-        new BufferedImage(
-          mouseImg[2].getWidth(null),
-          mouseImg[2].getHeight(null),
-          BufferedImage.TYPE_INT_RGB
-        );
-      ImageBuff.createGraphics().drawImage(mouseImg[2], 0, 0, null);
-      direction = 3;
-    } else {
-      int temp;
-      temp = (int) (posiY + velocityY * posiY);
-      if (checkCollision(posiX, temp) == false && temp > height - 40 + 40) {
-        posiY = height - 40 + 40;
-      } else if (checkCollision(posiX, temp) == false) {
-        posiY = temp;
-      }
-    }
+    ImageBuff =
+      new BufferedImage(
+        mouseImg[2].getWidth(null),
+        mouseImg[2].getHeight(null),
+        BufferedImage.TYPE_INT_RGB
+      );
+    ImageBuff.createGraphics().drawImage(mouseImg[2], 0, 0, null);
+    direction = 3;
   }
 
   public void setMouseID(int id) {
@@ -172,46 +145,5 @@ public class Mouse {
       );
     ImageBuff.createGraphics().drawImage(mouseImg[dir - 1], 0, 0, null);
     direction = dir;
-  }
-
-  public boolean checkCollision(int xP, int yP) {
-    ArrayList<Mouse> clientMice = GameBoardPanel.getClients();
-    int x, y;
-    for (int i = 1; i < clientMice.size(); i++) {
-      if (clientMice.get(i) != null) {
-        x = clientMice.get(i).getXposition();
-        y = clientMice.get(i).getYposition();
-        if (direction == 1) {
-          if (
-            ((yP <= y + 40) && yP >= y) &&
-            ((xP <= x + 40 && xP >= x) || (xP + 40 >= x && xP + 40 <= x + 40))
-          ) {
-            return true;
-          }
-        } else if (direction == 2) {
-          if (
-            ((xP + 40 >= x) && xP + 40 <= x + 40) &&
-            ((yP <= y + 40 & yP >= y) || (yP + 40 >= y && yP + 40 <= y + 40))
-          ) {
-            return true;
-          }
-        } else if (direction == 3) {
-          if (
-            ((yP + 40 >= y) && yP + 40 <= y + 40) &&
-            ((xP <= x + 40 && xP >= x) || (xP + 40 >= x && xP + 40 <= x + 40))
-          ) {
-            return true;
-          }
-        } else if (direction == 4) {
-          if (
-            ((xP <= x + 40) && xP >= x) &&
-            ((yP <= y + 40 && yP >= y) || (yP + 40 >= y && yP + 40 <= y + 40))
-          ) {
-            return true;
-          }
-        }
-      }
-    }
-    return false;
   }
 }
