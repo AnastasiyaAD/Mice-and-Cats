@@ -19,10 +19,6 @@ public class GameState {
     private Duration gameDuration = Duration.of(3, ChronoUnit.MINUTES);
     private GameStatus gameStatus = GameStatus.INIT;
 
-
-    public GameState() {
-    }
-
     public void addMouse(UUID clientId, Mouse mouse) {
         if (this.mice.containsKey(clientId)) {
             System.out.println("Mouse exists, cannot add");

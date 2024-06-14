@@ -46,6 +46,17 @@ public class GameManager {
     }
 
     private void checkState() {
+        checkBounds();
+        checkTunnels();
+    }
+
+    private void checkTunnels() {
+        gameState.getMice().values().forEach(m -> {
+
+        });
+    }
+
+    private void checkBounds() {
         gameState.getMice().values().forEach(m -> {
             var pos = m.getPos();
             var x = pos[0];
