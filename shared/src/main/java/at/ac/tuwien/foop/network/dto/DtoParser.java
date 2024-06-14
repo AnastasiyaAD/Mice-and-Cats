@@ -11,7 +11,6 @@ public class DtoParser {
         return objectMapper.readValue(json, ActionRequestDto.class);
     }
 
-
     public static HandshakeRequestDto parseHandshake(String json) throws JsonProcessingException {
         return objectMapper.readValue(json, HandshakeRequestDto.class);
     }

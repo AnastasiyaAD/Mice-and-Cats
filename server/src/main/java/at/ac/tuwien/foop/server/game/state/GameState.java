@@ -17,6 +17,7 @@ public class GameState {
     private final Map<UUID, Mouse> mice = new ConcurrentHashMap<>();
     private LocalDateTime gameStart;
     private Duration gameDuration = Duration.of(3, ChronoUnit.MINUTES);
+    private GameStatus gameStatus = GameStatus.INIT;
 
 
     public GameState() {

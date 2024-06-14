@@ -2,6 +2,7 @@ package at.ac.tuwien.foop.server.game;
 
 import at.ac.tuwien.foop.network.dto.ActionRequestDto;
 import at.ac.tuwien.foop.server.game.state.GameState;
+import at.ac.tuwien.foop.server.game.state.GameStatus;
 import at.ac.tuwien.foop.server.game.state.Mouse;
 import at.ac.tuwien.foop.server.network.ClientManager;
 import at.ac.tuwien.foop.server.network.UpdateBroadcaster;
@@ -21,31 +22,35 @@ public class GameManager {
     }
 
     public synchronized void queueAction(ActionRequestDto actionRequestDto) {
-        this.actionQueue.add(actionRequestDto);
+        actionQueue.add(actionRequestDto);
     }
 
     public void registerClient(ClientManager clientManager) {
         var newMouse = new Mouse(clientManager.getUsername());
-        this.gameState.addMouse(clientManager.getClientId(), newMouse);
-        this.updateBroadcaster.addClient(clientManager);
+        gameState.addMouse(clientManager.getClientId(), newMouse);
+        updateBroadcaster.addClient(clientManager);
         System.out.printf("Registered user %s, with clientId %s%n", clientManager.getUsername(), clientManager.getClientId());
     }
 
     public void updateGame() {
-        if (this.gameState.getGameStart() != null || allClientsReady()) {
-            this.gameState.setGameStart(LocalDateTime.now());
-            this.processActions();
-            this.checkState();
-            this.updateBroadcaster.broadcast(this.gameState);
+        if (gameState.getGameStart() != null || allClientsReady()) {
+            if (gameState.getGameStart() == null) {
+                gameState.setGameStart(LocalDateTime.now());
+                gameState.setGameStatus(GameStatus.RUNNING);
+            }
+            timeCheck();
+            processActions();
+            checkState();
+            updateBroadcaster.broadcast(gameState);
         }
     }
 
     private void checkState() {
-        this.gameState.getMice().values().forEach(m -> {
+        gameState.getMice().values().forEach(m -> {
             var pos = m.getPos();
             var x = pos[0];
             var y = pos[1];
-            var bounds = this.gameState.getGameField().getBounds();
+            var bounds = gameState.getGameField().getBounds();
             var boundsX = bounds[0];
             var boundsY = bounds[1];
             if (x > boundsX || y > boundsY) {
@@ -54,15 +59,22 @@ public class GameManager {
         });
     }
 
+    private void timeCheck() {
+        if (gameState.getGameStart().plus(gameState.getGameDuration()).isAfter(LocalDateTime.now())) {
+            // TODO: check who won?
+            gameState.setGameStatus(GameStatus.TIME_OUT);
+        }
+    }
+
     private void processActions() {
-        while (!this.actionQueue.isEmpty()) {
-            ActionRequestDto actionRequestDto = this.actionQueue.poll();
-            this.processActionHelper(actionRequestDto);
+        while (!actionQueue.isEmpty()) {
+            ActionRequestDto actionRequestDto = actionQueue.poll();
+            processActionHelper(actionRequestDto);
         }
     }
 
     private boolean allClientsReady() {
-        boolean allReady = !this.updateBroadcaster.getClients().isEmpty() && this.updateBroadcaster.getClients().stream().allMatch(ClientManager::isReady);
+        boolean allReady = !updateBroadcaster.getClients().isEmpty() && updateBroadcaster.getClients().stream().allMatch(ClientManager::isReady);
         if (allReady) {
             System.out.println("All clients ready");
         }
@@ -70,7 +82,7 @@ public class GameManager {
     }
 
     private void processActionHelper(ActionRequestDto actionRequestDto) {
-        var mouse = this.gameState.getMouse(actionRequestDto.getClientId());
+        var mouse = gameState.getMouse(actionRequestDto.getClientId());
         var direction = actionRequestDto.getDirection();
         var speedPerTick = configuration.mouseSpeed() / configuration.tickRate();
         mouse.move(direction.getDirX() * speedPerTick, direction.getDirY() * speedPerTick);

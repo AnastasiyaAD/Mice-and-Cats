@@ -34,11 +34,7 @@ public class ClientManager implements Runnable {
     }
 
     public void sendData(String gameState) {
-        try (var writer = new PrintWriter(socket.getOutputStream(), true)) {
-            writer.println(gameState);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        writer.println(gameState);
     }
 
     @Override

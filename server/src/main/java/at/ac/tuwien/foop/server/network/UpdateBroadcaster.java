@@ -44,7 +44,6 @@ public class UpdateBroadcaster {
     }
 
     private String convertStateToJson(GameStateDto state) throws JsonProcessingException {
-        // Assuming you're using Gson for JSON serialization
         return objectMapper.writeValueAsString(state);
     }
 }
