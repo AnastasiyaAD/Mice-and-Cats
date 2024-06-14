@@ -14,7 +14,7 @@ public class GameStateMapper {
     public static GameStateDto toDto(GameState gameState) {
         var mice = gameState.getMice().entrySet().stream()
                 .map(entry -> new MouseDto(entry.getValue().getPos(), entry.getKey(), entry.getValue().getUsername())).toList();
-        return new GameStateDto(Duration.between(gameState.getGameStart(), LocalDateTime.now()), mice, mapEnum(gameState.getGameStatus()));
+        return new GameStateDto(gameState.getGameField().getBounds(), Duration.between(gameState.getGameStart(), LocalDateTime.now()), mice, mapEnum(gameState.getGameStatus()));
     }
 
     private static GameStatusDto mapEnum(GameStatus status) {
