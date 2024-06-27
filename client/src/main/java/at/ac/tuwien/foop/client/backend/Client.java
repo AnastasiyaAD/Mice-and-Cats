@@ -26,16 +26,16 @@ public class Client implements IClient, AutoCloseable {
 
   @Override
   public void connect(String host, int port) throws IOException {
-      socket = new Socket(host, port);
-      socket.getOutputStream();
-      out = new PrintWriter(socket.getOutputStream(), true);
-      in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-      gameStateListener = new GameStateListener(in, this);
-      listenerThread = new Thread(gameStateListener);
-      // TODO: Check when we want to start listening
-      listenerThread.start();
-      // Handshake first then we can listen to message
-    
+    socket = new Socket(host, port);
+    socket.getOutputStream();
+    out = new PrintWriter(socket.getOutputStream(), true);
+    in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    gameStateListener = new GameStateListener(in, this);
+    listenerThread = new Thread(gameStateListener);
+    // TODO: Check when we want to start listening
+    listenerThread.start();
+    // Handshake first then we can listen to message
+
   }
 
   public static Client getGameClient() {
@@ -43,7 +43,7 @@ public class Client implements IClient, AutoCloseable {
     return client;
   }
 
-  public void register(String username)  {
+  public void register(String username) {
     var handshakeRequest = HandshakeRequestDto.registerHandshakeRequest(
       username
     );
@@ -54,7 +54,11 @@ public class Client implements IClient, AutoCloseable {
     }
   }
 
-  public void initiateReady(String username)  throws IOException {
+  public Socket getSocket() {
+    return socket;
+  }
+
+  public void initiateReady(String username) throws IOException {
     var handshakeRequest = HandshakeRequestDto.readyHandshakeRequest();
     try {
       send(objectMapper.writeValueAsString(handshakeRequest));

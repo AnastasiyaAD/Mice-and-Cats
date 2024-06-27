@@ -41,6 +41,7 @@ public class ClientGUI
 
   int width = 1400, height = 910;
   boolean isRunning = true;
+  boolean allClientsReady = false;
   private GameBoardPanel boardPanel;
 
   private String host;
@@ -133,6 +134,7 @@ public class ClientGUI
         } catch (InterruptedException ex) {
           ex.printStackTrace();
         }
+        new ClientReceivingThread(client.getSocket()).start();
         registerButton.setFocusable(false);
         readyButton.setFocusable(true);
         readyButton.setEnabled(true);
@@ -176,10 +178,25 @@ public class ClientGUI
         System.out.println("The Server is not ready Handshake!");
         readyButton.setEnabled(true);
       }
-      // TODO: while (!allClientsReady()) {}
-      // boardPanel.setGameStatus(true);
-      // boardPanel.repaint();
-      // boardPanel.setFocusable(true);
+      try {
+        Thread.sleep(2000);
+        if (allClientsReady) {
+          boardPanel.setGameStatus(true);
+          boardPanel.repaint();
+          boardPanel.setFocusable(true);
+        } else {
+          JOptionPane.showMessageDialog(
+            this,
+            "The players are not ready, try again later!",
+            "Mice and Cats in a Network Game",
+            JOptionPane.INFORMATION_MESSAGE
+          );
+          System.out.println("all Clients are not ready!");
+          readyButton.setEnabled(true);
+        }
+      } catch (InterruptedException ex) {
+        ex.printStackTrace();
+      }
     }
   }
 
@@ -203,4 +220,37 @@ public class ClientGUI
   public void windowActivated(WindowEvent e) {}
 
   public void windowDeactivated(WindowEvent e) {}
+
+  public class ClientReceivingThread extends Thread {
+
+    Socket clientSocket;
+    DataInputStream reader;
+
+    public ClientReceivingThread(Socket clientSocket) {
+      this.clientSocket = clientSocket;
+      try {
+        reader = new DataInputStream(clientSocket.getInputStream());
+      } catch (IOException ex) {
+        ex.printStackTrace();
+      }
+    }
+
+    public void run() {
+      while (isRunning) {
+        String sentence = "no";
+        try {
+          sentence = reader.readUTF();
+        } catch (IOException ex) {
+          ex.printStackTrace();
+        }
+        System.out.println("new");
+        System.out.println(sentence);
+      }
+      try {
+        client.close();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+  }
 }
