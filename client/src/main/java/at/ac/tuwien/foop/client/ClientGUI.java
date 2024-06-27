@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import org.json.JSONObject;
 
 public class ClientGUI
   extends JFrame
@@ -238,13 +239,14 @@ public class ClientGUI
     public void run() {
       while (isRunning) {
         String sentence = "no";
+        JSONObject jo = null;
         try {
           sentence = reader.readUTF();
+          jo = new JSONObject(sentence.toString());
         } catch (IOException ex) {
           ex.printStackTrace();
         }
-        System.out.println("new");
-        System.out.println(sentence);
+        System.out.println(jo.getJSONArray("mice"));
       }
       try {
         client.close();
