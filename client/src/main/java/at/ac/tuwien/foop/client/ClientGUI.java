@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class ClientGUI
@@ -39,10 +40,12 @@ public class ClientGUI
   public static JPanel gameStatusPanel;
   private Client client;
   private Mouse clientMouse;
+  private int numberPlayers = 0;
 
   int width = 1400, height = 910;
   boolean isRunning = true;
-  boolean allClientsReady = false;
+  boolean allClientsReady = true;
+  boolean playerReady = false;
   private GameBoardPanel boardPanel;
 
   private String host;
@@ -135,7 +138,7 @@ public class ClientGUI
         } catch (InterruptedException ex) {
           ex.printStackTrace();
         }
-        new ClientReceivingThread(client.getSocket()).start();
+        new ClientReceivingThread(client.getSocket()).start(); //start Listening
         registerButton.setFocusable(false);
         readyButton.setFocusable(true);
         readyButton.setEnabled(true);
@@ -240,11 +243,52 @@ public class ClientGUI
       while (isRunning) {
         String sentence = "no";
         JSONObject jo = null;
+        JSONArray mice = null;
         try {
           sentence = reader.readUTF();
           jo = new JSONObject(sentence.toString());
+          mice = jo.getJSONArray("mice");
         } catch (IOException ex) {
           ex.printStackTrace();
+        }
+        if (mice != null && !playerReady) {
+          if (numberPlayers < mice.length()) { // registration of new players on the field
+            for (int index = 0; index < mice.length(); index++) {
+              String name = mice.getJSONObject(index).getString("username");
+              JSONArray position = mice
+                .getJSONObject(index)
+                .getJSONArray("position");
+              float positionX = (float) position.get(0);
+              float positionY = (float) position.get(1);
+              if (name == username) {
+                clientMouse.setMouseID(index);
+                playerReady = true;
+              } else {
+                int x = Math.round(810 / 1500 * positionX);
+                int y = Math.round(812 / 1500 * positionY);
+                int dir = 1;
+                int id = index;
+                boardPanel.registerNewMouse(new Mouse(x, y, dir, id));
+              } 
+            }
+          } else { 
+            for (int index = 0; index < mice.length(); index++) {
+              JSONArray position = mice
+                .getJSONObject(index)
+                .getJSONArray("position");
+              float positionX = (float) position.get(0);
+              float positionY = (float) position.get(1);
+
+              int x = Math.round(810 / 1500 * positionX);
+              int y = Math.round(812 / 1500 * positionY);
+              int dir = 1;
+              int id = index;
+              boardPanel.getMouse(id).setXpoistion(x);
+              boardPanel.getMouse(id).setYposition(y);
+              boardPanel.getMouse(id).setDirection(dir);
+              boardPanel.repaint();
+            }
+          }
         }
         System.out.println(jo.getJSONArray("mice"));
       }
