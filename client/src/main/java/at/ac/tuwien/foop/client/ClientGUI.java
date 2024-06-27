@@ -266,12 +266,11 @@ public class ClientGUI
               } else {
                 int x = Math.round(810 / 1500 * positionX);
                 int y = Math.round(812 / 1500 * positionY);
-                int dir = 1;
                 int id = index;
-                boardPanel.registerNewMouse(new Mouse(x, y, dir, id));
-              } 
+                boardPanel.registerNewMouse(new Mouse(x, y, 1, id));
+              }
             }
-          } else { 
+          } else {
             for (int index = 0; index < mice.length(); index++) {
               JSONArray position = mice
                 .getJSONObject(index)
@@ -281,11 +280,9 @@ public class ClientGUI
 
               int x = Math.round(810 / 1500 * positionX);
               int y = Math.round(812 / 1500 * positionY);
-              int dir = 1;
               int id = index;
               boardPanel.getMouse(id).setXpoistion(x);
               boardPanel.getMouse(id).setYposition(y);
-              boardPanel.getMouse(id).setDirection(dir);
               boardPanel.repaint();
             }
           }

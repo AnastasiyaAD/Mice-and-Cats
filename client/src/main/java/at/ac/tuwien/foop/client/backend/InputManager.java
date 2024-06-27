@@ -10,11 +10,12 @@ public class InputManager implements KeyListener {
   private final int RIGHT = 39;
   private final int UP = 38;
   private final int DOWN = 40;
-  private static Client client;
+  private Client client;
   private Mouse mouse;
 
   /** Creates a new instance of InputManager */
   public InputManager(Mouse mouse) {
+    this.client = Client.getGameClient();
     this.mouse = mouse;
   }
 
