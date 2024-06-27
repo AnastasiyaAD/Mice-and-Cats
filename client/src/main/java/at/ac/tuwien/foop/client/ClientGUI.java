@@ -45,7 +45,6 @@ public class ClientGUI
   int width = 1400, height = 910;
   boolean isRunning = true;
   boolean allClientsReady = true;
-  boolean playerReady = false;
   private GameBoardPanel boardPanel;
 
   private String host;
@@ -113,7 +112,6 @@ public class ClientGUI
     registerPanel.add(readyButton);
 
     client = Client.getGameClient();
-
     clientMouse = new Mouse();
     boardPanel = new GameBoardPanel(clientMouse, false);
 
@@ -264,7 +262,7 @@ public class ClientGUI
           if (numberPlayers < miceLength) { // registration of new players on the field
             System.out.println("registration of new players on the field");
             for (int index = 0; index < miceLength; index++) {
-              int id = index + 1;
+              int id = index;
               String name = mice.getJSONObject(index).getString("username");
               JSONArray position = new JSONArray(
                 mice.getJSONObject(index).getJSONArray("position").toString()
@@ -274,27 +272,24 @@ public class ClientGUI
               int positionX = position.getInt(0);
               int positionY = position.getInt(1);
               if (name.equals(username)) {
-                System.out.println("registration clientMouse id = " + id);
                 clientMouse.setMouseID(id);
-                clientMouse.setXpoistion(positionX);
-                clientMouse.setXpoistion(positionY);
-                playerReady = true;
-              } else {
-                System.out.println("registration new mouse id = " + id);
-
-                System.out.println(
-                  "positionX = " + positionX + " positionY = " + positionY
-                );
-                boardPanel.registerNewMouse(
-                  new Mouse(positionX, positionY, 1, id)
-                );
               }
+              System.out.println("registration new mouse id = " + id);
+
+              System.out.println(
+                "positionX = " + positionX + " positionY = " + positionY
+              );
+              boardPanel.registerNewMouse(
+                new Mouse(positionX, positionY, 1, id)
+              );
             }
             numberPlayers = miceLength;
           } else {
             System.out.println("update players on the field");
             for (int index = 0; index < miceLength; index++) {
-              int id = index + 1;
+              String name = mice.getJSONObject(index).getString("username");
+
+              int id = index;
               JSONArray position = new JSONArray(
                 mice.getJSONObject(index).getJSONArray("position").toString()
               );
@@ -316,9 +311,8 @@ public class ClientGUI
                   "!!!!!!!!Exception in Update Mouse!!!!!!!!: " + e.getMessage()
                 );
               }
-
-              boardPanel.repaint();
             }
+            boardPanel.repaint();
           }
         }
       }
