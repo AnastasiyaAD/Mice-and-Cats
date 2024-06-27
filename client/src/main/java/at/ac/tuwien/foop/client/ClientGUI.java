@@ -45,6 +45,7 @@ public class ClientGUI
 
   private String host;
   private int port;
+  private String username;
 
   public ClientGUI() {
     setTitle("Mice and Cats in a Network Game");
@@ -121,6 +122,7 @@ public class ClientGUI
     Object obj = e.getSource();
     host = ipaddressText.getText();
     port = Integer.parseInt(portText.getText());
+    username = usernameText.getText();
     if (obj == registerButton) {
       registerButton.setEnabled(false);
       readyButton.setFocusable(false);
@@ -134,7 +136,7 @@ public class ClientGUI
         registerButton.setFocusable(false);
         readyButton.setFocusable(true);
         readyButton.setEnabled(true);
-        client.register(usernameText.getText());
+        client.register(username);
         try {
           Thread.sleep(500);
         } catch (InterruptedException ex) {
@@ -158,7 +160,7 @@ public class ClientGUI
     if (obj == readyButton) {
       readyButton.setEnabled(false);
       try {
-        client.initiateReady(usernameText.getText());
+        client.initiateReady(username);
         try {
           Thread.sleep(500);
         } catch (InterruptedException ex) {
@@ -174,11 +176,10 @@ public class ClientGUI
         System.out.println("The Server is not ready Handshake!");
         readyButton.setEnabled(true);
       }
-
       // TODO: while (!allClientsReady()) {}
-      boardPanel.setGameStatus(true);
-      boardPanel.repaint();
-      boardPanel.setFocusable(true);
+      // boardPanel.setGameStatus(true);
+      // boardPanel.repaint();
+      // boardPanel.setFocusable(true);
     }
   }
 

@@ -26,34 +26,33 @@ public class InputManager implements KeyListener {
       case LEFT:
         if (direction == 1 | direction == 3 | direction == 2) {
           mouse.moveLeft();
-          client.sendDirection(mouse.getServerDirection());
         } else {
-          //TODO: get new coordinates from the server
+          //TODO: check wall
+          client.sendDirection(mouse.getServerDirection());
         }
         break;
       case RIGHT:
         if (direction == 1 | direction == 3 | direction == 4) {
           mouse.moveRight();
-          client.sendDirection(mouse.getServerDirection());
         } else {
           client.sendDirection(mouse.getServerDirection());
-          //TODO: get new coordinates from the server
+          //TODO: check wall
         }
         break;
       case UP:
         if (direction == 2 | direction == 4 | direction == 3) {
           mouse.moveForward();
-          client.sendDirection(mouse.getServerDirection());
         } else {
-          //TODO: get new coordinates from the server
+          //TODO: check wall
+          client.sendDirection(mouse.getServerDirection());
         }
         break;
       case DOWN:
         if (direction == 2 | direction == 4 | direction == 1) {
           mouse.moveBackward();
-          client.sendDirection(mouse.getServerDirection());
         } else {
-          //TODO: get new coordinates from the server
+          //TODO: check wall
+          client.sendDirection(mouse.getServerDirection());
         }
         break;
       default:
