@@ -3,7 +3,6 @@ package at.ac.tuwien.foop.client;
 import at.ac.tuwien.foop.network.dto.Direction;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
 public class Mouse {
@@ -14,8 +13,12 @@ public class Mouse {
   private int posiX = -1, posiY = -1;
   private int direction = 1;
   private int velocityX = 5, velocityY = 5;
+  private int width = 725;
+  private int height = 773;
+  private static int startPositionX = 67;
+  private static int startPositionY = 38;
   private Direction sDirection;
-  private boolean isWall = false;
+  private boolean isWall;
 
   public int getDirection() {
     return direction;
@@ -35,8 +38,8 @@ public class Mouse {
 
   /** Creates a new instance of Mouse */
   public Mouse() {
-    posiX = 67;
-    posiY = 37;
+    posiX = startPositionX;
+    posiY = startPositionY;
     loadImage(0);
   }
 
@@ -89,8 +92,9 @@ public class Mouse {
 
   public void moveLeft() {
     int temp;
-    temp = posiX - velocityY;
-    if (direction == 4 && !checkWall(posiX, posiY)) {
+    temp = posiX - velocityX;
+    checkWall(posiX, posiY);
+    if (direction == 2 && !isWall) {
       posiX = temp;
     }
     ImageBuff =
@@ -100,16 +104,22 @@ public class Mouse {
         BufferedImage.TYPE_INT_RGB
       );
     ImageBuff.createGraphics().drawImage(mouseImg[3], 0, 0, null);
-    direction = 4;
+    direction = 2;
     System.out.println(
-      "!!!!!moveLeft positionX = " + posiX + " positionY = " + posiY
+      "!!!!!moveLeft positionX = " +
+      posiX +
+      " positionY = " +
+      posiY +
+      " isWall = " +
+      isWall
     );
   }
 
   public void moveRight() {
     int temp;
     temp = posiX + velocityX;
-    if (direction == 2 && !checkWall(posiX, posiY)) {
+    checkWall(posiX, posiY);
+    if (direction == 4 && !isWall) {
       posiX = temp;
     }
     ImageBuff =
@@ -119,16 +129,22 @@ public class Mouse {
         BufferedImage.TYPE_INT_RGB
       );
     ImageBuff.createGraphics().drawImage(mouseImg[1], 0, 0, null);
-    direction = 2;
+    direction = 4;
     System.out.println(
-      "!!!!!moveRight positionX = " + posiX + " positionY = " + posiY
+      "!!!!!moveRight positionX = " +
+      posiX +
+      " positionY = " +
+      posiY +
+      " isWall = " +
+      isWall
     );
   }
 
   public void moveForward() {
     int temp;
     temp = posiY - velocityY;
-    if (direction == 1 && !checkWall(posiX, posiY)) {
+    checkWall(posiX, posiY);
+    if (direction == 1 && !isWall) {
       posiY = temp;
     }
     ImageBuff =
@@ -140,14 +156,20 @@ public class Mouse {
     ImageBuff.createGraphics().drawImage(mouseImg[0], 0, 0, null);
     direction = 1;
     System.out.println(
-      "!!!!!moveForward positionX = " + posiX + " positionY = " + posiY
+      "!!!!!moveForward positionX = " +
+      posiX +
+      " positionY = " +
+      posiY +
+      " isWall = " +
+      isWall
     );
   }
 
   public void moveBackward() {
     int temp;
     temp = posiY + velocityY;
-    if (direction == 3 && !checkWall(posiX, posiY)) {
+    checkWall(posiX, posiY);
+    if (direction == 3 && !isWall) {
       posiY = temp;
     }
     ImageBuff =
@@ -159,7 +181,12 @@ public class Mouse {
     ImageBuff.createGraphics().drawImage(mouseImg[2], 0, 0, null);
     direction = 3;
     System.out.println(
-      "!!!!!moveForward positionX = " + posiX + " positionY = " + posiY
+      "!!!!!moveForward positionX = " +
+      posiX +
+      " positionY = " +
+      posiY +
+      " isWall = " +
+      isWall
     );
   }
 
@@ -182,8 +209,22 @@ public class Mouse {
     direction = dir;
   }
 
-  public boolean checkWall(int xP, int yP) {
-    //TODO:checkWall
-    return false;
+  public void checkWall(int xP, int yP) {
+    isWall = false;
+    switch (direction) {
+      case 1:
+        isWall = yP <= startPositionY;
+        break;
+      case 2:
+        isWall = xP <= startPositionX;
+        break;
+      case 3:
+        isWall = yP >= startPositionY + height;
+        break;
+      case 4:
+        isWall = xP >= startPositionX + width;
+        break;
+    }
+    System.out.println("isWall = " + isWall);
   }
 }

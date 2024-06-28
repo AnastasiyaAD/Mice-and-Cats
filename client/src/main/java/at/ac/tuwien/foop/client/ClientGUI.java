@@ -48,7 +48,7 @@ public class ClientGUI
   private GameBoardPanel boardPanel;
 
   private static int startPositionX = 67;
-  private static int startPositionY = 33;
+  private static int startPositionY = 38;
 
   private String host;
   private int port;
@@ -259,7 +259,7 @@ public class ClientGUI
           // TODO: handle exception
         }
 
-        System.out.println(jo);
+        // System.out.println(jo);
 
         if (mice != null) {
           if (numberPlayers < miceLength) { // registration of new players on the field
@@ -270,18 +270,12 @@ public class ClientGUI
               JSONArray position = new JSONArray(
                 mice.getJSONObject(index).getJSONArray("position").toString()
               );
-              System.out.println("position = " + position);
-
               int positionX = position.getInt(0) + startPositionX;
               int positionY = position.getInt(1) + startPositionY;
               if (name.equals(username)) {
                 clientMouse.setMouseID(id);
               }
               System.out.println("registration new mouse id = " + id);
-
-              System.out.println(
-                "positionX = " + positionX + " positionY = " + positionY
-              );
               boardPanel.registerNewMouse(
                 new Mouse(positionX, positionY, 1, id)
               );
