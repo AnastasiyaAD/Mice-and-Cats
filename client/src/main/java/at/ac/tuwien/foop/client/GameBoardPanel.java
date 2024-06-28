@@ -1,5 +1,6 @@
 package at.ac.tuwien.foop.client;
 
+import at.ac.tuwien.foop.client.backend.InputManager;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -8,8 +9,6 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
-
-import at.ac.tuwien.foop.client.backend.InputManager;
 
 public class GameBoardPanel extends JPanel {
 
@@ -73,13 +72,17 @@ public class GameBoardPanel extends JPanel {
       }
       y = mouse.getXposition();
       l = mouse.getYposition();
-      for (int i = 1; i < mice.size(); i++) {
-        if (mice.get(i) != null) g.drawImage(
-          mice.get(i).getBuffImage(),
-          mice.get(i).getXposition(),
-          mice.get(i).getYposition(),
-          this
-        );
+      for (int i = 0; i < mice.size(); i++) {
+        if (mice.get(i) != null) {
+          if (mouse.getMouseID() != mice.get(i).getMouseID()) {
+            g.drawImage(
+              mice.get(i).getBuffImage(),
+              mice.get(i).getXposition(),
+              mice.get(i).getYposition(),
+              this
+            );
+          }
+        }
       }
     }
     repaint();
