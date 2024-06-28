@@ -13,8 +13,9 @@ public class Mouse {
   private int mouseID;
   private int posiX = -1, posiY = -1;
   private int direction = 1;
-  private int width = 810, height = 812;
+  private int velocityX = 5, velocityY = 5;
   private Direction sDirection;
+  private boolean isWall = false;
 
   public int getDirection() {
     return direction;
@@ -34,10 +35,8 @@ public class Mouse {
 
   /** Creates a new instance of Mouse */
   public Mouse() {
-    while (posiX < 70 | posiY < 40 | posiY > height - 40 | posiX > width - 40) {
-      posiX = (int) (Math.random() * width);
-      posiY = (int) (Math.random() * height);
-    }
+    posiX = 67;
+    posiY = 37;
     loadImage(0);
   }
 
@@ -84,7 +83,16 @@ public class Mouse {
     posiY = y;
   }
 
+  public boolean getIsWall() {
+    return isWall;
+  }
+
   public void moveLeft() {
+    int temp;
+    temp = posiX - velocityY;
+    if (direction == 4 && !checkWall(posiX, posiY)) {
+      posiX = temp;
+    }
     ImageBuff =
       new BufferedImage(
         mouseImg[3].getWidth(null),
@@ -93,9 +101,17 @@ public class Mouse {
       );
     ImageBuff.createGraphics().drawImage(mouseImg[3], 0, 0, null);
     direction = 4;
+    System.out.println(
+      "!!!!!moveLeft positionX = " + posiX + " positionY = " + posiY
+    );
   }
 
   public void moveRight() {
+    int temp;
+    temp = posiX + velocityX;
+    if (direction == 2 && !checkWall(posiX, posiY)) {
+      posiX = temp;
+    }
     ImageBuff =
       new BufferedImage(
         mouseImg[1].getWidth(null),
@@ -104,9 +120,17 @@ public class Mouse {
       );
     ImageBuff.createGraphics().drawImage(mouseImg[1], 0, 0, null);
     direction = 2;
+    System.out.println(
+      "!!!!!moveRight positionX = " + posiX + " positionY = " + posiY
+    );
   }
 
   public void moveForward() {
+    int temp;
+    temp = posiY - velocityY;
+    if (direction == 1 && !checkWall(posiX, posiY)) {
+      posiY = temp;
+    }
     ImageBuff =
       new BufferedImage(
         mouseImg[0].getWidth(null),
@@ -115,9 +139,17 @@ public class Mouse {
       );
     ImageBuff.createGraphics().drawImage(mouseImg[0], 0, 0, null);
     direction = 1;
+    System.out.println(
+      "!!!!!moveForward positionX = " + posiX + " positionY = " + posiY
+    );
   }
 
   public void moveBackward() {
+    int temp;
+    temp = posiY + velocityY;
+    if (direction == 3 && !checkWall(posiX, posiY)) {
+      posiY = temp;
+    }
     ImageBuff =
       new BufferedImage(
         mouseImg[2].getWidth(null),
@@ -126,6 +158,9 @@ public class Mouse {
       );
     ImageBuff.createGraphics().drawImage(mouseImg[2], 0, 0, null);
     direction = 3;
+    System.out.println(
+      "!!!!!moveForward positionX = " + posiX + " positionY = " + posiY
+    );
   }
 
   public void setMouseID(int id) {
@@ -145,5 +180,10 @@ public class Mouse {
       );
     ImageBuff.createGraphics().drawImage(mouseImg[dir - 1], 0, 0, null);
     direction = dir;
+  }
+
+  public boolean checkWall(int xP, int yP) {
+    //TODO:checkWall
+    return false;
   }
 }

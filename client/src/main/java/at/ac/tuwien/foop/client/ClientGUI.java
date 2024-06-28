@@ -47,6 +47,9 @@ public class ClientGUI
   boolean allClientsReady = true;
   private GameBoardPanel boardPanel;
 
+  private static int startPositionX = 67;
+  private static int startPositionY = 33;
+
   private String host;
   private int port;
   private String username;
@@ -269,8 +272,8 @@ public class ClientGUI
               );
               System.out.println("position = " + position);
 
-              int positionX = position.getInt(0);
-              int positionY = position.getInt(1);
+              int positionX = position.getInt(0) + startPositionX;
+              int positionY = position.getInt(1) + startPositionY;
               if (name.equals(username)) {
                 clientMouse.setMouseID(id);
               }
@@ -288,28 +291,30 @@ public class ClientGUI
             System.out.println("update players on the field");
             for (int index = 0; index < miceLength; index++) {
               String name = mice.getJSONObject(index).getString("username");
-
-              int id = index;
-              JSONArray position = new JSONArray(
-                mice.getJSONObject(index).getJSONArray("position").toString()
-              );
-              int positionX = position.getInt(0);
-              int positionY = position.getInt(1);
-              System.out.println(
-                "Update Mouse ID = " +
-                id +
-                " positionX = " +
-                positionX +
-                " positionY = " +
-                positionY
-              );
-              try {
-                boardPanel.getMouse(id).setXpoistion(positionX);
-                boardPanel.getMouse(id).setYposition(positionY);
-              } catch (Exception e) {
-                System.out.println(
-                  "!!!!!!!!Exception in Update Mouse!!!!!!!!: " + e.getMessage()
+              if (!name.equals(username)) {
+                int id = index;
+                JSONArray position = new JSONArray(
+                  mice.getJSONObject(index).getJSONArray("position").toString()
                 );
+                int positionX = position.getInt(0) + startPositionX;
+                int positionY = position.getInt(1) + startPositionY;
+                System.out.println(
+                  "Update Mouse ID = " +
+                  id +
+                  " positionX = " +
+                  positionX +
+                  " positionY = " +
+                  positionY
+                );
+                try {
+                  boardPanel.getMouse(id).setXpoistion(positionX);
+                  boardPanel.getMouse(id).setYposition(positionY);
+                } catch (Exception e) {
+                  System.out.println(
+                    "!!!!!!!!Exception in Update Mouse!!!!!!!!: " +
+                    e.getMessage()
+                  );
+                }
               }
             }
             boardPanel.repaint();

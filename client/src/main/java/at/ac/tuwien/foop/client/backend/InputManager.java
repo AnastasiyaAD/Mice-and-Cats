@@ -25,36 +25,36 @@ public class InputManager implements KeyListener {
     int direction = mouse.getDirection();
     switch (e.getKeyCode()) {
       case LEFT:
-        if (direction == 1 | direction == 3 | direction == 2) {
-          mouse.moveLeft();
-        } else {
-          //TODO: check wall
+        mouse.moveLeft();
+
+        if (!mouse.getIsWall()) {
           client.sendDirection(mouse.getServerDirection());
         }
+
         break;
       case RIGHT:
-        if (direction == 1 | direction == 3 | direction == 4) {
-          mouse.moveRight();
-        } else {
+        mouse.moveRight();
+
+        if (!mouse.getIsWall()) {
           client.sendDirection(mouse.getServerDirection());
-          //TODO: check wall
         }
+
         break;
       case UP:
-        if (direction == 2 | direction == 4 | direction == 3) {
-          mouse.moveForward();
-        } else {
-          //TODO: check wall
+        mouse.moveForward();
+
+        if (!mouse.getIsWall()) {
           client.sendDirection(mouse.getServerDirection());
         }
+
         break;
       case DOWN:
-        if (direction == 2 | direction == 4 | direction == 1) {
-          mouse.moveBackward();
-        } else {
-          //TODO: check wall
+        mouse.moveBackward();
+
+        if (!mouse.getIsWall()) {
           client.sendDirection(mouse.getServerDirection());
         }
+
         break;
       default:
         break;
