@@ -47,8 +47,8 @@ public class ClientGUI
   boolean allClientsReady = true;
   private GameBoardPanel boardPanel;
 
-  private static int startPositionX = 67;
-  private static int startPositionY = 38;
+  private static int startPositionX = 60;
+  private static int startPositionY = 33;
 
   private String host;
   private int port;
@@ -66,13 +66,13 @@ public class ClientGUI
     registerPanel = new JPanel();
     registerPanel.setBackground(Color.YELLOW);
     registerPanel.setSize(400, 200);
-    registerPanel.setBounds(880, 40, 400, 200);
+    registerPanel.setBounds(850, 35, 400, 200);
     registerPanel.setLayout(null);
 
     gameStatusPanel = new JPanel();
     gameStatusPanel.setBackground(Color.YELLOW);
     gameStatusPanel.setSize(400, 300);
-    gameStatusPanel.setBounds(880, 280, 400, 573);
+    gameStatusPanel.setBounds(850, 260, 400, 573);
     gameStatusPanel.setLayout(null);
 
     ipaddressLabel = new JLabel("IP address: ");

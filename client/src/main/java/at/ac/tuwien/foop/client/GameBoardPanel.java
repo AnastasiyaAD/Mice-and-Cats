@@ -14,8 +14,8 @@ public class GameBoardPanel extends JPanel {
 
   /** Creates a new instance of GameBoardPanel */
   private Mouse mouse;
-  private int width = 810;
-  private int height = 861;
+  private int width = 800;
+  private int height = 850;
   private static ArrayList<Mouse> mice;
   private boolean gameStatus;
   int z = 0;
@@ -45,14 +45,14 @@ public class GameBoardPanel extends JPanel {
     g.fillRect(0, 0, getWidth(), getHeight());
 
     g.drawImage(
-      new ImageIcon("public/playing_field/Background_without.png").getImage(),
+      new ImageIcon("public/playing_field/grass.png").getImage(),
       60,
       33,
       null
     );
     g.setColor(Color.YELLOW);
     g.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
-    g.drawString("Mice and Cats in a Network Game", 300, 30);
+    g.drawString("Mice and Cats in a Network Game", 300, 25);
 
     if (gameStatus) {
       g.drawImage(

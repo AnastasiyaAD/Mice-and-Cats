@@ -13,10 +13,11 @@ public class Mouse {
   private int posiX = -1, posiY = -1;
   private int direction = 1;
   private int velocityX = 5, velocityY = 5;
-  private int width = 725;
-  private int height = 773;
-  private static int startPositionX = 67;
-  private static int startPositionY = 38;
+  private int width = 750;
+  private int height = 800;
+  private int sizeMouse = 40;
+  private static int startPositionX = 60;
+  private static int startPositionY = 33;
   private Direction sDirection;
   private boolean isWall;
 
@@ -213,16 +214,16 @@ public class Mouse {
     isWall = false;
     switch (direction) {
       case 1:
-        isWall = yP <= startPositionY;
+        isWall = yP - velocityY < startPositionY;
         break;
       case 2:
-        isWall = xP <= startPositionX;
+        isWall = xP - velocityX < startPositionX;
         break;
       case 3:
-        isWall = yP >= startPositionY + height;
+        isWall = yP + velocityY > startPositionY + height - sizeMouse;
         break;
       case 4:
-        isWall = xP >= startPositionX + width;
+        isWall = xP + velocityX > startPositionX + width - sizeMouse;
         break;
     }
     System.out.println("isWall = " + isWall);
