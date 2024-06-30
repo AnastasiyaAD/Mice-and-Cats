@@ -55,6 +55,42 @@ public class GameBoardPanel extends JPanel {
     g.drawString("Mice and Cats in a Network Game", 300, 25);
 
     if (gameStatus) {
+      if (mouse.getIsUnderground()) {
+        g.drawImage(
+          new ImageIcon(
+            "public/playing_field/tunnel_" + mouse.getTunnel() + ".png"
+          )
+            .getImage(),
+          60,
+          33,
+          null
+        );
+        for (int i = 0; i < mice.size(); i++) {
+          if (mice.get(i) != null) {
+            if (mouse.getMouseID() != mice.get(i).getMouseID()) {
+              g.drawImage(
+                null,
+                mice.get(i).getXposition(),
+                mice.get(i).getYposition(),
+                this
+              );
+            }
+          }
+        }
+      } else {
+        for (int i = 0; i < mice.size(); i++) {
+          if (mice.get(i) != null) {
+            if (mouse.getMouseID() != mice.get(i).getMouseID()) {
+              g.drawImage(
+                mice.get(i).getBuffImage(),
+                mice.get(i).getXposition(),
+                mice.get(i).getYposition(),
+                this
+              );
+            }
+          }
+        }
+      }
       g.drawImage(
         mouse.getBuffImage(),
         mouse.getXposition(),
@@ -72,18 +108,6 @@ public class GameBoardPanel extends JPanel {
       }
       y = mouse.getXposition();
       l = mouse.getYposition();
-      for (int i = 0; i < mice.size(); i++) {
-        if (mice.get(i) != null) {
-          if (mouse.getMouseID() != mice.get(i).getMouseID()) {
-            g.drawImage(
-              mice.get(i).getBuffImage(),
-              mice.get(i).getXposition(),
-              mice.get(i).getYposition(),
-              this
-            );
-          }
-        }
-      }
     }
     repaint();
   }

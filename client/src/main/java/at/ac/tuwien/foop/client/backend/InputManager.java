@@ -10,6 +10,7 @@ public class InputManager implements KeyListener {
   private final int RIGHT = 39;
   private final int UP = 38;
   private final int DOWN = 40;
+  private final int SPACE = 32;
   private Client client;
   private Mouse mouse;
 
@@ -47,6 +48,10 @@ public class InputManager implements KeyListener {
           client.sendDirection(mouse.getServerDirection());
         }
         break;
+      case SPACE:
+        {
+          mouse.exit();
+        }
       default:
         break;
     }

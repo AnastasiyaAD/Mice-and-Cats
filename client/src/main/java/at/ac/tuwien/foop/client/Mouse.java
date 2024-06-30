@@ -20,6 +20,9 @@ public class Mouse {
   private static int startPositionY = 33;
   private Direction sDirection;
   private boolean isWall;
+  private boolean isUnderground;
+  private boolean isEntrance;
+  private int tunnel;
 
   public int getDirection() {
     return direction;
@@ -77,6 +80,18 @@ public class Mouse {
 
   public int getYposition() {
     return posiY;
+  }
+
+  public boolean getIsUnderground() {
+    return isUnderground;
+  }
+
+  public int getTunnel() {
+    return tunnel;
+  }
+
+  public boolean getIsEntrance() {
+    return isEntrance;
   }
 
   public void setXpoistion(int x) {
@@ -191,6 +206,18 @@ public class Mouse {
     );
   }
 
+  public void exit() {
+    boolean before = isUnderground;
+    checkTunnelEntrance(posiX, posiY);
+    if (isEntrance) {
+      if (before) {
+        isEntrance = false;
+        isUnderground = false;
+        tunnel = 0;
+      }
+    }
+  }
+
   public void setMouseID(int id) {
     mouseID = id;
   }
@@ -210,22 +237,173 @@ public class Mouse {
     direction = dir;
   }
 
-  public void checkWall(int xP, int yP) {
+  public void checkWall(int x, int y) {
     isWall = false;
     switch (direction) {
       case 1:
-        isWall = yP - velocityY < startPositionY;
+        isWall = y - velocityY < startPositionY;
         break;
       case 2:
-        isWall = xP - velocityX < startPositionX;
+        isWall = x - velocityX < startPositionX;
         break;
       case 3:
-        isWall = yP + velocityY > startPositionY + height - sizeMouse;
+        isWall = y + velocityY > startPositionY + height - sizeMouse;
         break;
       case 4:
-        isWall = xP + velocityX > startPositionX + width - sizeMouse;
+        isWall = x + velocityX > startPositionX + width - sizeMouse;
         break;
     }
     System.out.println("isWall = " + isWall);
+  }
+
+  public void checkTunnelEntrance(int x, int y) {
+    isUnderground = false;
+    tunnel = 0;
+    isEntrance = false;
+    //tunnel 1 [2;14]
+    if (
+      x >= 50 + startPositionX &&
+      x <= 100 + startPositionX &&
+      y >= 650 + startPositionY &&
+      y <= 700 + startPositionY
+    ) {
+      isUnderground = true;
+      tunnel = 1;
+      isEntrance = true;
+    }
+    //tunnel 1 [3;11]
+    if (
+      x >= 100 + startPositionX &&
+      x <= 150 + startPositionX &&
+      y >= 500 + startPositionY &&
+      y <= 550 + startPositionY
+    ) {
+      isUnderground = true;
+      tunnel = 1;
+      isEntrance = true;
+    }
+    //tunnel 1 [6;12]
+    if (
+      x >= 250 + startPositionX &&
+      x <= 300 + startPositionX &&
+      y >= 550 + startPositionY &&
+      y <= 600 + startPositionY
+    ) {
+      isUnderground = true;
+      tunnel = 1;
+      isEntrance = true;
+    }
+
+    //tunnel 2 [6;12]
+    if (
+      x >= 250 + startPositionX &&
+      x <= 300 + startPositionX &&
+      y >= 300 + startPositionY &&
+      y <= 350 + startPositionY
+    ) {
+      isUnderground = true;
+      tunnel = 2;
+      isEntrance = true;
+    }
+
+    //tunnel 2 [9;10]
+    if (
+      x >= 400 + startPositionX &&
+      x <= 450 + startPositionX &&
+      y >= 450 + startPositionY &&
+      y <= 500 + startPositionY
+    ) {
+      isUnderground = true;
+      tunnel = 2;
+      isEntrance = true;
+    }
+
+    //tunnel 2 [11;8]
+    if (
+      x >= 500 + startPositionX &&
+      x <= 550 + startPositionX &&
+      y >= 350 + startPositionY &&
+      y <= 400 + startPositionY
+    ) {
+      isUnderground = true;
+      tunnel = 2;
+      isEntrance = true;
+    }
+
+    //tunnel 3 [7;3]
+    if (
+      x >= 300 + startPositionX &&
+      x <= 350 + startPositionX &&
+      y >= 100 + startPositionY &&
+      y <= 150 + startPositionY
+    ) {
+      isUnderground = true;
+      tunnel = 3;
+      isEntrance = true;
+    }
+
+    //tunnel 3 [9;6]
+    if (
+      x >= 400 + startPositionX &&
+      x <= 450 + startPositionX &&
+      y >= 200 + startPositionY &&
+      y <= 250 + startPositionY
+    ) {
+      isUnderground = true;
+      tunnel = 3;
+      isEntrance = true;
+    }
+
+    //tunnel 4 [11;2]
+    if (
+      x >= 500 + startPositionX &&
+      x <= 550 + startPositionX &&
+      y >= 50 + startPositionY &&
+      y <= 100 + startPositionY
+    ) {
+      isUnderground = true;
+      tunnel = 4;
+      isEntrance = true;
+    }
+
+    //tunnel 4 [14;4]
+    if (
+      x >= 650 + startPositionX &&
+      x <= 700 + startPositionX &&
+      y >= 150 + startPositionY &&
+      y <= 200 + startPositionY
+    ) {
+      isUnderground = true;
+      tunnel = 4;
+      isEntrance = true;
+    }
+
+    //tunnel 5 [8;16]
+    if (
+      x >= 350 + startPositionX &&
+      x <= 400 + startPositionX &&
+      y >= 750 + startPositionY &&
+      y <= 800 + startPositionY
+    ) {
+      isUnderground = true;
+      tunnel = 5;
+      isEntrance = true;
+    }
+
+    //tunnel 5 [13;14]
+    if (
+      x >= 600 + startPositionX &&
+      x <= 650 + startPositionX &&
+      y >= 650 + startPositionY &&
+      y <= 700 + startPositionY
+    ) {
+      isUnderground = true;
+      tunnel = 5;
+      isEntrance = true;
+    }
+  }
+
+  public void checkTunnelBorders(int x, int y) {
+    //TODO: checkTunnelBorders
   }
 }
