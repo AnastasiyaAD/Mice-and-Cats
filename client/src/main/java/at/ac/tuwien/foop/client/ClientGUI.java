@@ -1,24 +1,16 @@
 package at.ac.tuwien.foop.client;
 
 import at.ac.tuwien.foop.client.backend.Client;
-import at.ac.tuwien.foop.client.backend.GameStateListener;
-import java.awt.Color;
+import at.ac.tuwien.foop.client.backend.InputManager;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.DataInputStream;
 import java.io.IOException;
-import java.net.Socket;
 import java.net.UnknownHostException;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 public class ClientGUI
   extends JFrame
@@ -110,9 +102,13 @@ public class ClientGUI
     registerPanel.add(registerButton);
     registerPanel.add(readyButton);
 
-    client = Client.getGameClient();
-    clientMouse = new Mouse();
-    boardPanel = new GameBoardPanel(clientMouse, false);
+    boardPanel = new GameBoardPanel();
+
+    // FIXME: this could be cleaned up
+    client = new Client(boardPanel);
+    var inputManager = new InputManager(client);
+    boardPanel.addKeyListener(inputManager);
+
 
     getContentPane().add(registerPanel);
     getContentPane().add(gameStatusPanel);
@@ -138,7 +134,7 @@ public class ClientGUI
         registerButton.setFocusable(false);
         readyButton.setFocusable(true);
         readyButton.setEnabled(true);
-        client.register(clientMouse, username, boardPanel);
+        client.register(username);
         try {
           Thread.sleep(500);
         } catch (InterruptedException ex) {
@@ -168,7 +164,7 @@ public class ClientGUI
         } catch (InterruptedException ex) {
           ex.printStackTrace();
         }
-      } catch (IOException ex) {
+      } catch (RuntimeException ex) {
         JOptionPane.showMessageDialog(
           this,
           "The Server is not handshaking, try again later!",
@@ -181,7 +177,6 @@ public class ClientGUI
       try {
         Thread.sleep(2000);
         if (allClientsReady) {
-          boardPanel.setGameStatus(true);
           boardPanel.repaint();
           boardPanel.setFocusable(true);
         } else {

@@ -1,6 +1,8 @@
 package at.ac.tuwien.foop.client.backend;
 
 import at.ac.tuwien.foop.client.Mouse;
+import at.ac.tuwien.foop.network.dto.Direction;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -15,9 +17,8 @@ public class InputManager implements KeyListener {
   private Mouse mouse;
 
   /** Creates a new instance of InputManager */
-  public InputManager(Mouse mouse) {
-    this.client = Client.getGameClient();
-    this.mouse = mouse;
+  public InputManager(Client client) {
+    this.client = client;
   }
 
   public void keyTyped(KeyEvent e) {}
@@ -25,28 +26,16 @@ public class InputManager implements KeyListener {
   public void keyPressed(KeyEvent e) {
     switch (e.getKeyCode()) {
       case LEFT:
-        mouse.moveLeft();
-        if (!mouse.getIsWall()) {
-          client.sendDirection(mouse.getServerDirection());
-        }
+        client.sendDirection(Direction.WEST);
         break;
       case RIGHT:
-        mouse.moveRight();
-        if (!mouse.getIsWall()) {
-          client.sendDirection(mouse.getServerDirection());
-        }
+        client.sendDirection(Direction.EAST);
         break;
       case UP:
-        mouse.moveForward();
-        if (!mouse.getIsWall()) {
-          client.sendDirection(mouse.getServerDirection());
-        }
+        client.sendDirection(Direction.NORTH);
         break;
       case DOWN:
-        mouse.moveBackward();
-        if (!mouse.getIsWall()) {
-          client.sendDirection(mouse.getServerDirection());
-        }
+        client.sendDirection(Direction.SOUTH);
         break;
       case SPACE:
         {

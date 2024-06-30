@@ -218,14 +218,6 @@ public class Mouse {
     }
   }
 
-  public void setMouseID(int id) {
-    mouseID = id;
-  }
-
-  public int getMouseID() {
-    return mouseID;
-  }
-
   public void setDirection(int dir) {
     ImageBuff =
       new BufferedImage(
