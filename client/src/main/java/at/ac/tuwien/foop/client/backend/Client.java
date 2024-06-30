@@ -1,6 +1,7 @@
 package at.ac.tuwien.foop.client.backend;
 
 import at.ac.tuwien.foop.client.GameBoardPanel;
+import at.ac.tuwien.foop.client.Mouse;
 import at.ac.tuwien.foop.network.dto.ActionRequestDto;
 import at.ac.tuwien.foop.network.dto.Direction;
 import at.ac.tuwien.foop.network.dto.GameStateDto;
@@ -8,6 +9,7 @@ import at.ac.tuwien.foop.network.dto.HandshakeRequestDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -18,24 +20,19 @@ public class Client implements IClient, AutoCloseable {
 
   private Socket socket;
   private PrintWriter out;
-  private BufferedReader in;
   private Thread listenerThread;
   private GameStateListener gameStateListener;
   private static Client client;
+  private DataInputStream in;
   private static final ObjectMapper objectMapper = new ObjectMapper();
 
   @Override
   public void connect(String host, int port) throws IOException {
     socket = new Socket(host, port);
     socket.getOutputStream();
+    socket.getInputStream();
     out = new PrintWriter(socket.getOutputStream(), true);
-    in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-    gameStateListener = new GameStateListener(in, this);
-    listenerThread = new Thread(gameStateListener);
-    // TODO: Check when we want to start listening
-    listenerThread.start();
-    // Handshake first then we can listen to message
-
+    in = new DataInputStream(socket.getInputStream());
   }
 
   public static Client getGameClient() {
@@ -43,7 +40,12 @@ public class Client implements IClient, AutoCloseable {
     return client;
   }
 
-  public void register(String username) {
+  public void register(
+    Mouse clientMouse,
+    String username,
+    GameBoardPanel boardPanel
+  ) {
+    new GameStateListener(clientMouse, username, boardPanel, in).start();
     var handshakeRequest = HandshakeRequestDto.registerHandshakeRequest(
       username
     );
@@ -107,7 +109,6 @@ public class Client implements IClient, AutoCloseable {
     if (listenerThread != null) {
       listenerThread.join();
     }
-    in.close();
     out.close();
     socket.close();
   }

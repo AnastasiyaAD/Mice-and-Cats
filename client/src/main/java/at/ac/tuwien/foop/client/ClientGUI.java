@@ -1,6 +1,7 @@
 package at.ac.tuwien.foop.client;
 
 import at.ac.tuwien.foop.client.backend.Client;
+import at.ac.tuwien.foop.client.backend.GameStateListener;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,15 +41,10 @@ public class ClientGUI
   public static JPanel gameStatusPanel;
   private Client client;
   private Mouse clientMouse;
-  private int numberPlayers = 0;
 
   int width = 1400, height = 910;
-  boolean isRunning = true;
   boolean allClientsReady = true;
   private GameBoardPanel boardPanel;
-
-  private static int startPositionX = 60;
-  private static int startPositionY = 33;
 
   private String host;
   private int port;
@@ -139,11 +135,10 @@ public class ClientGUI
         } catch (InterruptedException ex) {
           ex.printStackTrace();
         }
-        new ClientReceivingThread(client.getSocket()).start(); //start Listening
         registerButton.setFocusable(false);
         readyButton.setFocusable(true);
         readyButton.setEnabled(true);
-        client.register(username);
+        client.register(clientMouse, username, boardPanel);
         try {
           Thread.sleep(500);
         } catch (InterruptedException ex) {
@@ -225,101 +220,4 @@ public class ClientGUI
   public void windowActivated(WindowEvent e) {}
 
   public void windowDeactivated(WindowEvent e) {}
-
-  public class ClientReceivingThread extends Thread {
-
-    Socket clientSocket;
-    DataInputStream reader;
-
-    public ClientReceivingThread(Socket clientSocket) {
-      this.clientSocket = clientSocket;
-      try {
-        reader = new DataInputStream(clientSocket.getInputStream());
-      } catch (IOException ex) {
-        ex.printStackTrace();
-      }
-    }
-
-    public void run() {
-      while (isRunning) {
-        String sentence = "no";
-        JSONObject jo = null;
-        JSONArray mice = null;
-        int miceLength = 0;
-        try {
-          sentence = reader.readUTF();
-        } catch (IOException ex) {
-          ex.printStackTrace();
-        }
-        try {
-          jo = new JSONObject(sentence.toString());
-          mice = jo.getJSONArray("mice");
-          miceLength = mice.length();
-        } catch (org.json.JSONException e) {
-          // TODO: handle exception
-        }
-
-        // System.out.println(jo);
-
-        if (mice != null) {
-          if (numberPlayers < miceLength) { // registration of new players on the field
-            System.out.println("registration of new players on the field");
-            for (int index = 0; index < miceLength; index++) {
-              int id = index;
-              String name = mice.getJSONObject(index).getString("username");
-              JSONArray position = new JSONArray(
-                mice.getJSONObject(index).getJSONArray("position").toString()
-              );
-              int positionX = position.getInt(0) + startPositionX;
-              int positionY = position.getInt(1) + startPositionY;
-              if (name.equals(username)) {
-                clientMouse.setMouseID(id);
-              }
-              System.out.println("registration new mouse id = " + id);
-              boardPanel.registerNewMouse(
-                new Mouse(positionX, positionY, 1, id)
-              );
-            }
-            numberPlayers = miceLength;
-          } else {
-            System.out.println("update players on the field");
-            for (int index = 0; index < miceLength; index++) {
-              String name = mice.getJSONObject(index).getString("username");
-              if (!name.equals(username)) {
-                int id = index;
-                JSONArray position = new JSONArray(
-                  mice.getJSONObject(index).getJSONArray("position").toString()
-                );
-                int positionX = position.getInt(0) + startPositionX;
-                int positionY = position.getInt(1) + startPositionY;
-                System.out.println(
-                  "Update Mouse ID = " +
-                  id +
-                  " positionX = " +
-                  positionX +
-                  " positionY = " +
-                  positionY
-                );
-                try {
-                  boardPanel.getMouse(id).setXpoistion(positionX);
-                  boardPanel.getMouse(id).setYposition(positionY);
-                } catch (Exception e) {
-                  System.out.println(
-                    "!!!!!!!!Exception in Update Mouse!!!!!!!!: " +
-                    e.getMessage()
-                  );
-                }
-              }
-            }
-            boardPanel.repaint();
-          }
-        }
-      }
-      try {
-        client.close();
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-  }
 }
