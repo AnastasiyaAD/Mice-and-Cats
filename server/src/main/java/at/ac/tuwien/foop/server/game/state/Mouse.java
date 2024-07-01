@@ -8,9 +8,12 @@ import lombok.EqualsAndHashCode;
 public class Mouse {
     private final String username;
     private double[] pos = new double[]{0,0};
+    private int currentLevel;
+    private Integer tunnelVote;
 
     public Mouse(String username) {
         this.username = username;
+        this.currentLevel = 0;
     }
 
     public void move(double x, double y) {
