@@ -38,9 +38,7 @@ public class InputManager implements KeyListener {
         client.sendDirection(Direction.SOUTH);
         break;
       case SPACE:
-        {
-          mouse.exit();
-        }
+        //TODO: client sendDirection Tunnel
       default:
         break;
     }
