@@ -2,8 +2,6 @@ package at.ac.tuwien.foop.client;
 
 import at.ac.tuwien.foop.client.backend.Client;
 import at.ac.tuwien.foop.client.backend.InputManager;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,6 +9,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import javax.swing.*;
 
 public class ClientGUI
   extends JFrame
@@ -102,13 +101,12 @@ public class ClientGUI
     registerPanel.add(registerButton);
     registerPanel.add(readyButton);
 
-    boardPanel = new GameBoardPanel();
+    boardPanel = new GameBoardPanel(60, 33, 750, 800);
 
     // FIXME: this could be cleaned up
     client = new Client(boardPanel);
     var inputManager = new InputManager(client);
     boardPanel.addKeyListener(inputManager);
-
 
     getContentPane().add(registerPanel);
     getContentPane().add(gameStatusPanel);
