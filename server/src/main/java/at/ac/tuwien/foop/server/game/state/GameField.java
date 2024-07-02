@@ -18,18 +18,22 @@ import static at.ac.tuwien.foop.server.game.state.NodeType.*;
  */
 @Getter
 public class GameField {
-    private final int[] bounds = new int[]{1500, 1500};
+    private final int[] bounds = new int[]{14, 15};
     private final List<Tunnel> tunnels = new ArrayList<>();
 
     public GameField() {
-        // Tunnel 2
+        // Tunnel 1
         var tunnel2Nodes = new LinkedList<TunnelNode>();
-        tunnel2Nodes.addFirst(new TunnelNode(new int[]{5,0}, DOOR));
-        tunnel2Nodes.add(new TunnelNode(new int[]{6,0}, TILE));
-        tunnel2Nodes.add(new TunnelNode(new int[]{7,0}, DOOR));
-        var tunnel2 = new Tunnel(tunnel2Nodes);
+        tunnel2Nodes.add(new TunnelNode(new int[]{7,1}, TILE));
+        tunnel2Nodes.add(new TunnelNode(new int[]{8,1}, TILE));
+        tunnel2Nodes.add(new TunnelNode(new int[]{6,2}, DOOR));
+        tunnel2Nodes.add(new TunnelNode(new int[]{7,2}, TILE));
+        tunnel2Nodes.add(new TunnelNode(new int[]{8,2}, TILE));
+        tunnel2Nodes.add(new TunnelNode(new int[]{8,3}, TILE));
+        tunnel2Nodes.add(new TunnelNode(new int[]{8,4}, DOOR));
+        var tunnel1 = new Tunnel(1, tunnel2Nodes);
         // ----
 
-        tunnels.add(tunnel2);
+        tunnels.add(tunnel1);
     }
 }

@@ -100,8 +100,16 @@ public class GameManager {
 
     private void processActionHelper(ActionRequestDto actionRequestDto) {
         var mouse = gameState.getMouse(actionRequestDto.getClientId());
-        var direction = actionRequestDto.getDirection();
-        var speedPerTick = configuration.mouseSpeed() / configuration.tickRate();
-        mouse.move(direction.getDirX() * speedPerTick, direction.getDirY() * speedPerTick);
+        switch (actionRequestDto.getType()) {
+            case DIRECTION -> {
+                var direction = actionRequestDto.getDirection();
+                var speedPerTick = configuration.mouseSpeed() / configuration.tickRate();
+                mouse.move(direction.getDirX() * speedPerTick, direction.getDirY() * speedPerTick);
+            }
+            case TUNNEL_VOTE -> mouse.setTunnelVote(actionRequestDto.getTunnelVote());
+            case LEVEL_CHANGE -> {
+
+            }
+        }
     }
 }

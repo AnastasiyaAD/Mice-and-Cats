@@ -8,5 +8,6 @@ import java.util.LinkedList;
 @Data
 @AllArgsConstructor
 public class Tunnel {
+    private final int level;
     private final LinkedList<TunnelNode> tunnelNodeList;
 }
