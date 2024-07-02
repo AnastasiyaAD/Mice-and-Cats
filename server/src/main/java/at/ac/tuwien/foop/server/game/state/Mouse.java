@@ -20,4 +20,9 @@ public class Mouse {
         this.pos[0] += x;
         this.pos[1] += y;
     }
+
+    public void setPosition(double x, double y) {
+        this.pos[0] = x;
+        this.pos[1] = y;
+    }
 }

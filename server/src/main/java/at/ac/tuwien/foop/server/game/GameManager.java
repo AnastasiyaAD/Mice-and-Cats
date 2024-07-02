@@ -9,6 +9,7 @@ import at.ac.tuwien.foop.server.network.ClientManager;
 import at.ac.tuwien.foop.server.network.UpdateBroadcaster;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class GameManager {
@@ -63,7 +64,8 @@ public class GameManager {
     }
 
     private void checkBounds() {
-        gameState.getMice().values().forEach(m -> {
+        Collection<Mouse> mice = gameState.getMice().values();
+        mice.stream().filter(m -> m.getCurrentLevel() == 0).forEach(m -> {
             var pos = m.getPos();
             var x = pos[0];
             var y = pos[1];
@@ -73,6 +75,10 @@ public class GameManager {
             if (x > boundsX || y > boundsY) {
                 m.setPos(new double[]{Math.max(0, Math.min(x, boundsX)), Math.max(0, Math.min(y, boundsY))});
             }
+        });
+        mice.stream().filter(m -> m.getCurrentLevel() != 0).forEach(m -> {
+            var currentTunnel = gameState.getGameField().getTunnels().get(m.getCurrentLevel());
+            currentTunnel.isPosWithinTunnel(m.getPos()[0], m.getPos()[1]);
         });
     }
 
@@ -100,27 +106,37 @@ public class GameManager {
 
     private void processActionHelper(ActionRequestDto actionRequestDto) {
         var mouse = gameState.getMouse(actionRequestDto.getClientId());
+        double[] mousePos = mouse.getPos();
         switch (actionRequestDto.getType()) {
             case DIRECTION -> {
                 var direction = actionRequestDto.getDirection();
                 var speedPerTick = configuration.mouseSpeed() / configuration.tickRate();
-                mouse.move(direction.getDirX() * speedPerTick, direction.getDirY() * speedPerTick);
+                double xChange = direction.getDirX() * speedPerTick;
+                double yChange = direction.getDirY() * speedPerTick;
+                if (mouse.getCurrentLevel() == 0) {
+                    mouse.move(xChange, yChange);
+                } else {
+                    var currentTunnel = gameState.getGameField().getTunnels().get(mouse.getCurrentLevel());
+                    var nextX = mousePos[0] + xChange;
+                    var nextY = mousePos[1] + yChange;
+                    if (currentTunnel.isPosWithinTunnel(nextX, nextY)) {
+                        mouse.move(xChange, yChange);
+                    }
+                }
             }
             case TUNNEL_VOTE -> mouse.setTunnelVote(actionRequestDto.getTunnelVote());
             case LEVEL_CHANGE -> {
                 var toLevel = actionRequestDto.getLevelChangeRequest().toLevel();
                 var currentLevel = mouse.getCurrentLevel();
-                if (toLevel != currentLevel) {
-                    if (currentLevel != 0 && toLevel == 0) {
-                        var currentTunnel = gameState.getGameField().getTunnels().get(currentLevel);
-                        if (currentTunnel.isPosWithinDoor(mouse.getPos()[0], mouse.getPos()[1])) {
-                            mouse.setCurrentLevel(0);
-                        }
-                    } else if (currentLevel == 0) {
-                        var targetTunnel = gameState.getGameField().getTunnels().get(toLevel);
-                        if (targetTunnel.isPosWithinDoor(mouse.getPos()[0], mouse.getPos()[1])) {
-                            mouse.setCurrentLevel(toLevel);
-                        }
+                if (currentLevel != 0 && toLevel == 0) {
+                    var currentTunnel = gameState.getGameField().getTunnels().get(currentLevel);
+                    if (currentTunnel.isPosWithinDoor(mousePos[0], mousePos[1])) {
+                        mouse.setCurrentLevel(0);
+                    }
+                } else if (currentLevel == 0 && toLevel != 0) {
+                    var targetTunnel = gameState.getGameField().getTunnels().get(toLevel);
+                    if (targetTunnel.isPosWithinDoor(mousePos[0], mousePos[1])) {
+                        mouse.setCurrentLevel(toLevel);
                     }
                 }
             }
