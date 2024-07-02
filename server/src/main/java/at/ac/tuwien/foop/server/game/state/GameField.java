@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import static at.ac.tuwien.foop.server.game.state.TunnelNode.NodeType.*;
+import static at.ac.tuwien.foop.server.game.state.NodeType.*;
 
 /**
  * (x, y)<br>

@@ -1,10 +1,13 @@
 package at.ac.tuwien.foop.server.game.state;
 
 import lombok.Data;
+import lombok.Setter;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,6 +18,8 @@ public class GameState {
 
     private final GameField gameField = new GameField();
     private final Map<UUID, Mouse> mice = new ConcurrentHashMap<>();
+    @Setter
+    private List<Cat> cats = new ArrayList<>();
     private LocalDateTime gameStart;
     private Duration gameDuration = Duration.of(3, ChronoUnit.MINUTES);
     private GameStatus gameStatus = GameStatus.INIT;

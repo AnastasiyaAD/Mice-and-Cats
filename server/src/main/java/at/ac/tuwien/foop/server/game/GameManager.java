@@ -1,6 +1,7 @@
 package at.ac.tuwien.foop.server.game;
 
 import at.ac.tuwien.foop.network.dto.ActionRequestDto;
+import at.ac.tuwien.foop.server.game.cats.CatManager;
 import at.ac.tuwien.foop.server.game.state.GameState;
 import at.ac.tuwien.foop.server.game.state.GameStatus;
 import at.ac.tuwien.foop.server.game.state.Mouse;
@@ -16,9 +17,11 @@ public class GameManager {
     private final UpdateBroadcaster updateBroadcaster = new UpdateBroadcaster();
     private final ConcurrentLinkedQueue<ActionRequestDto> actionQueue = new ConcurrentLinkedQueue<>();
     private final Configuration configuration;
+    private final CatManager catManager;
 
     public GameManager(Configuration configuration) {
         this.configuration = configuration;
+        this.catManager = new CatManager();
     }
 
     public synchronized void queueAction(ActionRequestDto actionRequestDto) {
@@ -35,11 +38,14 @@ public class GameManager {
     public void updateGame() {
         if (gameState.getGameStart() != null || allClientsReady()) {
             if (gameState.getGameStart() == null) {
+                catManager.spawnCats(gameState);
                 gameState.setGameStart(LocalDateTime.now());
                 gameState.setGameStatus(GameStatus.RUNNING);
             }
             timeCheck();
+            // FIXME: Not completely sure where we should simulate the cats
             processActions();
+            catManager.updateCats(gameState);
             checkState();
             updateBroadcaster.broadcast(gameState);
         }

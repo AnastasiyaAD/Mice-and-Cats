@@ -1,9 +1,13 @@
 package at.ac.tuwien.foop.client;
 
+import at.ac.tuwien.foop.network.dto.CatDto;
 import at.ac.tuwien.foop.network.dto.GameStateDto;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import javax.swing.*;
 import lombok.Setter;
 
@@ -25,6 +29,7 @@ public class GameBoardPanel extends JPanel {
 
   // FIXME: Why is this static?
   private HashMap<String, Mouse> mice;
+  private List<Cat> cats = new ArrayList<>();
 
   @Setter
   private String username;
@@ -45,7 +50,22 @@ public class GameBoardPanel extends JPanel {
       clientMouse.setYposition((int) mouse.position()[1]);
       clientMouse.setDirection(1);
     }
+    setCatPosition(gameState);
     this.repaint();
+  }
+
+  private void setCatPosition(GameStateDto gameState) {
+    if (this.cats.isEmpty()) {
+      this.cats = gameState.cats().stream().map(c -> new Cat(((int) c.position()[0]) * 50,
+              ((int) c.position()[0]) * 50)).toList();
+    } else {
+      for (int i = 0; i < this.cats.size(); i++) {
+        var cat = this.cats.get(i);
+        var serverCatPosition = gameState.cats().get(i).position();
+        cat.setXPosition(((int) serverCatPosition[0]) * 50);
+        cat.setYPosition(((int) serverCatPosition[1]) * 50);
+      }
+    }
   }
 
   private void drawUnderground(Graphics2D g, int tunnel) {
@@ -85,6 +105,14 @@ public class GameBoardPanel extends JPanel {
         mouse.getXposition(),
         mouse.getYposition(),
         this
+      );
+    }
+    for (var cat : cats) {
+      g.drawImage(
+              cat.getImageBuff(),
+              cat.getXPosition(),
+              cat.getYPosition(),
+              this
       );
     }
 
