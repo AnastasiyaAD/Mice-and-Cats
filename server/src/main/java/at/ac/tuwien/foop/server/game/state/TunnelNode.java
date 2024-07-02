@@ -2,4 +2,7 @@ package at.ac.tuwien.foop.server.game.state;
 
 public record TunnelNode(int[] position, NodeType type) {
 
+    boolean isDoorNode() {
+        return type == NodeType.DOOR;
+    }
 }

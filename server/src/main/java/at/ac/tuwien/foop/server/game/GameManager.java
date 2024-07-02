@@ -108,7 +108,21 @@ public class GameManager {
             }
             case TUNNEL_VOTE -> mouse.setTunnelVote(actionRequestDto.getTunnelVote());
             case LEVEL_CHANGE -> {
-
+                var toLevel = actionRequestDto.getLevelChangeRequest().toLevel();
+                var currentLevel = mouse.getCurrentLevel();
+                if (toLevel != currentLevel) {
+                    if (currentLevel != 0 && toLevel == 0) {
+                        var currentTunnel = gameState.getGameField().getTunnels().get(currentLevel);
+                        if (currentTunnel.isPosWithinDoor(mouse.getPos()[0], mouse.getPos()[1])) {
+                            mouse.setCurrentLevel(0);
+                        }
+                    } else if (currentLevel == 0) {
+                        var targetTunnel = gameState.getGameField().getTunnels().get(toLevel);
+                        if (targetTunnel.isPosWithinDoor(mouse.getPos()[0], mouse.getPos()[1])) {
+                            mouse.setCurrentLevel(toLevel);
+                        }
+                    }
+                }
             }
         }
     }
