@@ -1,5 +1,6 @@
 package at.ac.tuwien.foop.server.game.cats;
 
+import at.ac.tuwien.foop.server.game.Configuration;
 import at.ac.tuwien.foop.server.game.state.*;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class CatManager implements ICatManager {
     }
 
     @Override
-    public void spawnCats(GameState gameState) {
+    public void spawnCats(Configuration configuration, GameState gameState) {
         // FIXME: The tunnel entrances could be fixed
         var entrances = getTunnelEntranceCoordinates(gameState);
         // TODO: We could maybe use a more intelligent algorithm to spawn cats
@@ -41,7 +42,7 @@ public class CatManager implements ICatManager {
         for (int i = 0; i < 3; i++) {
             int randomIndex = rand.nextInt(entrances.size());
             int[] randomEntrance = entrances.get(randomIndex);
-            TrackerCat cat = new TrackerCat(intCoordinatesToDoubleCoords(randomEntrance));
+            TrackerCat cat = new TrackerCat(configuration, intCoordinatesToDoubleCoords(randomEntrance));
             cats.add(cat);
         }
     }

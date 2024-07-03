@@ -39,7 +39,7 @@ public class GameManager {
     public void updateGame() {
         if (gameState.getGameStart() != null || allClientsReady()) {
             if (gameState.getGameStart() == null) {
-                catManager.spawnCats(gameState);
+                catManager.spawnCats(configuration, gameState);
                 gameState.setGameStart(LocalDateTime.now());
                 gameState.setGameStatus(GameStatus.RUNNING);
             }
