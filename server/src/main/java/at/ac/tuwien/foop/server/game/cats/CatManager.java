@@ -9,7 +9,7 @@ import java.util.List;
 public class CatManager implements ICatManager {
     private final List<IServerCatState> cats = new ArrayList<IServerCatState>();
     private List<int[]> getTunnelEntranceCoordinates(GameState gameState) {
-        var tunnels = gameState.getGameField().getTunnels();
+        var tunnels = gameState.getGameField().getTunnels().values();
         return tunnels
                 .stream()
                 .flatMap(

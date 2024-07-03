@@ -13,7 +13,7 @@ public class TunnelCamperCat implements IServerCatState {
     @Override
     public void move(GameState gameState) {
         // Camp at some tunnel for x ticks, chase mice if the are within x distance
-        var tunnels = gameState.getGameField().getTunnels();
+        var tunnels = gameState.getGameField().getTunnels().values();
         for (var tunnel : tunnels) {
 
         }
