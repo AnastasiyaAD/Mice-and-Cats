@@ -15,6 +15,10 @@ public class GameBoardPanel extends JPanel {
 
   private int fieldPositionX;
   private int fieldPositionY;
+  private String username;
+  // FIXME: Why is this static?
+  private HashMap<String, Mouse> mice = new HashMap<>();
+  private List<Cat> cats = new ArrayList<>();
 
   /**
    * Creates a new instance of GameBoardPanel
@@ -24,31 +28,27 @@ public class GameBoardPanel extends JPanel {
     this.fieldPositionY = y;
     setSize(width + x, height + y);
     setFocusable(true);
-    mice = new HashMap<>();
   }
 
-  // FIXME: Why is this static?
-  private HashMap<String, Mouse> mice;
-  private List<Cat> cats = new ArrayList<>();
-
   @Setter
-  private String username;
+  private String name;
 
   public void updateBoard(GameStateDto gameState) {
     var mice = gameState.mice();
     for (var mouse : mice) {
       // FIXME: Do we use UUID here or username to identify the mice?
-      String username = mouse.username();
-      var clientMouse = this.mice.get(username);
+      String name = mouse.username();
+      var clientMouse = this.mice.get(name);
       // Add mouse if not already encountered
       if (clientMouse == null) {
         clientMouse = new Mouse();
-        this.mice.put(username, clientMouse);
+        this.mice.put(name, clientMouse);
       }
 
       clientMouse.setXpoistion((int) mouse.position()[0]);
       clientMouse.setYposition((int) mouse.position()[1]);
       clientMouse.setDirection(1);
+      clientMouse.setTunnel((int) mouse.level());
     }
     setCatPosition(gameState);
     this.repaint();
@@ -56,8 +56,14 @@ public class GameBoardPanel extends JPanel {
 
   private void setCatPosition(GameStateDto gameState) {
     if (this.cats.isEmpty()) {
-      this.cats = gameState.cats().stream().map(c -> new Cat(((int) c.position()[0]) * 50,
-              ((int) c.position()[0]) * 50)).toList();
+      this.cats =
+        gameState
+          .cats()
+          .stream()
+          .map(c ->
+            new Cat(((int) c.position()[0]) * 50, ((int) c.position()[0]) * 50)
+          )
+          .toList();
     } else {
       for (int i = 0; i < this.cats.size(); i++) {
         var cat = this.cats.get(i);
@@ -78,7 +84,43 @@ public class GameBoardPanel extends JPanel {
       fieldPositionY,
       null
     );
-    repaint();
+    for (var mouse : this.mice.values()) {
+      if (mouse.getTunnel() == tunnel) {
+        g.drawImage(
+          mouse.getBuffImage(),
+          mouse.getXposition(),
+          mouse.getYposition(),
+          this
+        );
+      }
+    }
+  }
+
+  private void drawSurface(Graphics2D g) {
+    g.drawImage(
+      new ImageIcon("public/playing_field/grass.png").getImage(),
+      fieldPositionX,
+      fieldPositionY,
+      null
+    );
+    for (var mouse : this.mice.values()) {
+      if (mouse.getTunnel() == 0) {
+        g.drawImage(
+          mouse.getBuffImage(),
+          mouse.getXposition(),
+          mouse.getYposition(),
+          this
+        );
+      }
+    }
+    for (var cat : cats) {
+      g.drawImage(
+        cat.getImageBuff(),
+        cat.getXPosition(),
+        cat.getYPosition(),
+        this
+      );
+    }
   }
 
   public void paintComponent(Graphics gr) {
@@ -86,36 +128,24 @@ public class GameBoardPanel extends JPanel {
     Graphics2D g = (Graphics2D) gr;
     g.setColor(Color.BLACK);
     g.fillRect(0, 0, getWidth(), getHeight());
-
-    g.drawImage(
-      new ImageIcon("public/playing_field/grass.png").getImage(),
-      fieldPositionX,
-      fieldPositionY,
-      null
-    );
     g.setColor(Color.YELLOW);
     g.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
     g.drawString("Mice and Cats in a Network Game", 300, 25);
-
-    // FIXME: Draw underground if OUR mouse is in the underground
-    // drawUnderground(g, tunnel)
-    for (var mouse : this.mice.values()) {
-      g.drawImage(
-        mouse.getBuffImage(),
-        mouse.getXposition(),
-        mouse.getYposition(),
-        this
-      );
+    var player = this.mice.get(username);
+    if (player == null) {
+      drawSurface(g);
+    } else {
+      int tunnel = player.getTunnel();
+      if (tunnel == 0) {
+        drawSurface(g);
+      } else {
+        drawUnderground(g, tunnel);
+      }
     }
-    for (var cat : cats) {
-      g.drawImage(
-              cat.getImageBuff(),
-              cat.getXPosition(),
-              cat.getYPosition(),
-              this
-      );
-    }
-
     repaint();
+  }
+
+  public void add(String clientName) {
+    username = clientName;
   }
 }

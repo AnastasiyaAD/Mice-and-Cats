@@ -85,6 +85,10 @@ public class Mouse {
     return tunnel;
   }
 
+  public void setTunnel(int number) {
+    tunnel = number;
+  }
+
   public void setXpoistion(int x) {
     posiX = x;
   }

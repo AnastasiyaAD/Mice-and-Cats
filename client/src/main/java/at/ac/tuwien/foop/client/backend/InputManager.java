@@ -1,8 +1,6 @@
 package at.ac.tuwien.foop.client.backend;
 
-import at.ac.tuwien.foop.client.Mouse;
 import at.ac.tuwien.foop.network.dto.Direction;
-
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -14,7 +12,6 @@ public class InputManager implements KeyListener {
   private final int DOWN = 40;
   private final int SPACE = 32;
   private Client client;
-  private Mouse mouse;
 
   /** Creates a new instance of InputManager */
   public InputManager(Client client) {
@@ -38,7 +35,7 @@ public class InputManager implements KeyListener {
         client.sendDirection(Direction.SOUTH);
         break;
       case SPACE:
-        //TODO: client sendDirection Tunnel
+        client.sendLevelChange();
       default:
         break;
     }

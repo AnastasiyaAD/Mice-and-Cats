@@ -31,7 +31,6 @@ public class ClientGUI
   private JPanel registerPanel;
   public static JPanel gameStatusPanel;
   private Client client;
-  private Mouse clientMouse;
 
   int width = 1400, height = 910;
   boolean allClientsReady = true;
@@ -155,6 +154,7 @@ public class ClientGUI
     }
     if (obj == readyButton) {
       readyButton.setEnabled(false);
+      changeUsername(username);
       try {
         client.initiateReady(username);
         try {
@@ -213,4 +213,8 @@ public class ClientGUI
   public void windowActivated(WindowEvent e) {}
 
   public void windowDeactivated(WindowEvent e) {}
+
+  public void changeUsername(String username) {
+    boardPanel.add(username);
+  }
 }

@@ -5,6 +5,8 @@ import at.ac.tuwien.foop.network.dto.ActionRequestDto;
 import at.ac.tuwien.foop.network.dto.Direction;
 import at.ac.tuwien.foop.network.dto.GameStateDto;
 import at.ac.tuwien.foop.network.dto.HandshakeRequestDto;
+import at.ac.tuwien.foop.network.dto.LevelChangeRequest;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -24,6 +26,7 @@ public class Client implements IClient, AutoCloseable {
     private GameStateListener gameStateListener;
     private ObjectMapper objectMapper = new ObjectMapper();
     private final GameBoardPanel gameBoardPanel;
+    private LevelChangeRequest levelChangeRequest;
 
     public Client(GameBoardPanel gameBoardPanel) {
         this.gameBoardPanel = gameBoardPanel;
@@ -83,7 +86,16 @@ public class Client implements IClient, AutoCloseable {
         }
     }
 
-    @Override
+  public void sendLevelChange() {
+    var actionRequest = new ActionRequestDto(levelChangeRequest);
+    try {
+      send(objectMapper.writeValueAsString(actionRequest));
+    } catch (JsonProcessingException e) {
+      // TODO: handle exception
+    }
+  }
+
+  @Override
     public void receive(String json) {
         // TODO: Hook into GUI here
         try {
@@ -96,18 +108,18 @@ public class Client implements IClient, AutoCloseable {
         }
     }
 
-    @Override
-    public void close() throws Exception {
+  @Override
+  public void close() throws Exception {
 
-        if (gameStateListener != null) {
-            gameStateListener.stop();
-        }
-        if (listenerThread != null) {
-            listenerThread.join();
-        }
-        in.close();
-        out.close();
-        socket.close();
-    }
+      if (gameStateListener != null) {
+          gameStateListener.stop();
+      }
+      if (listenerThread != null) {
+          listenerThread.join();
+      }
+      in.close();
+      out.close();
+      socket.close();
+  }
 
 }
