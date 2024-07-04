@@ -9,7 +9,7 @@ public class Mouse {
 
   private Image[] mouseImg;
   private BufferedImage ImageBuff;
-  private int mouseID;
+  private String mouseID;
   private int posiX = -1, posiY = -1;
   private int direction = 1;
 
@@ -18,6 +18,7 @@ public class Mouse {
   private Direction sDirection;
   private boolean isUnderground;
   private int tunnel;
+  private Integer tunnelVote;
 
   public int getDirection() {
     return direction;
@@ -42,11 +43,20 @@ public class Mouse {
     loadImage(0);
   }
 
-  public Mouse(int x, int y, int dir, int id) {
+  public Mouse(
+    String id,
+    int x,
+    int y,
+    int dir,
+    int tunnelS,
+    Integer tunnelVoteS
+  ) {
     posiX = x;
     posiY = y;
     mouseID = id;
     direction = dir;
+    tunnel = tunnelS;
+    tunnelVote = tunnelVoteS;
     loadImage(0);
   }
 
@@ -85,7 +95,15 @@ public class Mouse {
     return tunnel;
   }
 
+  public Integer getTunnelVote() {
+    return tunnelVote;
+  }
+
   public void setTunnel(int number) {
+    tunnel = number;
+  }
+
+  public void setTunnelVote(Integer number) {
     tunnel = number;
   }
 

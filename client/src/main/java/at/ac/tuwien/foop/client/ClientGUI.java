@@ -103,7 +103,7 @@ public class ClientGUI
     sendMessage = new JButton("Send");
     sendMessage.setBounds(850, 773, 30, 20);
     sendMessage.addActionListener(this);
-
+    
     boardPanel = new GameBoardPanel(60, 33, 750, 800);
     chatPanel = new GameChatPanel(850, 260, 400, 573);
 
@@ -203,7 +203,7 @@ public class ClientGUI
     }
     if (obj == sendMessage) {
       if (!message.equals("")) {
-        client.sendMessage(username + ": " + message + "\n");
+        client.sendMessage(Integer.parseInt(message));
         chatPanel.cleanTextField();
       }
     }

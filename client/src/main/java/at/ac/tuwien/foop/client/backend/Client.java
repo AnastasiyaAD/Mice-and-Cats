@@ -102,9 +102,13 @@ public class Client implements IClient, AutoCloseable {
     }
   }
 
-  public void sendMessage(String message) {
-    //TODO: ActionRequestDto(tunnelVote)
-    System.out.println(message);
+  public void sendMessage(Integer tunnelVote) {
+    var actionRequest = new ActionRequestDto(tunnelVote);
+    try {
+      send(objectMapper.writeValueAsString(actionRequest));
+    } catch (JsonProcessingException e) {
+      // TODO: handle exception
+    }
   }
 
   @Override
