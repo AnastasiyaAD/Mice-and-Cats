@@ -36,11 +36,15 @@ public class ClientGUI
   int width = 1400, height = 910;
   boolean allClientsReady = true;
   private GameBoardPanel boardPanel;
+  private GameChatPanel chatPanel;
 
   private String host;
   private int port;
   private String username;
   private UUID clientId;
+  private String message;
+
+  private JButton sendMessage;
 
   public ClientGUI() {
     setTitle("Mice and Cats in a Network Game");
@@ -56,12 +60,6 @@ public class ClientGUI
     registerPanel.setSize(400, 200);
     registerPanel.setBounds(850, 35, 400, 200);
     registerPanel.setLayout(null);
-
-    gameStatusPanel = new JPanel();
-    gameStatusPanel.setBackground(Color.YELLOW);
-    gameStatusPanel.setSize(400, 300);
-    gameStatusPanel.setBounds(850, 260, 400, 573);
-    gameStatusPanel.setLayout(null);
 
     ipaddressLabel = new JLabel("IP address: ");
     ipaddressLabel.setBounds(90, 25, 100, 25);
@@ -102,16 +100,23 @@ public class ClientGUI
     registerPanel.add(registerButton);
     registerPanel.add(readyButton);
 
+    sendMessage = new JButton("Send");
+    sendMessage.setBounds(850, 773, 30, 20);
+    sendMessage.addActionListener(this);
+
     boardPanel = new GameBoardPanel(60, 33, 750, 800);
+    chatPanel = new GameChatPanel(850, 260, 400, 573);
+
+    chatPanel.add(sendMessage);
 
     // FIXME: this could be cleaned up
-    client = new Client(boardPanel);
+    client = new Client(boardPanel, chatPanel);
     var inputManager = new InputManager(client);
     boardPanel.addKeyListener(inputManager);
 
     getContentPane().add(registerPanel);
-    getContentPane().add(gameStatusPanel);
     getContentPane().add(boardPanel);
+    getContentPane().add(chatPanel);
     setVisible(true);
   }
 
@@ -120,6 +125,8 @@ public class ClientGUI
     host = ipaddressText.getText();
     port = Integer.parseInt(portText.getText());
     username = usernameText.getText();
+    message = chatPanel.getMessage();
+
     if (obj == registerButton) {
       registerButton.setEnabled(false);
       readyButton.setFocusable(false);
@@ -194,6 +201,12 @@ public class ClientGUI
         ex.printStackTrace();
       }
     }
+    if (obj == sendMessage) {
+      if (!message.equals("")) {
+        client.sendMessage(username + ": " + message + "\n");
+        chatPanel.cleanTextField();
+      }
+    }
   }
 
   public void windowOpened(WindowEvent e) {}
@@ -219,5 +232,6 @@ public class ClientGUI
 
   public void changeClientId(String clientId) {
     boardPanel.add(clientId);
+    chatPanel.add(clientId);
   }
 }
