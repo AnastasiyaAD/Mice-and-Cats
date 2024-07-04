@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.UUID;
 
 public class Client implements IClient, AutoCloseable {
     private Socket socket;
@@ -43,20 +44,23 @@ public class Client implements IClient, AutoCloseable {
         gameStateListener = new GameStateListener(in, this);
         listenerThread = new Thread(gameStateListener);
         // TODO: Check when we want to start listening
-        listenerThread.start();
-            // Handshake first then we can listen to message
+        // Handshake first then we can listen to message
     }
 
-    public void register(String username) {
+    public UUID register(String username) {
         var handshakeRequest = HandshakeRequestDto.registerHandshakeRequest(username);
         try {
             send(objectMapper.writeValueAsString(handshakeRequest));
-        } catch (JsonProcessingException e) {
+            var clientId = in.readLine();
+            listenerThread.start();
+            return UUID.fromString(clientId);
+        } catch (IOException e) {
             // TODO: handle exception
+            throw new RuntimeException(e);
         }
     }
 
-    public void initiateReady (String username) {
+    public void initiateReady(String username) {
         var handshakeRequest = HandshakeRequestDto.readyHandshakeRequest();
         try {
             send(objectMapper.writeValueAsString(handshakeRequest));
@@ -86,16 +90,16 @@ public class Client implements IClient, AutoCloseable {
         }
     }
 
-  public void sendLevelChange() {
-    var actionRequest = new ActionRequestDto(levelChangeRequest);
-    try {
-      send(objectMapper.writeValueAsString(actionRequest));
-    } catch (JsonProcessingException e) {
-      // TODO: handle exception
+    public void sendLevelChange() {
+        var actionRequest = new ActionRequestDto(levelChangeRequest);
+        try {
+            send(objectMapper.writeValueAsString(actionRequest));
+        } catch (JsonProcessingException e) {
+            // TODO: handle exception
+        }
     }
-  }
 
-  @Override
+    @Override
     public void receive(String json) {
         // TODO: Hook into GUI here
         try {
@@ -108,18 +112,18 @@ public class Client implements IClient, AutoCloseable {
         }
     }
 
-  @Override
-  public void close() throws Exception {
+    @Override
+    public void close() throws Exception {
 
-      if (gameStateListener != null) {
-          gameStateListener.stop();
-      }
-      if (listenerThread != null) {
-          listenerThread.join();
-      }
-      in.close();
-      out.close();
-      socket.close();
-  }
+        if (gameStateListener != null) {
+            gameStateListener.stop();
+        }
+        if (listenerThread != null) {
+            listenerThread.join();
+        }
+        in.close();
+        out.close();
+        socket.close();
+    }
 
 }

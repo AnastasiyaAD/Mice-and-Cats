@@ -74,6 +74,7 @@ public class ClientManager implements Runnable {
             }
             this.username = registerHandshake.getUsername();
             this.gameManager.registerClient(this);
+            writer.println(this.clientId);
 
             var readyData = reader.readLine();
             registerHandshake = DtoParser.parseHandshake(readyData);

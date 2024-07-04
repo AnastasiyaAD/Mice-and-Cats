@@ -9,6 +9,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.UUID;
 import javax.swing.*;
 
 public class ClientGUI
@@ -39,6 +40,7 @@ public class ClientGUI
   private String host;
   private int port;
   private String username;
+  private UUID clientId;
 
   public ClientGUI() {
     setTitle("Mice and Cats in a Network Game");
@@ -131,7 +133,8 @@ public class ClientGUI
         registerButton.setFocusable(false);
         readyButton.setFocusable(true);
         readyButton.setEnabled(true);
-        client.register(username);
+        this.clientId = client.register(username);
+        System.out.println("ClientId: " + this.clientId);
         try {
           Thread.sleep(500);
         } catch (InterruptedException ex) {
