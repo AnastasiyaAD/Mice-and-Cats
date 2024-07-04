@@ -9,5 +9,5 @@ import java.util.UUID;
  * @param username
  * @param level 0 = surface, 1 = tunnel 1 etc...
  */
-public record MouseDto(double[] position, UUID clientId, String username, int level, int tunnelVote) {
+public record MouseDto(double[] position, UUID clientId, String username, int level, Integer tunnelVote) {
 }

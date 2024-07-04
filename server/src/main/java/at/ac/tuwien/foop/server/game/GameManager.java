@@ -72,7 +72,7 @@ public class GameManager {
             var bounds = gameState.getGameField().getBounds();
             var boundsX = bounds[0];
             var boundsY = bounds[1];
-            if (x > boundsX || y > boundsY) {
+            if (x > boundsX || y > boundsY || x < 0 || y < 0) {
                 m.setPos(new double[]{Math.max(0, Math.min(x, boundsX)), Math.max(0, Math.min(y, boundsY))});
             }
         });
