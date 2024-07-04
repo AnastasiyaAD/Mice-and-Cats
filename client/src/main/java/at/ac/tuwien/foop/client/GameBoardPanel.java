@@ -15,6 +15,7 @@ public class GameBoardPanel extends JPanel {
 
   private int fieldPositionX;
   private int fieldPositionY;
+  private static int scale = 50;
   private String username;
   // FIXME: Why is this static?
   private HashMap<String, Mouse> mice = new HashMap<>();
@@ -45,8 +46,12 @@ public class GameBoardPanel extends JPanel {
         this.mice.put(name, clientMouse);
       }
 
-      clientMouse.setXpoistion((int) mouse.position()[0] + fieldPositionX);
-      clientMouse.setYposition((int) mouse.position()[1] + fieldPositionY);
+      clientMouse.setXpoistion(
+        ((int) mouse.position()[0]) * scale + fieldPositionX
+      );
+      clientMouse.setYposition(
+        ((int) mouse.position()[1]) * scale + fieldPositionY
+      );
       clientMouse.setDirection(1);
       clientMouse.setTunnel((int) mouse.level());
     }
@@ -62,8 +67,8 @@ public class GameBoardPanel extends JPanel {
           .stream()
           .map(c ->
             new Cat(
-              ((int) c.position()[0]) * 50 + fieldPositionX,
-              ((int) c.position()[0]) * 50 + fieldPositionY
+              ((int) c.position()[0]) * scale + fieldPositionX,
+              ((int) c.position()[0]) * scale + fieldPositionY
             )
           )
           .toList();
@@ -71,8 +76,8 @@ public class GameBoardPanel extends JPanel {
       for (int i = 0; i < this.cats.size(); i++) {
         var cat = this.cats.get(i);
         var serverCatPosition = gameState.cats().get(i).position();
-        cat.setXPosition(((int) serverCatPosition[0]) * 50 + fieldPositionX);
-        cat.setYPosition(((int) serverCatPosition[1]) * 50 + fieldPositionY);
+        cat.setXPosition(((int) serverCatPosition[0]) * scale + fieldPositionX);
+        cat.setYPosition(((int) serverCatPosition[1]) * scale + fieldPositionY);
       }
     }
   }
