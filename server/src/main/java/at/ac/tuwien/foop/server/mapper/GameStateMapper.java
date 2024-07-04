@@ -14,7 +14,13 @@ public class GameStateMapper {
 
     public static GameStateDto toDto(GameState gameState) {
         var mice = gameState.getMice().entrySet().stream()
-                .map(entry -> new MouseDto(entry.getValue().getPos(), entry.getKey(), entry.getValue().getUsername(), entry.getValue().getCurrentLevel())).toList();
+                .map(entry -> new MouseDto(
+                        entry.getValue().getPos(),
+                        entry.getKey(),
+                        entry.getValue().getUsername(),
+                        entry.getValue().getCurrentLevel(),
+                        entry.getValue().getTunnelVote())
+                ).toList();
         var cats = gameState.getCats().stream().map(cat -> new CatDto(cat.getPos())).toList();
         return new GameStateDto(gameState.getGameField().getBounds(), Duration.between(gameState.getGameStart(), LocalDateTime.now()), mice, cats, mapEnum(gameState.getGameStatus()));
     }
