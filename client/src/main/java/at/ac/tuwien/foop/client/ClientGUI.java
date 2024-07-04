@@ -157,7 +157,7 @@ public class ClientGUI
     }
     if (obj == readyButton) {
       readyButton.setEnabled(false);
-      changeUsername(username);
+      changeClientId(clientId.toString());
       try {
         client.initiateReady(username);
         try {
@@ -217,7 +217,7 @@ public class ClientGUI
 
   public void windowDeactivated(WindowEvent e) {}
 
-  public void changeUsername(String username) {
-    boardPanel.add(username);
+  public void changeClientId(String clientId) {
+    boardPanel.add(clientId);
   }
 }

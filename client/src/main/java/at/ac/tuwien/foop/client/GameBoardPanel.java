@@ -16,7 +16,7 @@ public class GameBoardPanel extends JPanel {
   private int fieldPositionX;
   private int fieldPositionY;
   private static int scale = 50;
-  private String username;
+  private String clientId;
   // FIXME: Why is this static?
   private HashMap<String, Mouse> mice = new HashMap<>();
   private List<Cat> cats = new ArrayList<>();
@@ -37,13 +37,12 @@ public class GameBoardPanel extends JPanel {
   public void updateBoard(GameStateDto gameState) {
     var mice = gameState.mice();
     for (var mouse : mice) {
-      // FIXME: Do we use UUID here or username to identify the mice?
-      String name = mouse.username();
-      var clientMouse = this.mice.get(name);
+      String id = mouse.clientId().toString();
+      var clientMouse = this.mice.get(id);
       // Add mouse if not already encountered
       if (clientMouse == null) {
         clientMouse = new Mouse();
-        this.mice.put(name, clientMouse);
+        this.mice.put(id, clientMouse);
       }
 
       clientMouse.setXpoistion(
@@ -139,7 +138,7 @@ public class GameBoardPanel extends JPanel {
     g.setColor(Color.YELLOW);
     g.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
     g.drawString("Mice and Cats in a Network Game", 300, 25);
-    var player = this.mice.get(username);
+    var player = this.mice.get(clientId);
     if (player == null) {
       drawSurface(g);
     } else {
@@ -154,6 +153,6 @@ public class GameBoardPanel extends JPanel {
   }
 
   public void add(String clientName) {
-    username = clientName;
+    clientId = clientName;
   }
 }
