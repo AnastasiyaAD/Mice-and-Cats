@@ -1,20 +1,21 @@
 package at.ac.tuwien.foop.client;
 
-import at.ac.tuwien.foop.network.dto.CatDto;
 import at.ac.tuwien.foop.network.dto.GameStateDto;
+import lombok.Setter;
+
+import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import javax.swing.*;
-import lombok.Setter;
 
 public class GameBoardPanel extends JPanel {
 
   private int fieldPositionX;
   private int fieldPositionY;
+  private final int width;
+  private final int height;
   private static int scale = 50;
   private String clientId;
   // FIXME: Why is this static?
@@ -27,6 +28,8 @@ public class GameBoardPanel extends JPanel {
   public GameBoardPanel(int x, int y, int width, int height) {
     this.fieldPositionX = x;
     this.fieldPositionY = y;
+    this.width = width;
+    this.height = height;
     setSize(width + x, height + y);
     setFocusable(true);
   }
@@ -36,6 +39,9 @@ public class GameBoardPanel extends JPanel {
 
   public void updateBoard(GameStateDto gameState) {
     var mice = gameState.mice();
+    // TODO unnecessary repetition of same calculation
+    var fieldScaleX = (double) width / (gameState.gameField()[0] + 1);
+    var fieldScaleY = (double) height / (gameState.gameField()[1] + 1);
     for (var mouse : mice) {
       String id = mouse.clientId().toString();
       var clientMouse = this.mice.get(id);
@@ -46,10 +52,10 @@ public class GameBoardPanel extends JPanel {
       }
 
       clientMouse.setXpoistion(
-        (int) Math.round(mouse.position()[0] * scale + fieldPositionX)
+              (int) (mouse.position()[0] * fieldScaleX) + fieldPositionX
       );
       clientMouse.setYposition(
-        (int) Math.round(mouse.position()[1] * scale + fieldPositionY)
+              (int) (mouse.position()[1] * fieldScaleY) + fieldPositionY
       );
       clientMouse.setDirection(1);
       clientMouse.setTunnel((int) mouse.level());

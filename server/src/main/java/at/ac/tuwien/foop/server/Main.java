@@ -7,7 +7,7 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        var config = new Configuration(60, 3, 3.2);
+        var config = new Configuration(60, 4.5, 4);
         var server = new Server(8008, config);
         server.start();
     }
