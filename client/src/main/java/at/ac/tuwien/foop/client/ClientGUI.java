@@ -37,6 +37,7 @@ public class ClientGUI
   boolean allClientsReady = true;
   private GameBoardPanel boardPanel;
   private GameChatPanel chatPanel;
+  private InputManager inputManager;
 
   private String host;
   private int port;
@@ -103,7 +104,7 @@ public class ClientGUI
     sendMessage = new JButton("Send");
     sendMessage.setBounds(850, 773, 30, 20);
     sendMessage.addActionListener(this);
-    
+
     boardPanel = new GameBoardPanel(60, 33, 750, 800);
     chatPanel = new GameChatPanel(850, 260, 400, 573);
 
@@ -111,8 +112,7 @@ public class ClientGUI
 
     // FIXME: this could be cleaned up
     client = new Client(boardPanel, chatPanel);
-    var inputManager = new InputManager(client);
-    boardPanel.addKeyListener(inputManager);
+    inputManager = new InputManager(client);
 
     getContentPane().add(registerPanel);
     getContentPane().add(boardPanel);
@@ -187,6 +187,8 @@ public class ClientGUI
         if (allClientsReady) {
           boardPanel.repaint();
           boardPanel.setFocusable(true);
+          boardPanel.requestFocus();
+          boardPanel.addKeyListener(inputManager);
         } else {
           JOptionPane.showMessageDialog(
             this,
