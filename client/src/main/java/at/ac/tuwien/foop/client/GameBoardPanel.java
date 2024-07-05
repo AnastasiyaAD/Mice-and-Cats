@@ -1,14 +1,13 @@
 package at.ac.tuwien.foop.client;
 
 import at.ac.tuwien.foop.network.dto.GameStateDto;
-import lombok.Setter;
-
-import javax.swing.*;
 import java.awt.*;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import javax.swing.*;
+import lombok.Setter;
 
 public class GameBoardPanel extends JPanel {
 
@@ -50,17 +49,18 @@ public class GameBoardPanel extends JPanel {
         clientMouse = new Mouse();
         this.mice.put(id, clientMouse);
       }
+      int middleMouse = clientMouse.getSize() / 2;
 
       clientMouse.setXpoistion(
-              (int) (mouse.position()[0] * fieldScaleX) + fieldPositionX
+        (int) (mouse.position()[0] * fieldScaleX) + fieldPositionX - middleMouse
       );
       clientMouse.setYposition(
-              (int) (mouse.position()[1] * fieldScaleY) + fieldPositionY
+        (int) (mouse.position()[1] * fieldScaleY) + fieldPositionY - middleMouse
       );
       clientMouse.setDirection(1);
       clientMouse.setTunnel((int) mouse.level());
     }
-    setCatPosition(gameState);
+    // setCatPosition(gameState);
     this.repaint();
   }
 
@@ -72,20 +72,25 @@ public class GameBoardPanel extends JPanel {
           .stream()
           .map(c ->
             new Cat(
-              ((int) Math.round(c.position()[0] * scale + fieldPositionX)),
-              ((int) Math.round(c.position()[1] * scale + fieldPositionY))
+              ((int) Math.round(c.position()[0] * scale - fieldPositionX)),
+              ((int) Math.round(c.position()[1] * scale - fieldPositionY))
             )
           )
           .toList();
     } else {
       for (int i = 0; i < this.cats.size(); i++) {
         var cat = this.cats.get(i);
+        int middleCat = cat.getSize() / 2;
         var serverCatPosition = gameState.cats().get(i).position();
         cat.setXPosition(
-          (int) Math.round(serverCatPosition[0] * scale + fieldPositionX)
+          (int) Math.round(
+            serverCatPosition[0] * scale + fieldPositionX - middleCat
+          )
         );
         cat.setYPosition(
-          (int) Math.round(serverCatPosition[1] * scale + fieldPositionY)
+          (int) Math.round(
+            serverCatPosition[1] * scale + fieldPositionY -middleCat
+          )
         );
       }
     }

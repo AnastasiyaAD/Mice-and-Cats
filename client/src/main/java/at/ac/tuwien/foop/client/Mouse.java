@@ -15,6 +15,7 @@ public class Mouse {
 
   private static int startPositionX = 60;
   private static int startPositionY = 33;
+  private static final int SIZE = 40;
   private Direction sDirection;
   private boolean isUnderground;
   private int tunnel;
@@ -93,6 +94,10 @@ public class Mouse {
 
   public int getTunnel() {
     return tunnel;
+  }
+
+  public int getSize() {
+    return SIZE;
   }
 
   public Integer getTunnelVote() {
