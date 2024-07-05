@@ -67,7 +67,7 @@ public class GameBoardPanel extends JPanel {
           .map(c ->
             new Cat(
               ((int) Math.round(c.position()[0] * scale + fieldPositionX)),
-              ((int) Math.round(c.position()[0] * scale + fieldPositionY))
+              ((int) Math.round(c.position()[1] * scale + fieldPositionY))
             )
           )
           .toList();
