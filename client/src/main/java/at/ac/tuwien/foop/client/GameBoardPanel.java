@@ -60,7 +60,7 @@ public class GameBoardPanel extends JPanel {
       clientMouse.setDirection(1);
       clientMouse.setTunnel((int) mouse.level());
     }
-    // setCatPosition(gameState);
+    setCatPosition(gameState);
     this.repaint();
   }
 
