@@ -39,7 +39,7 @@ public class CatManager implements ICatManager {
         Random rand = new Random();
 
         // FIXME: More sophisticated amount of cats selection
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 1; i++) {
             int randomIndex = rand.nextInt(entrances.size());
             int[] randomEntrance = entrances.get(randomIndex);
             TrackerCat cat = new TrackerCat(configuration, intCoordinatesToDoubleCoords(randomEntrance));

@@ -39,7 +39,9 @@ public class TrackerCat implements IServerCatState {
     private double[] computeMoveToMouse(double[] mousePos, double[] catPos, double distance) {
         double dx = mousePos[0] - catPos[0];
         double dy = mousePos[1] - catPos[1];
-        double length = Math.sqrt(dx * dy + dy * dy);
+
+        double arg = dx * dx + dy * dy;
+        double length = Math.sqrt(arg);
 
         // Normalize the direction vector
         double dirX = dx / length;
@@ -50,7 +52,7 @@ public class TrackerCat implements IServerCatState {
         double moveY = dirY * distance;
 
         // Compute the new position
-        double[] newCatPos = { catPos[0] + moveX, catPos[1] + moveY };
+        double[] newCatPos = { catPos[0] + (moveX / 3), catPos[1] + (moveY / 3) };
         return newCatPos;
     }
 
