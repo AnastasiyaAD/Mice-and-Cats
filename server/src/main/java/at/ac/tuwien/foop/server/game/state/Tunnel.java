@@ -17,7 +17,7 @@ public class Tunnel {
         return tunnelNodeList.stream().filter(TunnelNode::isDoorNode).anyMatch(door -> {
             var doorX = door.position()[0];
             var doorY = door.position()[1];
-            return x >= doorX && x <= doorX && y >= doorY && y <= doorY;
+            return x >= doorX && x <= doorX + 1 && y >= doorY && y <= doorY + 1;
         });
     }
 
@@ -25,7 +25,7 @@ public class Tunnel {
         return tunnelNodeList.stream().anyMatch(node -> {
             var nodeX = node.position()[0];
             var nodeY = node.position()[1];
-            return x >= nodeX && x <= nodeX && y >= nodeY && y <= nodeY;
+            return x >= nodeX && x <= nodeX + 1 && y >= nodeY && y <= nodeY + 1;
         });
     }
 }

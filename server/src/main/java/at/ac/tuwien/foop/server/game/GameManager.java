@@ -10,6 +10,7 @@ import at.ac.tuwien.foop.server.network.UpdateBroadcaster;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class GameManager {
@@ -126,19 +127,21 @@ public class GameManager {
             }
             case TUNNEL_VOTE -> mouse.setTunnelVote(actionRequestDto.getTunnelVote());
             case LEVEL_CHANGE -> {
-                var toLevel = actionRequestDto.getLevelChangeRequest().toLevel();
-                var currentLevel = mouse.getCurrentLevel();
-                if (currentLevel != 0 && toLevel == 0) {
-                    var currentTunnel = gameState.getGameField().getTunnels().get(currentLevel);
-                    if (currentTunnel.isPosWithinDoor(mousePos[0], mousePos[1])) {
-                        mouse.setCurrentLevel(0);
+                var toLevelOpt = gameState.getGameField().getTunnels().entrySet().stream().filter(e -> e.getValue().isPosWithinDoor(mousePos[0], mousePos[1])).map(Map.Entry::getKey).findFirst();
+                 toLevelOpt.ifPresent(toLevel -> {
+                    var currentLevel = mouse.getCurrentLevel();
+                    if (currentLevel != 0 && toLevel == 0) {
+                        var currentTunnel = gameState.getGameField().getTunnels().get(currentLevel);
+                        if (currentTunnel.isPosWithinDoor(mousePos[0], mousePos[1])) {
+                            mouse.setCurrentLevel(0);
+                        }
+                    } else if (currentLevel == 0 && toLevel != 0) {
+                        var targetTunnel = gameState.getGameField().getTunnels().get(toLevel);
+                        if (targetTunnel.isPosWithinDoor(mousePos[0], mousePos[1])) {
+                            mouse.setCurrentLevel(toLevel);
+                        }
                     }
-                } else if (currentLevel == 0 && toLevel != 0) {
-                    var targetTunnel = gameState.getGameField().getTunnels().get(toLevel);
-                    if (targetTunnel.isPosWithinDoor(mousePos[0], mousePos[1])) {
-                        mouse.setCurrentLevel(toLevel);
-                    }
-                }
+                });
             }
         }
     }
