@@ -208,6 +208,8 @@ public class ClientGUI
         client.sendMessage(Integer.parseInt(message));
         chatPanel.cleanTextField();
       }
+      boardPanel.setFocusable(true);
+      boardPanel.requestFocus();
     }
   }
 

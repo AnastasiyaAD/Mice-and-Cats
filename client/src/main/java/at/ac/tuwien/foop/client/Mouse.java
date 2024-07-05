@@ -109,7 +109,7 @@ public class Mouse {
   }
 
   public void setTunnelVote(Integer number) {
-    tunnel = number;
+    tunnelVote = number;
   }
 
   public void setXpoistion(int x) {
