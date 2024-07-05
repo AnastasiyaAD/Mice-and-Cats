@@ -46,10 +46,10 @@ public class GameBoardPanel extends JPanel {
       }
 
       clientMouse.setXpoistion(
-        ((int) mouse.position()[0]) * scale + fieldPositionX
+        (int) Math.round(mouse.position()[0] * scale + fieldPositionX)
       );
       clientMouse.setYposition(
-        ((int) mouse.position()[1]) * scale + fieldPositionY
+        (int) Math.round(mouse.position()[1] * scale + fieldPositionY)
       );
       clientMouse.setDirection(1);
       clientMouse.setTunnel((int) mouse.level());
@@ -66,8 +66,8 @@ public class GameBoardPanel extends JPanel {
           .stream()
           .map(c ->
             new Cat(
-              ((int) c.position()[0]) * scale + fieldPositionX,
-              ((int) c.position()[0]) * scale + fieldPositionY
+              ((int) Math.round(c.position()[0] * scale + fieldPositionX)),
+              ((int) Math.round(c.position()[0] * scale + fieldPositionY))
             )
           )
           .toList();
@@ -75,8 +75,12 @@ public class GameBoardPanel extends JPanel {
       for (int i = 0; i < this.cats.size(); i++) {
         var cat = this.cats.get(i);
         var serverCatPosition = gameState.cats().get(i).position();
-        cat.setXPosition(((int) serverCatPosition[0]) * scale + fieldPositionX);
-        cat.setYPosition(((int) serverCatPosition[1]) * scale + fieldPositionY);
+        cat.setXPosition(
+          (int) Math.round(serverCatPosition[0] * scale + fieldPositionX)
+        );
+        cat.setYPosition(
+          (int) Math.round(serverCatPosition[1] * scale + fieldPositionY)
+        );
       }
     }
   }
