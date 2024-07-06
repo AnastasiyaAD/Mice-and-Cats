@@ -9,6 +9,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.EmptyStackException;
 import java.util.UUID;
 import javax.swing.*;
 
@@ -204,10 +205,28 @@ public class ClientGUI
       }
     }
     if (obj == sendMessage) {
-      if (!message.equals("")) {
-        client.sendMessage(Integer.parseInt(message));
-        chatPanel.cleanTextField();
+      try {
+        if (!message.equals("")) {
+          Integer text = Integer.parseInt(message);
+          if (text < 6 && text > 0) {
+            client.sendMessage(text);
+            System.out.println(text);
+            chatPanel.sendMessage(text);
+          } else {
+            throw new Exception();
+          }
+        }
+      } catch (Exception ex) {
+        JOptionPane.showMessageDialog(
+          this,
+          "The message was not sent. The message should only contain the tunnel number from 1 to 5. Try again later!",
+          "Mice and Cats in a Network Game",
+          JOptionPane.INFORMATION_MESSAGE
+        );
+        System.out.println("The message has not been sent " + ex.getMessage());
       }
+      boardPanel.setFocusable(true);
+      boardPanel.requestFocus();
     }
   }
 
