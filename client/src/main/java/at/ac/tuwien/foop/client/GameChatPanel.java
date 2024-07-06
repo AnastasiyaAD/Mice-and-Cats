@@ -4,10 +4,16 @@ import at.ac.tuwien.foop.network.dto.GameStateDto;
 import java.awt.*;
 import java.util.HashMap;
 import javax.swing.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
+import javax.swing.text.StyledDocument;
 
 public class GameChatPanel extends JPanel {
 
-  private JTextArea messageArea;
+  private JTextPane messageArea;
   private JTextField textField;
   private String clientId;
   public boolean startVote;
@@ -18,11 +24,8 @@ public class GameChatPanel extends JPanel {
     setBounds(x, y, width, height);
     setFocusable(true);
     startVote = false;
-    messageArea = new JTextArea();
+    messageArea = new JTextPane();
     messageArea.setEditable(false);
-    messageArea.setLineWrap(true);
-    messageArea.setWrapStyleWord(true);
-    messageArea.setFont(new Font("Dialog", Font.PLAIN, 14));
 
     var scroll = new JScrollPane(
       messageArea,
@@ -76,13 +79,16 @@ public class GameChatPanel extends JPanel {
         var clientMouse = this.mice.get(id);
         int playerTunnel = clientMouse.getTunnel();
 
-        //chat only for mice in one tunnel
-        if (mouse.level() == playerTunnel) {
+        //chat only for mice in one tunnel without messages from the player himself
+        if (mouse.level() == playerTunnel && !id.equals(clientId)) {
           Integer vote = clientMouse.getTunnelVote();
           Integer sVote = mouse.tunnelVote();
           if (sVote != vote) {
-            this.messageArea.append(mouse.username() + ": " + sVote + "\n");
-            this.messageArea.append("\n");
+            appendToPane(
+              this.messageArea,
+              mouse.username() + ": " + sVote + "\n" + "\n",
+              Color.BLACK
+            );
             // update vote mouse
             clientMouse.setTunnelVote(sVote);
           }
@@ -102,5 +108,35 @@ public class GameChatPanel extends JPanel {
 
   public void add(String clientID) {
     clientId = clientID;
+  }
+
+  public void sendMessage(Integer text) {
+    appendToPane(this.messageArea, text + "\n" + "\n", Color.RED);
+    cleanTextField();
+  }
+
+  private void appendToPane(JTextPane tp, String msg, Color c) {
+    StyleContext sc = StyleContext.getDefaultStyleContext();
+    AttributeSet aset = sc.addAttribute(
+      SimpleAttributeSet.EMPTY,
+      StyleConstants.Foreground,
+      c
+    );
+
+    aset = sc.addAttribute(aset, StyleConstants.FontFamily, "Lucida Console");
+    aset =
+      sc.addAttribute(
+        aset,
+        StyleConstants.Alignment,
+        StyleConstants.ALIGN_JUSTIFIED
+      );
+
+    int len = tp.getDocument().getLength();
+    StyledDocument doc = (StyledDocument) tp.getDocument();
+    try {
+      doc.insertString(len, msg, aset);
+    } catch (BadLocationException e) {
+      e.printStackTrace();
+    }
   }
 }
