@@ -22,7 +22,8 @@ public class GameStateMapper {
                         entry.getValue().getTunnelVote())
                 ).toList();
         var cats = gameState.getCats().stream().map(cat -> new CatDto(cat.getPos())).toList();
-        return new GameStateDto(gameState.getGameField().getBounds(), Duration.between(gameState.getGameStart(), LocalDateTime.now()), mice, cats, mapEnum(gameState.getGameStatus()));
+        var timeElapsed = Duration.between(gameState.getGameStart(), LocalDateTime.now());
+        return new GameStateDto(gameState.getGameField().getBounds(), gameState.getGameDuration().minus(timeElapsed), mice, cats, mapEnum(gameState.getGameStatus()));
     }
 
     private static GameStatusDto mapEnum(GameStatus status) {
