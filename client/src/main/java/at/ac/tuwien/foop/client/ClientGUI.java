@@ -9,7 +9,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.EmptyStackException;
 import java.util.UUID;
 import javax.swing.*;
 

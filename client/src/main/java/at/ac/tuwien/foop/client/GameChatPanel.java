@@ -2,6 +2,7 @@ package at.ac.tuwien.foop.client;
 
 import at.ac.tuwien.foop.network.dto.GameStateDto;
 import java.awt.*;
+import java.time.Duration;
 import java.util.HashMap;
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
@@ -16,7 +17,8 @@ public class GameChatPanel extends JPanel {
   private JTextPane messageArea;
   private JTextField textField;
   private String clientId;
-  public boolean startVote;
+  private JLabel timer;
+  private boolean startVote;
   private HashMap<String, Mouse> mice = new HashMap<>();
 
   public GameChatPanel(int x, int y, int width, int height) {
@@ -24,6 +26,13 @@ public class GameChatPanel extends JPanel {
     setBounds(x, y, width, height);
     setFocusable(true);
     startVote = false;
+
+    timer = new JLabel("Timer", SwingConstants.CENTER);
+    Dimension dimTimer = new Dimension();
+    dimTimer.setSize(new Dimension(width, 30));
+    timer.setPreferredSize(dimTimer);
+    add(timer);
+
     messageArea = new JTextPane();
     messageArea.setEditable(false);
 
@@ -49,6 +58,7 @@ public class GameChatPanel extends JPanel {
   public void updateBoard(GameStateDto gameState) {
     startVote = false;
     this.textField.setEditable(false);
+    this.timer.setText(formatDuration(gameState.timeRemaining()));
 
     var mice = gameState.mice();
 
@@ -138,5 +148,16 @@ public class GameChatPanel extends JPanel {
     } catch (BadLocationException e) {
       e.printStackTrace();
     }
+  }
+
+  public static String formatDuration(Duration duration) {
+    long seconds = duration.getSeconds();
+    long absSeconds = Math.abs(seconds);
+    String positive = String.format(
+      "%02d:%02d",
+      (absSeconds % 3600) / 60,
+      absSeconds % 60
+    );
+    return seconds < 0 ? "-" + positive : positive;
   }
 }
