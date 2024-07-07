@@ -11,6 +11,7 @@ import at.ac.tuwien.foop.server.network.UpdateBroadcaster;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.stream.Collectors;
 
 public class GameManager {
 
@@ -54,13 +55,15 @@ public class GameManager {
 
     private void checkState() {
         checkBounds();
-        checkTunnels();
+        checkMiceWon();
+        gameState.clearExpiredSnapshots(configuration.catSnapshotDuration());
     }
 
-    private void checkTunnels() {
-        gameState.getMice().values().forEach(m -> {
-
-        });
+    private void checkMiceWon() {
+        var countingMap = gameState.getMice().values().stream().collect(Collectors.groupingBy(Mouse::getCurrentLevel, Collectors.counting()));
+        if (countingMap.getOrDefault(0, -1L) == 0 && countingMap.values().stream().filter(level -> level != 0).distinct().count() == 1) {
+            gameState.setGameStatus(GameStatus.MICE_WON);
+        }
     }
 
     private void checkBounds() {
@@ -70,12 +73,13 @@ public class GameManager {
             var x = pos[0];
             var y = pos[1];
             var bounds = gameState.getGameField().getBounds();
-            var boundsX = bounds[0] - (gameState.getGameField().getMouseSize() / 2);
-            var boundsY = bounds[1] - (gameState.getGameField().getMouseSize() / 2);
+            double characterSizeHalf = gameState.getGameField().getMouseSize() / 2;
+            var boundsX = bounds[0] + 1 - characterSizeHalf;
+            var boundsY = bounds[1] + 1 - characterSizeHalf;
             if (x > boundsX || y > boundsY || x < 0 || y < 0) {
                 m.setPos(new double[]{
-                        Math.max(0 + (gameState.getGameField().getMouseSize() / 2), Math.min(x, boundsX)),
-                        Math.max(0 + (gameState.getGameField().getMouseSize() / 2), Math.min(y, boundsY))
+                        Math.max(characterSizeHalf, Math.min(x, boundsX)),
+                        Math.max(characterSizeHalf, Math.min(y, boundsY))
                 });
             }
         });
@@ -83,7 +87,6 @@ public class GameManager {
 
     private void timeCheck() {
         if (gameState.getGameStart().plus(gameState.getGameDuration()).isAfter(LocalDateTime.now())) {
-            // TODO: check who won?
             gameState.setGameStatus(GameStatus.TIME_OUT);
         }
     }
@@ -131,6 +134,7 @@ public class GameManager {
                     var currentLevel = mouse.getCurrentLevel();
                     if (currentLevel == 0) {
                         mouse.setCurrentLevel(tunnelEntry.getKey());
+                        gameState.addSnapshot(tunnelEntry.getKey(), gameState.getCats());
                     } else {
                         mouse.setCurrentLevel(0);
                     }
