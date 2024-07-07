@@ -16,8 +16,8 @@ public class CatManager implements ICatManager {
                 .flatMap(
                         t -> t.getTunnelNodeList()
                                 .stream()
-                                .filter(node -> node.type() == NodeType.DOOR)
-                                .map(TunnelNode::position))
+                                .filter(TunnelNode::isDoorNode)
+                                .map(TunnelNode::getPosition))
                 .toList();
     }
 

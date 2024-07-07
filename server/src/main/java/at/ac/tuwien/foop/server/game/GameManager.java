@@ -10,7 +10,6 @@ import at.ac.tuwien.foop.server.network.UpdateBroadcaster;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class GameManager {
@@ -71,15 +70,14 @@ public class GameManager {
             var x = pos[0];
             var y = pos[1];
             var bounds = gameState.getGameField().getBounds();
-            var boundsX = bounds[0];
-            var boundsY = bounds[1];
+            var boundsX = bounds[0] - (gameState.getGameField().getMouseSize() / 2);
+            var boundsY = bounds[1] - (gameState.getGameField().getMouseSize() / 2);
             if (x > boundsX || y > boundsY || x < 0 || y < 0) {
-                m.setPos(new double[]{Math.max(0, Math.min(x, boundsX)), Math.max(0, Math.min(y, boundsY))});
+                m.setPos(new double[]{
+                        Math.max(0 + (gameState.getGameField().getMouseSize() / 2), Math.min(x, boundsX)),
+                        Math.max(0 + (gameState.getGameField().getMouseSize() / 2), Math.min(y, boundsY))
+                });
             }
-        });
-        mice.stream().filter(m -> m.getCurrentLevel() != 0).forEach(m -> {
-            var currentTunnel = gameState.getGameField().getTunnels().get(m.getCurrentLevel());
-            currentTunnel.isPosWithinTunnel(m.getPos()[0], m.getPos()[1]);
         });
     }
 
@@ -111,7 +109,7 @@ public class GameManager {
         switch (actionRequestDto.getType()) {
             case DIRECTION -> {
                 var direction = actionRequestDto.getDirection();
-                var speedPerTick = configuration.mouseSpeed() / configuration.tickRate();
+                var speedPerTick = (configuration.mouseSpeed() * gameState.getGameField().getBounds()[0] / 100d) / configuration.tickRate();
                 double xChange = direction.getDirX() * speedPerTick;
                 double yChange = direction.getDirY() * speedPerTick;
                 if (mouse.getCurrentLevel() == 0) {
@@ -120,26 +118,21 @@ public class GameManager {
                     var currentTunnel = gameState.getGameField().getTunnels().get(mouse.getCurrentLevel());
                     var nextX = mousePos[0] + xChange;
                     var nextY = mousePos[1] + yChange;
-                    if (currentTunnel.isPosWithinTunnel(nextX, nextY)) {
+                    if (currentTunnel.isPosWithinTunnel(nextX, nextY, gameState.getGameField().getMouseSize())) {
                         mouse.move(xChange, yChange);
                     }
                 }
             }
             case TUNNEL_VOTE -> mouse.setTunnelVote(actionRequestDto.getTunnelVote());
             case LEVEL_CHANGE -> {
-                var toLevelOpt = gameState.getGameField().getTunnels().entrySet().stream().filter(e -> e.getValue().isPosWithinDoor(mousePos[0], mousePos[1])).map(Map.Entry::getKey).findFirst();
-                 toLevelOpt.ifPresent(toLevel -> {
+                var tunnelFound = gameState.getGameField().getTunnels().entrySet().stream()
+                        .filter(e -> e.getValue().isPosWithinDoor(mousePos[0], mousePos[1], gameState.getGameField().getMouseSize())).findFirst();
+                tunnelFound.ifPresent(tunnelEntry -> {
                     var currentLevel = mouse.getCurrentLevel();
-                    if (currentLevel != 0 && toLevel == 0) {
-                        var currentTunnel = gameState.getGameField().getTunnels().get(currentLevel);
-                        if (currentTunnel.isPosWithinDoor(mousePos[0], mousePos[1])) {
-                            mouse.setCurrentLevel(0);
-                        }
-                    } else if (currentLevel == 0 && toLevel != 0) {
-                        var targetTunnel = gameState.getGameField().getTunnels().get(toLevel);
-                        if (targetTunnel.isPosWithinDoor(mousePos[0], mousePos[1])) {
-                            mouse.setCurrentLevel(toLevel);
-                        }
+                    if (currentLevel == 0) {
+                        mouse.setCurrentLevel(tunnelEntry.getKey());
+                    } else {
+                        mouse.setCurrentLevel(0);
                     }
                 });
             }

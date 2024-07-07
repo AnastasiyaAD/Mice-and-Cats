@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 @Data
 public class Mouse {
     private final String username;
-    private double[] pos = new double[]{0,0};
+    private double[] pos = new double[]{1,1};
     private int currentLevel;
     private Integer tunnelVote;
 
