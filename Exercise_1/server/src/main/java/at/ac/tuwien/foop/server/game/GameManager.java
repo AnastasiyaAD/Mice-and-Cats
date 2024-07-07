@@ -86,7 +86,7 @@ public class GameManager {
     }
 
     private void timeCheck() {
-        if (gameState.getGameStart().plus(gameState.getGameDuration()).isAfter(LocalDateTime.now())) {
+        if (gameState.getGameStart().plus(gameState.getGameDuration()).isBefore(LocalDateTime.now())) {
             gameState.setGameStatus(GameStatus.TIME_OUT);
         }
     }
