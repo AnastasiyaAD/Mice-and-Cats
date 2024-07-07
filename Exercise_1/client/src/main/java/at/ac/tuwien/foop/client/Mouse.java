@@ -65,7 +65,7 @@ public class Mouse {
     mouseImg = new Image[4];
     for (int i = a; i < mouseImg.length + a; i++) {
       mouseImg[i - a] =
-        new ImageIcon("public/rat_player/" + i + ".png").getImage();
+        new ImageIcon("Exercise_1/public/rat_player/" + i + ".png").getImage();
     }
     ImageBuff =
       new BufferedImage(
