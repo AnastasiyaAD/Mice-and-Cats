@@ -99,7 +99,7 @@ public class GameBoardPanel extends JPanel {
   private void drawUnderground(Graphics2D g, int tunnel) {
     g.drawImage(
       new ImageIcon(
-        MessageFormat.format("public/playing_field/tunnel_{0}.png", tunnel)
+        MessageFormat.format("Exercise_1/public/playing_field/tunnel_{0}.png", tunnel)
       )
         .getImage(),
       fieldPositionX,
@@ -120,7 +120,7 @@ public class GameBoardPanel extends JPanel {
 
   private void drawSurface(Graphics2D g) {
     g.drawImage(
-      new ImageIcon("public/playing_field/grass.png").getImage(),
+      new ImageIcon("Exercise_1/public/playing_field/grass.png").getImage(),
       fieldPositionX,
       fieldPositionY,
       null

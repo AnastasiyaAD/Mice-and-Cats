@@ -21,7 +21,7 @@ public class Cat {
   }
 
   private void loadCatImage() {
-    var icon = new ImageIcon("public/cat/cat_back_1.png").getImage();
+    var icon = new ImageIcon("Exercise_1/public/cat/cat_back_1.png").getImage();
     ImageBuff =
       new BufferedImage(
         icon.getWidth(null),
