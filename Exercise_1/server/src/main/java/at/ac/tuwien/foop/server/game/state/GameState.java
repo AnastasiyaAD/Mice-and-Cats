@@ -53,7 +53,7 @@ public class GameState {
         // 2. If no mice are present in any tunnel, select any tunnel randomly
         if (tunnelCounts.isEmpty()) {
             Random random = new Random();
-            var tunnel = random.nextInt(tunnels.size());
+            var tunnel = random.nextInt(tunnels.size()) + 1;
             var tunnelNode = gameField.getTunnels().get(tunnel).getRandomNonDoorNode();
             return new TunnelPosition(tunnel, tunnelNode);
         }
@@ -75,7 +75,7 @@ public class GameState {
 
         // 5. Choose randomly among the tunnels with the minimum count
         Random random = new Random();
-        int selectedTunnel = minTunnels.get(random.nextInt(minTunnels.size()));
+        int selectedTunnel = minTunnels.get(random.nextInt(minTunnels.size()) + 1);
 
         // 6. Return the respawn position for the selected tunnel
         var tunnelNode = gameField.getTunnels().get(selectedTunnel).getRandomNonDoorNode();

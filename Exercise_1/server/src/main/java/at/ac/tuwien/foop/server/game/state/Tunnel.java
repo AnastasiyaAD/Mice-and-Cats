@@ -35,7 +35,7 @@ public class Tunnel {
     }
 
     public TunnelNode getRandomNonDoorNode() {
-        var nonDoorNodes = tunnelNodeList.stream().filter(TunnelNode::isDoorNode).toList();
+        var nonDoorNodes = tunnelNodeList.stream().filter(x -> !x.isDoorNode()).toList();
         var random = new Random();
         return nonDoorNodes.get(random.nextInt(nonDoorNodes.size()));
     }
