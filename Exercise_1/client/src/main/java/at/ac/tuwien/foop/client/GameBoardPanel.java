@@ -13,6 +13,7 @@ public class GameBoardPanel extends JPanel {
 
   private int fieldPositionX;
   private int fieldPositionY;
+  private String state = "";
   private final int width;
   private final int height;
   private static int scale = 50;
@@ -37,6 +38,7 @@ public class GameBoardPanel extends JPanel {
   private String name;
 
   public void updateBoard(GameStateDto gameState) {
+    state = gameState.status().name();
     var mice = gameState.mice();
     // TODO unnecessary repetition of same calculation
     var fieldScaleX = (double) width / (gameState.gameField()[0] + 1);
@@ -89,7 +91,7 @@ public class GameBoardPanel extends JPanel {
         );
         cat.setYPosition(
           (int) Math.round(
-            serverCatPosition[1] * scale + fieldPositionY -middleCat
+            serverCatPosition[1] * scale + fieldPositionY - middleCat
           )
         );
       }
@@ -99,7 +101,10 @@ public class GameBoardPanel extends JPanel {
   private void drawUnderground(Graphics2D g, int tunnel) {
     g.drawImage(
       new ImageIcon(
-        MessageFormat.format("Exercise_1/public/playing_field/tunnel_{0}.png", tunnel)
+        MessageFormat.format(
+          "Exercise_1/public/playing_field/tunnel_{0}.png",
+          tunnel
+        )
       )
         .getImage(),
       fieldPositionX,
@@ -116,6 +121,24 @@ public class GameBoardPanel extends JPanel {
         );
       }
     }
+  }
+
+  private void drawGameOver(Graphics2D g) {
+    g.drawImage(
+      new ImageIcon("Exercise_1/public/gameover.png").getImage(),
+      fieldPositionX,
+      fieldPositionY,
+      null
+    );
+  }
+
+  private void drawGameWon(Graphics2D g) {
+    g.drawImage(
+      new ImageIcon("Exercise_1/public/victory.png").getImage(),
+      fieldPositionX,
+      fieldPositionY,
+      null
+    );
   }
 
   private void drawSurface(Graphics2D g) {
@@ -153,17 +176,30 @@ public class GameBoardPanel extends JPanel {
     g.setColor(Color.YELLOW);
     g.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
     g.drawString("Mice and Cats in a Network Game", 300, 25);
-    var player = this.mice.get(clientId);
-    if (player == null) {
-      drawSurface(g);
-    } else {
-      int tunnel = player.getTunnel();
-      if (tunnel == 0) {
+    switch (this.state) {
+      case "TIME_OUT":
+        drawGameOver(g);
+        break;
+      case "RUNNING":
+        var player = this.mice.get(clientId);
+        if (player == null) {
+          drawSurface(g);
+        } else {
+          int tunnel = player.getTunnel();
+          if (tunnel == 0) {
+            drawSurface(g);
+          } else {
+            drawUnderground(g, tunnel);
+          }
+        }
+        break;
+      case "MICE_WON":
+        drawGameWon(g);
+      default:
         drawSurface(g);
-      } else {
-        drawUnderground(g, tunnel);
-      }
+        break;
     }
+
     repaint();
   }
 
