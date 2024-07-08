@@ -21,7 +21,7 @@ public class TrackerCat implements IServerCatState {
     }
 
     @Override
-    public Optional<String> move(GameState gameState) {
+    public Optional<Mouse> move(GameState gameState) {
         // Directly heads to the nearest mouse, or defaults to the nearest tunnel if no mouse is present
         // TODO: unify mouse catch logic
         var seenMice = gameState.getMice().values().stream().filter(mouse -> mouse.getCurrentLevel() == 0).toList();
@@ -29,11 +29,27 @@ public class TrackerCat implements IServerCatState {
 
         if (nearestMouse.isPresent()) {
             var foundMouse = nearestMouse.get();
-            var speedPerTick = configuration.mouseSpeed() / configuration.tickRate();
+            double speedPerTick = ((double) configuration.catSpeed() / 10) / configuration.tickRate();
             var nextPos = computeMoveToMouse(foundMouse.getPos(), this.position, speedPerTick);
             this.position = nextPos;
         }
-        return nearestMouse.map(Mouse::getUsername);
+        if (nearestMouse.isPresent()) {
+            return intersects(nearestMouse.get());
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    private Optional<Mouse> intersects(Mouse mouse) {
+        double dx = this.position[0] - mouse.getPos()[0];
+        double dy = this.position[1] - mouse.getPos()[1];
+        double distance = Math.sqrt(dx * dx + dy * dy);
+        double radiusSum = (1.44 / 2) + (0.8 / 2);
+        if (distance < radiusSum) {
+            return Optional.of(mouse);
+        } else {
+            return Optional.empty();
+        }
     }
 
     private double[] computeMoveToMouse(double[] mousePos, double[] catPos, double distance) {

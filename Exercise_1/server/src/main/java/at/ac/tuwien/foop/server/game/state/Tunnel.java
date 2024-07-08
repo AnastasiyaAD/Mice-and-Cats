@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.LinkedList;
+import java.util.Random;
 
 @Data
 @AllArgsConstructor
@@ -31,5 +32,11 @@ public class Tunnel {
         var northBoundsCheck = y - (node.isNorthConnection() && accountForConnections ? 0 : characterSizeHalf) >= nodeY;
         var southBoundsCheck = y + (node.isSouthConnection() && accountForConnections ? 0 : characterSizeHalf) <= nodeY + 1;
         return westBoundsCheck && eastBoundsCheck && northBoundsCheck && southBoundsCheck;
+    }
+
+    public TunnelNode getRandomNonDoorNode() {
+        var nonDoorNodes = tunnelNodeList.stream().filter(TunnelNode::isDoorNode).toList();
+        var random = new Random();
+        return nonDoorNodes.get(random.nextInt(nonDoorNodes.size()));
     }
 }

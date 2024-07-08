@@ -28,18 +28,12 @@ public class CatManager implements ICatManager {
 
     @Override
     public void spawnCats(Configuration configuration, GameState gameState) {
-        // FIXME: The tunnel entrances could be fixed
         var entrances = getTunnelEntranceCoordinates(gameState);
-        // TODO: We could maybe use a more intelligent algorithm to spawn cats
-        var dimensions = gameState.getGameField().getBounds();
-        var x = dimensions[0];
-        var y = dimensions[1];
-
         // Random number generator
         Random rand = new Random();
 
-        // FIXME: More sophisticated amount of cats selection
-        for (int i = 0; i < 1; i++) {
+        // FIXME: More sophisticated amount of cats selection? Right now we pick random
+        for (int i = 0; i < configuration.trackerCats(); i++) {
             int randomIndex = rand.nextInt(entrances.size());
             int[] randomEntrance = entrances.get(randomIndex);
             TrackerCat cat = new TrackerCat(configuration, intCoordinatesToDoubleCoords(randomEntrance));
@@ -54,7 +48,14 @@ public class CatManager implements ICatManager {
     @Override
     public void updateCats(GameState gameState) {
         for (var cat:this.cats) {
-            cat.move(gameState);
+            var m = cat.move(gameState);
+            if (m.isPresent()) {
+                var mouseSpawnPosition = gameState.getTunnelRespawnPosition();
+                var position = mouseSpawnPosition.node().getPosition();
+                var level = mouseSpawnPosition.level();
+                m.get().setPosition(position[0] + 0.5, position[1] + 0.5);
+                m.get().setCurrentLevel(level);
+            }
         }
         gameState.setCats(cats.stream().map(c -> {
             Cat cr = new Cat();

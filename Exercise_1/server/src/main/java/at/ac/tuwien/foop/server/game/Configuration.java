@@ -8,6 +8,9 @@ import java.time.Duration;
  * @param mouseSpeed          Mouse speed per second in %, relative to the game field width (100% = moves through whole game field in the x-axis in one second)
  * @param catSpeed            Cat speed per second in %, relative to the game field width (100% = moves through whole game field in the x-axis in one second)
  * @param catSnapshotDuration Duration snapshot of previously known cat positions is shows inside tunnels
+ * @param trackerCats         How many tracker cats are spawned
+ * @param guardCats           How many guard cats are spawned
  */
-public record Configuration(int tickRate, int mouseSpeed, int catSpeed, Duration catSnapshotDuration) {
+public record Configuration(int tickRate, int mouseSpeed, int catSpeed, Duration catSnapshotDuration,
+                            int trackerCats, int guardCats) {
 }
