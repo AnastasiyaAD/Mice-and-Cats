@@ -61,7 +61,7 @@ public class GameManager {
 
     private void checkMiceWon() {
         var countingMap = gameState.getMice().values().stream().collect(Collectors.groupingBy(Mouse::getCurrentLevel, Collectors.counting()));
-        if (countingMap.getOrDefault(0, -1L) == 0 && countingMap.values().stream().filter(level -> level != 0).distinct().count() == 1) {
+        if (countingMap.get(0) == null && countingMap.values().size() == 1) {
             gameState.setGameStatus(GameStatus.MICE_WON);
         }
     }
@@ -76,7 +76,7 @@ public class GameManager {
             double characterSizeHalf = gameState.getGameField().getMouseSize() / 2;
             var boundsX = bounds[0] + 1 - characterSizeHalf;
             var boundsY = bounds[1] + 1 - characterSizeHalf;
-            if (x > boundsX || y > boundsY || x < 0 || y < 0) {
+            if (x > boundsX || y > boundsY || x < characterSizeHalf || y < characterSizeHalf) {
                 m.setPos(new double[]{
                         Math.max(characterSizeHalf, Math.min(x, boundsX)),
                         Math.max(characterSizeHalf, Math.min(y, boundsY))
