@@ -195,6 +195,7 @@ public class GameBoardPanel extends JPanel {
         break;
       case "MICE_WON":
         drawGameWon(g);
+        break;
       default:
         drawSurface(g);
         break;
