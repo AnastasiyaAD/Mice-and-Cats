@@ -110,7 +110,6 @@ public class ClientGUI
 
     chatPanel.add(sendMessage);
 
-    // FIXME: this could be cleaned up
     client = new Client(boardPanel, chatPanel);
     inputManager = new InputManager(client);
 

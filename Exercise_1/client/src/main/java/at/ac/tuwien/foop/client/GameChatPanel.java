@@ -1,9 +1,12 @@
 package at.ac.tuwien.foop.client;
 
 import at.ac.tuwien.foop.network.dto.GameStateDto;
+import at.ac.tuwien.foop.network.dto.MouseDto;
+
 import java.awt.*;
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -21,31 +24,36 @@ public class GameChatPanel extends JPanel {
   private boolean startVote;
   private HashMap<String, Mouse> mice = new HashMap<>();
 
-  public GameChatPanel(int x, int y, int width, int height) {
+  private void setupPane(int x, int y, int width, int height) {
     setSize(width, height);
     setBounds(x, y, width, height);
     setFocusable(true);
-    startVote = false;
+  }
 
+  private void setupTimer(int width) {
     timer = new JLabel("Timer", SwingConstants.CENTER);
     Dimension dimTimer = new Dimension();
     dimTimer.setSize(new Dimension(width, 30));
     timer.setPreferredSize(dimTimer);
     add(timer);
+  }
 
+  private void setupMessageArea(int width, int height) {
     messageArea = new JTextPane();
     messageArea.setEditable(false);
 
     var scroll = new JScrollPane(
-      messageArea,
-      JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-      ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+            messageArea,
+            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
     );
     Dimension dimField = new Dimension();
     dimField.setSize(new Dimension(width - 30, height - 120));
     scroll.setPreferredSize(dimField);
     add(scroll);
+  }
 
+  private void setupTextField(int x, int y, int width, int height) {
     textField = new JTextField();
     Dimension dimFieldText = new Dimension();
     dimFieldText.setSize(new Dimension(width, 30));
@@ -53,6 +61,14 @@ public class GameChatPanel extends JPanel {
     textField.setLocation(x, y + height - 60);
     add(textField);
     textField.setEditable(false);
+  }
+
+  public GameChatPanel(int x, int y, int width, int height) {
+    setupPane(x, y, width, height);
+    startVote = false;
+    setupTimer(width);
+    setupMessageArea(width, height);
+    setupTextField(x, y, width, height);
   }
 
   public void updateBoard(GameStateDto gameState) {
@@ -80,32 +96,35 @@ public class GameChatPanel extends JPanel {
           this.messageArea.setText("");
         }
       }
-      clientMouse.setTunnel((int) mouse.level());
+      clientMouse.setTunnel(mouse.level());
     }
     if (startVote) {
-      this.textField.setEditable(true);
-      for (var mouse : mice) {
-        String id = mouse.clientId().toString();
-        var clientMouse = this.mice.get(id);
-        int playerTunnel = clientMouse.getTunnel();
+      updateVote(mice);
+    }
+    this.repaint();
+  }
+  private void updateVote(List<MouseDto> mice) {
+    this.textField.setEditable(true);
+    for (var mouse : mice) {
+      String id = mouse.clientId().toString();
+      var clientMouse = this.mice.get(id);
+      int playerTunnel = clientMouse.getTunnel();
 
-        //chat only for mice in one tunnel without messages from the player himself
-        if (mouse.level() == playerTunnel && !id.equals(clientId)) {
-          Integer vote = clientMouse.getTunnelVote();
-          Integer sVote = mouse.tunnelVote();
-          if (sVote != vote) {
-            appendToPane(
-              this.messageArea,
-              mouse.username() + ": " + sVote + "\n" + "\n",
-              Color.BLACK
-            );
-            // update vote mouse
-            clientMouse.setTunnelVote(sVote);
-          }
+      //chat only for mice in one tunnel without messages from the player himself
+      if (mouse.level() == playerTunnel && !id.equals(clientId)) {
+        Integer vote = clientMouse.getTunnelVote();
+        Integer sVote = mouse.tunnelVote();
+        if (sVote.equals(vote)) {
+          appendToPane(
+                  this.messageArea,
+                  mouse.username() + ": " + sVote + "\n" + "\n",
+                  Color.BLACK
+          );
+          // update vote mouse
+          clientMouse.setTunnelVote(sVote);
         }
       }
     }
-    this.repaint();
   }
 
   public String getMessage() {

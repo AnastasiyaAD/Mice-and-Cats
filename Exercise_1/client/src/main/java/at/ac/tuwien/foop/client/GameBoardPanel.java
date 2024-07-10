@@ -40,7 +40,6 @@ public class GameBoardPanel extends JPanel {
   public void updateBoard(GameStateDto gameState) {
     state = gameState.status().name();
     var mice = gameState.mice();
-    // TODO unnecessary repetition of same calculation
     var fieldScaleX = (double) width / (gameState.gameField()[0] + 1);
     var fieldScaleY = (double) height / (gameState.gameField()[1] + 1);
     for (var mouse : mice) {
