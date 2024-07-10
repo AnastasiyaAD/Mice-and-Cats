@@ -75,7 +75,7 @@ public class GameState {
 
         // 5. Choose randomly among the tunnels with the minimum count
         Random random = new Random();
-        int selectedTunnel = minTunnels.get(random.nextInt(minTunnels.size()) + 1);
+        int selectedTunnel = minTunnels.get(random.nextInt(minTunnels.size()));
 
         // 6. Return the respawn position for the selected tunnel
         var tunnelNode = gameField.getTunnels().get(selectedTunnel).getRandomNonDoorNode();

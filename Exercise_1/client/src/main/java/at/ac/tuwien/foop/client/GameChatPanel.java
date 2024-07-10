@@ -114,7 +114,7 @@ public class GameChatPanel extends JPanel {
       if (mouse.level() == playerTunnel && !id.equals(clientId)) {
         Integer vote = clientMouse.getTunnelVote();
         Integer sVote = mouse.tunnelVote();
-        if (sVote.equals(vote)) {
+        if (sVote != vote) {
           appendToPane(
                   this.messageArea,
                   mouse.username() + ": " + sVote + "\n" + "\n",
