@@ -1,0 +1,5 @@
+Compiler version: 24.05.10.7822 - macosx-armv6
+Type: Quick_melt
+batch mode: False
+new session: True
+starting date: 07/10/2024 1:03:29.316 PM
