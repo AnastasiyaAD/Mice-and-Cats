@@ -5585,11 +5585,154 @@ char *names982 [] =
 
 char *names983 [] =
 {
-"status",
-"symbol",
-"level",
 "position_x",
 "position_y",
+};
+
+char *names985 [] =
+{
+"player",
+"rand",
+};
+
+char *names988 [] =
+{
+"position_x",
+"position_y",
+};
+
+char *names989 [] =
+{
+"internal_item",
+"is_utc",
+"microseconds_now",
+};
+
+char *names996 [] =
+{
+"compact_time",
+"fractional_second",
+};
+
+char *names999 [] =
+{
+"time",
+"date",
+};
+
+char *names1003 [] =
+{
+"origin_date_time",
+"time",
+"date",
+};
+
+char *names1004 [] =
+{
+"origin_date",
+"year",
+"month",
+"day",
+};
+
+char *names1005 [] =
+{
+"minute",
+"hour",
+"fine_second",
+};
+
+char *names1007 [] =
+{
+"value",
+"name",
+"is_text",
+"is_numeric",
+"count_max",
+"count_min",
+"value_max",
+"value_min",
+"type",
+};
+
+char *names1008 [] =
+{
+"ordered_compact_date",
+};
+
+char *names1010 [] =
+{
+"value",
+"days",
+"months",
+"internal_parser",
+"separators_used",
+"right_day_text",
+"base_century",
+};
+
+char *names1011 [] =
+{
+"ordered_compact_date",
+};
+
+char *names1012 [] =
+{
+"ordered_compact_date",
+};
+
+char *names1013 [] =
+{
+"compact_time",
+"fractional_second",
+};
+
+char *names1014 [] =
+{
+"compact_time",
+"fractional_second",
+};
+
+char *names1015 [] =
+{
+"compact_time",
+"ordered_compact_date",
+"fractional_second",
+};
+
+char *names1016 [] =
+{
+"time",
+"date",
+"compact_time",
+"ordered_compact_date",
+"fractional_second",
+};
+
+char *names1017 [] =
+{
+"source_string",
+"day_text_val",
+"code",
+"months",
+"days",
+"parsed",
+"compact_time",
+"ordered_compact_date",
+"year_val",
+"month_val",
+"day_val",
+"hour_val",
+"minute_val",
+"base_century",
+"fractional_second",
+"fine_second_val",
+};
+
+char *names1018 [] =
+{
+"start_bound",
+"end_bound",
 };
 
 

@@ -3948,7 +3948,135 @@ static struct eif_par_types par984 = {984, ptf984, (uint16) 1, (uint16) 0, (char
 static EIF_TYPE_INDEX ptf985[] = {0,0xFFFF};
 static struct eif_par_types par985 = {985, ptf985, (uint16) 1, (uint16) 0, (char) 0};
 
-int egc_partab_size_init = 985				;
+/* RANDGENERATOR */
+static EIF_TYPE_INDEX ptf986[] = {0,0xFFFF};
+static struct eif_par_types par986 = {986, ptf986, (uint16) 1, (uint16) 0, (char) 0};
+
+/* TUNNEL */
+static EIF_TYPE_INDEX ptf987[] = {0,0xFFFF};
+static struct eif_par_types par987 = {987, ptf987, (uint16) 1, (uint16) 0, (char) 0};
+
+/* C_DATE */
+static EIF_TYPE_INDEX ptf988[] = {0,0xFFFF};
+static struct eif_par_types par988 = {988, ptf988, (uint16) 1, (uint16) 0, (char) 0};
+
+/* DATE_TIME_LANGUAGE_CONSTANTS */
+static EIF_TYPE_INDEX ptf989[] = {0,0xFFFF};
+static struct eif_par_types par989 = {989, ptf989, (uint16) 1, (uint16) 0, (char) 0};
+
+/* DATE_TIME_TOOLS */
+static EIF_TYPE_INDEX ptf990[] = {989,0xFFFF};
+static struct eif_par_types par990 = {990, ptf990, (uint16) 1, (uint16) 0, (char) 0};
+
+/* GROUP_ELEMENT */
+static EIF_TYPE_INDEX ptf991[] = {0,0xFFFF};
+static struct eif_par_types par991 = {991, ptf991, (uint16) 1, (uint16) 0, (char) 0};
+
+/* TIME_UTILITY */
+static EIF_TYPE_INDEX ptf992[] = {0,0xFFFF};
+static struct eif_par_types par992 = {992, ptf992, (uint16) 1, (uint16) 0, (char) 0};
+
+/* TIME_CONSTANTS */
+static EIF_TYPE_INDEX ptf993[] = {992,0xFFFF};
+static struct eif_par_types par993 = {993, ptf993, (uint16) 1, (uint16) 0, (char) 0};
+
+/* TIME_MEASUREMENT */
+static EIF_TYPE_INDEX ptf994[] = {993,0xFFFF};
+static struct eif_par_types par994 = {994, ptf994, (uint16) 1, (uint16) 0, (char) 0};
+
+/* TIME_VALUE */
+static EIF_TYPE_INDEX ptf995[] = {994,0xFFFF};
+static struct eif_par_types par995 = {995, ptf995, (uint16) 1, (uint16) 0, (char) 0};
+
+/* DATE_CONSTANTS */
+static EIF_TYPE_INDEX ptf996[] = {992,0xFFFF};
+static struct eif_par_types par996 = {996, ptf996, (uint16) 1, (uint16) 0, (char) 0};
+
+/* DATE_TIME_MEASUREMENT */
+static EIF_TYPE_INDEX ptf997[] = {996,0xFFF7,993,0xFFFF};
+static struct eif_par_types par997 = {997, ptf997, (uint16) 2, (uint16) 0, (char) 0};
+
+/* DATE_TIME_VALUE */
+static EIF_TYPE_INDEX ptf998[] = {997,0xFFFF};
+static struct eif_par_types par998 = {998, ptf998, (uint16) 1, (uint16) 0, (char) 0};
+
+/* DATE_MEASUREMENT */
+static EIF_TYPE_INDEX ptf999[] = {996,0xFFFF};
+static struct eif_par_types par999 = {999, ptf999, (uint16) 1, (uint16) 0, (char) 0};
+
+/* CODE_VALIDITY_CHECKER */
+static EIF_TYPE_INDEX ptf1000[] = {0,0xFFFF};
+static struct eif_par_types par1000 = {1000, ptf1000, (uint16) 1, (uint16) 0, (char) 0};
+
+/* DURATION */
+static EIF_TYPE_INDEX ptf1001[] = {69,0xFFF7,991,0xFFFF};
+static struct eif_par_types par1001 = {1001, ptf1001, (uint16) 2, (uint16) 0, (char) 0};
+
+/* DATE_TIME_DURATION */
+static EIF_TYPE_INDEX ptf1002[] = {1001,0xFFF7,997,0xFFFF};
+static struct eif_par_types par1002 = {1002, ptf1002, (uint16) 2, (uint16) 0, (char) 0};
+
+/* DATE_DURATION */
+static EIF_TYPE_INDEX ptf1003[] = {1001,0xFFF7,996,0xFFF7,999,0xFFFF};
+static struct eif_par_types par1003 = {1003, ptf1003, (uint16) 3, (uint16) 0, (char) 0};
+
+/* TIME_DURATION */
+static EIF_TYPE_INDEX ptf1004[] = {1001,0xFFF7,994,0xFFF7,85,0xFFFF};
+static struct eif_par_types par1004 = {1004, ptf1004, (uint16) 3, (uint16) 0, (char) 0};
+
+/* ABSOLUTE */
+static EIF_TYPE_INDEX ptf1005[] = {70,0xFFFF};
+static struct eif_par_types par1005 = {1005, ptf1005, (uint16) 1, (uint16) 0, (char) 0};
+
+/* DATE_TIME_CODE */
+static EIF_TYPE_INDEX ptf1006[] = {1000,0xFFF7,143,0xFFFF};
+static struct eif_par_types par1006 = {1006, ptf1006, (uint16) 2, (uint16) 0, (char) 0};
+
+/* DATE_VALUE */
+static EIF_TYPE_INDEX ptf1007[] = {999,0xFFF7,162,0xFFFF};
+static struct eif_par_types par1007 = {1007, ptf1007, (uint16) 2, (uint16) 0, (char) 0};
+
+/* FIND_SEPARATOR_FACILITY */
+static EIF_TYPE_INDEX ptf1008[] = {0,0xFFFF};
+static struct eif_par_types par1008 = {1008, ptf1008, (uint16) 1, (uint16) 0, (char) 0};
+
+/* DATE_TIME_CODE_STRING */
+static EIF_TYPE_INDEX ptf1009[] = {1008,0xFFFF};
+static struct eif_par_types par1009 = {1009, ptf1009, (uint16) 1, (uint16) 0, (char) 0};
+
+/* DATE_VALIDITY_CHECKER */
+static EIF_TYPE_INDEX ptf1010[] = {996,0xFFF7,1007,0xFFF7,0,0xFFFF};
+static struct eif_par_types par1010 = {1010, ptf1010, (uint16) 3, (uint16) 0, (char) 0};
+
+/* DATE */
+static EIF_TYPE_INDEX ptf1011[] = {1005,0xFFF7,1007,0xFFF7,1010,0xFFF7,143,0xFFFF};
+static struct eif_par_types par1011 = {1011, ptf1011, (uint16) 4, (uint16) 0, (char) 0};
+
+/* TIME_VALIDITY_CHECKER */
+static EIF_TYPE_INDEX ptf1012[] = {993,0xFFF7,995,0xFFF7,0,0xFFFF};
+static struct eif_par_types par1012 = {1012, ptf1012, (uint16) 3, (uint16) 0, (char) 0};
+
+/* TIME */
+static EIF_TYPE_INDEX ptf1013[] = {1005,0xFFF7,995,0xFFF7,1012,0xFFF7,143,0xFFFF};
+static struct eif_par_types par1013 = {1013, ptf1013, (uint16) 4, (uint16) 0, (char) 0};
+
+/* DATE_TIME_VALIDITY_CHECKER */
+static EIF_TYPE_INDEX ptf1014[] = {1010,0xFFF7,1012,0xFFF7,0,0xFFFF};
+static struct eif_par_types par1014 = {1014, ptf1014, (uint16) 3, (uint16) 0, (char) 0};
+
+/* DATE_TIME */
+static EIF_TYPE_INDEX ptf1015[] = {1005,0xFFF7,998,0xFFF7,1014,0xFFF7,143,0xFFFF};
+static struct eif_par_types par1015 = {1015, ptf1015, (uint16) 4, (uint16) 0, (char) 0};
+
+/* DATE_TIME_PARSER */
+static EIF_TYPE_INDEX ptf1016[] = {1014,0xFFF7,1008,0xFFFF};
+static struct eif_par_types par1016 = {1016, ptf1016, (uint16) 2, (uint16) 0, (char) 0};
+
+/* INTERVAL [G#1] */
+static EIF_TYPE_INDEX ptf1017[] = {69,0xFFFF};
+static struct eif_par_types par1017 = {1017, ptf1017, (uint16) 1, (uint16) 1, (char) 0};
+
+int egc_partab_size_init = 1017				;
 				struct eif_par_types *egc_partab_init[] = {
 &par0,
 &par1,
@@ -4936,6 +5064,38 @@ int egc_partab_size_init = 985				;
 &par983,
 &par984,
 &par985,
+&par986,
+&par987,
+&par988,
+&par989,
+&par990,
+&par991,
+&par992,
+&par993,
+&par994,
+&par995,
+&par996,
+&par997,
+&par998,
+&par999,
+&par1000,
+&par1001,
+&par1002,
+&par1003,
+&par1004,
+&par1005,
+&par1006,
+&par1007,
+&par1008,
+&par1009,
+&par1010,
+&par1011,
+&par1012,
+&par1013,
+&par1014,
+&par1015,
+&par1016,
+&par1017,
 NULL};
 
 #ifdef __cplusplus

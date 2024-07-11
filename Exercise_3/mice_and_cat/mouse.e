@@ -39,7 +39,7 @@ feature
     	end
     move_down
     	do
-    		if position_y < 8 then
+    		if position_y < 9 then
     			set_position_y(position_y + 1)
     		end
     	end
@@ -51,13 +51,21 @@ feature
     	end
     move_right
     	do
-    		if position_x < 18 then
+    		if position_x < 19 then
     			set_position_x(position_x + 1)
     		end
     	end
-    make
+    make(x,y:INTEGER)
+    	local
+    		rand_x: INTEGER
+    		rand_y: INTEGER
+    		rand: RANDGENERATOR
     	do
-
+    		create rand.make
+    		rand_x := rand.get(x-1)
+    		rand_y := rand.get(y-1)
+			set_position_x(rand_x)
+			set_position_y(rand_y)
     	end
 
 end

@@ -11,7 +11,7 @@ case "$O" in
 esac
 echo "Preparing C compilation"
 $spitshell >Makefile <<!GROK!THIS!
-INCLUDE_PATH =  -I"\$(ISE_LIBRARY)/library/base/elks/encoding/implementation/include" `$ISE_LIBRARY/library/base/elks/encoding/implementation/unix/Clib/iconv-config --include_path`
+INCLUDE_PATH =  -I"\$(ISE_LIBRARY)/library/base/elks/encoding/implementation/include" -I"\$(ISE_LIBRARY)/library/time/spec/include" `$ISE_LIBRARY/library/base/elks/encoding/implementation/unix/Clib/iconv-config --include_path`
 SHELL = /bin/sh
 CC = $cc
 CPP = $cpp
@@ -53,7 +53,7 @@ $spitshell >>Makefile <<'!NO!SUBS!'
 .cpp.o:
 	$(CPP) $(CPPFLAGS) -c $<
 
-SUBDIRS = C1 E1
+SUBDIRS = C1 C2 E1
 
 EXTERNALS =  \
 	`$(ISE_LIBRARY)/library/base/elks/encoding/implementation/unix/Clib/iconv-config --library`
@@ -62,6 +62,9 @@ all: mice_and_cat
 
 C1/Cobj1.o: Makefile E1/estructure.h
 	cd C1 ; $(START_TEST) $(SHELL) Makefile.SH ; $(MAKE) $(END_TEST)
+
+C2/Cobj2.o: Makefile E1/estructure.h
+	cd C2 ; $(START_TEST) $(SHELL) Makefile.SH ; $(MAKE) $(END_TEST)
 
 E1/Makefile: E1/Makefile.SH
 	cd E1 ; $(SHELL) Makefile.SH
@@ -103,7 +106,7 @@ E1/einit.o: Makefile E1/Makefile E1/estructure.h
 E1/eparents.o: Makefile E1/Makefile E1/estructure.h
 	cd E1 ; $(MAKE) eparents.o
 
-OBJECTS= C1/Cobj1.o  E1/eoption.o E1/epattern.o E1/efrozen.o E1/ecall.o E1/eplug.o E1/eskelet.o E1/enames.o E1/evisib.o E1/ececil.o E1/einit.o E1/eparents.o
+OBJECTS= C2/Cobj2.o C1/Cobj1.o  E1/eoption.o E1/epattern.o E1/efrozen.o E1/ecall.o E1/eplug.o E1/eskelet.o E1/enames.o E1/evisib.o E1/ececil.o E1/einit.o E1/eparents.o
 
 PRECOMP_OBJECTS= "/Users/anastasiadudina/Eiffel User Files/24.05/precomp/spec/macosx-armv6/EIFGENs/base-scoop-safe/W_code/preobj.o"
 

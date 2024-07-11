@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "mice_and_cat application root class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -13,6 +13,10 @@ create
 	make
 
 feature {NONE} -- Initialization
+	t: TIME
+	time_out: TIME
+	s:INTEGER
+	timer:TIME
 	make
 			-- Launch `Current'.
 		local
@@ -21,10 +25,15 @@ feature {NONE} -- Initialization
 			exit: BOOLEAN
 			player: MOUSE
 			field: FIELD
+			status: STRING
 		do
 			create terminal.make
 			terminal.set_non_blocking
 			terminal.make_term_raw
+			create t.make_now
+			create time_out.make_now
+			time_out.minute_add (1)
+			create timer.make_now
 			create field.make
 			player := field.get_player
 			print ("%/27/[25l") -- make cursor invisible
@@ -45,8 +54,27 @@ feature {NONE} -- Initialization
 						exit := True
 					else
 				end
+				t.make_now
+				if field.is_tunnel then
+					status := "%N%N  !!! VICTORY !!! "
+					exit := True
+				end
+				if is_time_out then
+					status := "%N%N  !!! GAME OVER !!! "
+					exit := True
+				end
 				field.print_field
-				sleep (1000 * 1000 * 500)
+				print("%N    TIMER: ")
+				s := time_out.relative_duration (t).seconds_count
+				timer.make_by_seconds (s)
+				print(timer.formatted_out ("mi:ss")) --print Timer
+				sleep (1000 * 1000 * 600)
 			end
+			print(status)
 		end
+
+	is_time_out: BOOLEAN
+	do
+		Result := t >= time_out
+	end
 end
