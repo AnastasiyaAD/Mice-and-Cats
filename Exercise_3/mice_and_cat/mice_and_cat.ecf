@@ -20,6 +20,7 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf">
 			<option warning="none"/>
 		</library>
+		<library name="math" location="$ISE_LIBRARY\contrib\library\gobo\library\math\src\library.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf">
 			<option warning="none"/>
 		</library>

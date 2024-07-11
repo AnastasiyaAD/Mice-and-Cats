@@ -19,15 +19,24 @@ feature
     width: INTEGER
     hight: INTEGER
     tunnels: ARRAY[TUNNEL]
+    number_caught: INTEGER
+
+
+    cat: CAT
 	make
+		local
+			speed: DOUBLE
 		do
-			width := 20
-			hight := 10
+			width := 22
+			hight := 11
+			speed := 3.5
 
 			create player.make(width, hight)
-			create tunnel_1.make(width, hight\\2)
-			create tunnel_2.make(width\\2, hight)
+			create tunnel_1.make(width, hight//2)
+			create cat.make(width\\2, hight, speed)
+			create tunnel_2.make(width//2, hight)
 			tunnels:= <<tunnel_1,tunnel_2>>
+			number_caught := 0
 
 
 		end
@@ -36,6 +45,25 @@ feature
         do
             Result := player
         end
+
+    get_cat: CAT
+        do
+            Result := cat
+        end
+
+    caught -- moving the mouse to a random location
+    	do
+			if player.get_position_y = cat.get_position_y and player.get_position_x = cat.get_position_x then
+				number_caught := number_caught + 1
+				player.make(width, hight)
+			end
+        end
+
+   get_caught: INTEGER
+   		do
+   			Result := number_caught
+   		end
+
 
     is_tunnel: BOOLEAN
     	local
@@ -54,7 +82,7 @@ feature
 		local
 	    i: INTEGER
 	    j: INTEGER
-	    print_tunnel: BOOLEAN
+	    print_dot: BOOLEAN
 		do
 			from
 				i := 0
@@ -66,19 +94,22 @@ feature
 					until
 						j >= width
 					loop
-						print_tunnel := false
+						print_dot := true
 						across tunnels as t loop -- print tunnels
 			    			if i = t.item.get_position_y and j = t.item.get_position_x then
 			    				print ("T")
-			    				print_tunnel:= true
+			    				print_dot:= false
 			    			end
 						end
 
-						if print_tunnel then
-						else
-							if i = player.get_position_y and j = player.get_position_x then -- print mouse
-							print ("O")
+						if i = cat.get_position_y and j = cat.get_position_x  then -- print cat
+							print ("X")
+							print_dot:= false
+						end
 
+						if print_dot then
+							if i = player.get_position_y and j = player.get_position_x then -- print mouse
+								print ("O")
 							else
 								print(".") -- print field
 							end

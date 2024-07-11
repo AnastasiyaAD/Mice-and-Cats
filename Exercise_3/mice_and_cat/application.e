@@ -12,13 +12,12 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature {NONE}
 	t: TIME
 	time_out: TIME
 	s:INTEGER
 	timer:TIME
 	make
-			-- Launch `Current'.
 		local
 			read_char: CHARACTER
 			terminal: TERMINAL
@@ -26,6 +25,7 @@ feature {NONE} -- Initialization
 			player: MOUSE
 			field: FIELD
 			status: STRING
+			cat: CAT
 		do
 			create terminal.make
 			terminal.set_non_blocking
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			create timer.make_now
 			create field.make
 			player := field.get_player
-			print ("%/27/[25l") -- make cursor invisible
+			cat := field.get_cat
 			from until exit loop
 				print ("%/27/[1J")  -- erase screen
 				print ("%/27/[H")   -- move cursor to top left
@@ -44,30 +44,37 @@ feature {NONE} -- Initialization
 				inspect read_char   -- mouse movement is not by arrows, but by S W D A  to exit, you need to press Q
 					when 'a' then
 						player.move_left
+						cat.move (player.get_position_x, player.get_position_y)
 					when 'd' then
 						player.move_right
+						cat.move (player.get_position_x, player.get_position_y)
 					when 'w' then
 						player.move_up
+						cat.move (player.get_position_x, player.get_position_y)
 					when 's' then
 						player.move_down
+						cat.move (player.get_position_x, player.get_position_y)
 					when 'q' then
 						exit := True
 					else
 				end
 				t.make_now
 				if field.is_tunnel then
-					status := "%N%N  !!! VICTORY !!! "
+					status := "%N%N   !!! VICTORY !!! "
 					exit := True
 				end
 				if is_time_out then
-					status := "%N%N  !!! GAME OVER !!! "
+					status := "%N%N !!! GAME OVER !!! "
 					exit := True
 				end
+				field.caught
 				field.print_field
-				print("%N    TIMER: ")
+				print("%NTIMER: ")
 				s := time_out.relative_duration (t).seconds_count
 				timer.make_by_seconds (s)
 				print(timer.formatted_out ("mi:ss")) --print Timer
+				print("  CAUGHT: ")
+				print(field.get_caught)
 				sleep (1000 * 1000 * 600)
 			end
 			print(status)

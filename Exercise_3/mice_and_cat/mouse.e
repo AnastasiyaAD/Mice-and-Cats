@@ -13,6 +13,8 @@ feature
     	-- position x on the a symbol on the playing field
     position_y: INTEGER
     	-- position y on the a symbol on the playing field
+    width_field: INTEGER
+    hight_field: INTEGER
 
     set_position_x (new_position_x: INTEGER )
     	do
@@ -39,7 +41,7 @@ feature
     	end
     move_down
     	do
-    		if position_y < 9 then
+    		if position_y < hight_field - 1 then
     			set_position_y(position_y + 1)
     		end
     	end
@@ -51,7 +53,7 @@ feature
     	end
     move_right
     	do
-    		if position_x < 19 then
+    		if position_x < width_field - 1 then
     			set_position_x(position_x + 1)
     		end
     	end
@@ -62,6 +64,8 @@ feature
     		rand: RANDGENERATOR
     	do
     		create rand.make
+    		width_field := x
+    		hight_field := y
     		rand_x := rand.get(x-1)
     		rand_y := rand.get(y-1)
 			set_position_x(rand_x)
