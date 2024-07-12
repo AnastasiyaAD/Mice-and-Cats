@@ -29,7 +29,7 @@ public class TrackerCat implements IServerCatState {
 
         if (nearestMouse.isPresent()) {
             var foundMouse = nearestMouse.get();
-            double speedPerTick = ((double) configuration.catSpeed() / 10) / configuration.tickRate();
+            double speedPerTick = ((double) configuration.catSpeed() / 5) / configuration.tickRate();
             var nextPos = computeMoveToMouse(foundMouse.getPos(), this.position, speedPerTick);
             this.position = nextPos;
         }

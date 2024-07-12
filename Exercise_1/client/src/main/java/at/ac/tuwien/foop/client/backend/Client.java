@@ -18,6 +18,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class Client implements IClient, AutoCloseable {
@@ -30,6 +32,7 @@ public class Client implements IClient, AutoCloseable {
   private final GameBoardPanel gameBoardPanel;
   private final GameChatPanel gameChatPanel;
   private LevelChangeRequest levelChangeRequest;
+  private Set<Direction> directions;
 
   public Client(GameBoardPanel gameBoardPanel, GameChatPanel gameChatPanel) {
     this.gameBoardPanel = gameBoardPanel;
@@ -37,6 +40,7 @@ public class Client implements IClient, AutoCloseable {
     ObjectMapper mapper = new ObjectMapper();
     mapper.registerModule(new JavaTimeModule());
     this.objectMapper = mapper;
+    this.directions = new HashSet<>();
   }
 
   @Override
@@ -93,6 +97,14 @@ public class Client implements IClient, AutoCloseable {
     }
   }
 
+  public void addDirection(Direction direction) {
+    this.directions.add(direction);
+  }
+
+  public void removeDirection(Direction direction) {
+    this.directions.remove(direction);
+  }
+
   public void sendLevelChange() {
     var actionRequest = new ActionRequestDto(levelChangeRequest);
     try {
@@ -114,6 +126,9 @@ public class Client implements IClient, AutoCloseable {
   @Override
   public void receive(String json) {
     // TODO: Hook into GUI here
+    for (var dir : this.directions) {
+      this.sendDirection(dir);
+    }
     try {
       // Game state received from server
       GameStateDto gameStateDto = objectMapper.readValue(
