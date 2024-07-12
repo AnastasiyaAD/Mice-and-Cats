@@ -32,11 +32,17 @@ public class CatManager implements ICatManager {
         // Random number generator
         Random rand = new Random();
 
-        // FIXME: More sophisticated amount of cats selection? Right now we pick random
         for (int i = 0; i < configuration.trackerCats(); i++) {
             int randomIndex = rand.nextInt(entrances.size());
             int[] randomEntrance = entrances.get(randomIndex);
             TrackerCat cat = new TrackerCat(configuration, intCoordinatesToDoubleCoords(randomEntrance));
+            cats.add(cat);
+        }
+
+        for (int i = 0; i < configuration.trackerCats(); i++) {
+            int randomIndex = rand.nextInt(entrances.size());
+            int[] randomEntrance = entrances.get(randomIndex);
+            var cat = new TunnelCamperCat(configuration, intCoordinatesToDoubleCoords(randomEntrance));
             cats.add(cat);
         }
     }
