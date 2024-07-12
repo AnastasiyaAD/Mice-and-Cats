@@ -27,6 +27,11 @@ public class GameState {
             System.out.println("Mouse exists, cannot add");
             throw new RuntimeException("Mouse already exists!");
         }
+        var pos = getTunnelRespawnPosition();
+        var coordinates = pos.node().getPosition();
+
+        mouse.setPosition(coordinates[0] + 0.5, coordinates[1] + 0.5);
+        mouse.setCurrentLevel(pos.level());
         this.mice.put(clientId, mouse);
     }
 
