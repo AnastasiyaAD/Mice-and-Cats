@@ -20,6 +20,7 @@ public class GameState {
     private List<Cat> cats = new ArrayList<>();
     private LocalDateTime gameStart;
     private Duration gameDuration = Duration.of(3, ChronoUnit.MINUTES);
+    @Setter
     private GameStatus gameStatus = GameStatus.INIT;
 
     public void addMouse(UUID clientId, Mouse mouse) {
@@ -27,6 +28,11 @@ public class GameState {
             System.out.println("Mouse exists, cannot add");
             throw new RuntimeException("Mouse already exists!");
         }
+        var pos = getTunnelRespawnPosition();
+        var coordinates = pos.node().getPosition();
+
+        mouse.setPosition(coordinates[0] + 0.5, coordinates[1] + 0.5);
+        mouse.setCurrentLevel(pos.level());
         this.mice.put(clientId, mouse);
     }
 
@@ -75,7 +81,7 @@ public class GameState {
 
         // 5. Choose randomly among the tunnels with the minimum count
         Random random = new Random();
-        int selectedTunnel = minTunnels.get(random.nextInt(minTunnels.size()) + 1);
+        int selectedTunnel = minTunnels.get(random.nextInt(minTunnels.size()));
 
         // 6. Return the respawn position for the selected tunnel
         var tunnelNode = gameField.getTunnels().get(selectedTunnel).getRandomNonDoorNode();

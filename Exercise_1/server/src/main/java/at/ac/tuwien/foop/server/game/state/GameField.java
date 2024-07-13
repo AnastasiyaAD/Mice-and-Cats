@@ -21,6 +21,9 @@ public class GameField {
     private final double catSize = 1.44;
     private final Map<Integer, Tunnel> tunnels = new HashMap<>();
 
+    /**
+     * Constructs a GameField object and initializes the tunnels with their respective nodes and connections.
+     */
     public GameField() {
         // Tunnel 1
         var tunnel1Nodes = new LinkedList<TunnelNode>();

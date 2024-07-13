@@ -12,6 +12,9 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Manages broadcasting game state updates to all connected clients.
+ */
 @Getter
 public class UpdateBroadcaster {
 
@@ -22,14 +25,29 @@ public class UpdateBroadcaster {
         objectMapper.registerModule(new JavaTimeModule());
     }
 
+    /**
+     * Adds a client to the set of clients to receive updates.
+     *
+     * @param clientHandler The client manager representing the client to be added.
+     */
     public void addClient(ClientManager clientHandler) {
         clients.add(clientHandler);
     }
 
+    /**
+     * Removes a client from the set of clients to receive updates.
+     *
+     * @param clientHandler The client manager representing the client to be removed.
+     */
     public void removeClient(ClientManager clientHandler) {
         clients.remove(clientHandler);
     }
 
+    /**
+     * Broadcasts the current game state to all connected clients.
+     *
+     * @param state The current game state to be broadcasted.
+     */
     public void broadcast(GameState state) {
         String stateJson;
         var dto = GameStateMapper.toDto(state);
@@ -43,6 +61,13 @@ public class UpdateBroadcaster {
         }
     }
 
+    /**
+     * Converts the game state DTO to a JSON string.
+     *
+     * @param state The game state DTO to be converted.
+     * @return The JSON string representation of the game state.
+     * @throws JsonProcessingException If an error occurs during JSON processing.
+     */
     private String convertStateToJson(GameStateDto state) throws JsonProcessingException {
         return objectMapper.writeValueAsString(state);
     }

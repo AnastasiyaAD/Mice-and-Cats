@@ -1,25 +1,28 @@
 package at.ac.tuwien.foop.server.game.cats;
 
-import at.ac.tuwien.foop.server.game.state.GameState;
+import at.ac.tuwien.foop.server.game.Configuration;
+import at.ac.tuwien.foop.server.game.state.Cat;
 import at.ac.tuwien.foop.server.game.state.Mouse;
 
+import java.util.List;
 import java.util.Optional;
 
-public class TunnelCamperCat implements IServerCatState {
-    private int ticksWaitedOnTunnel = 0;
+public class TunnelCamperCat extends Cat {
+    private final double[] tunnelToGuard;
 
-    @Override
-    public double[] getPos() {
-        return new double[0];
+    public TunnelCamperCat(Configuration configuration, double[] position) {
+        super(configuration, position);
+        this.tunnelToGuard = position.clone();
     }
 
     @Override
-    public Optional<Mouse> move(GameState gameState) {
-        // Camp at some tunnel for x ticks, chase mice if the are within x distance
-        var tunnels = gameState.getGameField().getTunnels().values();
-        for (var tunnel : tunnels) {
+    protected double[] getDefaultPosition() {
+        return this.tunnelToGuard;
+    }
 
-        }
-        return Optional.empty();
+    @Override
+    protected Optional<Mouse> findNearest(List<Mouse> mice, double[] position) {
+        return super.findNearest(mice, position)
+                .filter(mouse -> Math.sqrt(Math.pow(mouse.getPos()[0] - position[0], 2) + Math.pow(mouse.getPos()[1] - position[1], 2)) <= 3);
     }
 }
