@@ -12,11 +12,11 @@ import java.net.UnknownHostException;
 import java.util.UUID;
 import javax.swing.*;
 
-public class ClientGUI
-  extends JFrame
-  implements ActionListener, WindowListener {
+/**
+ * The GUI for the client in the "Mice and Cats in a Network Game". Manages user inputs and displays game state.
+ */
+public class ClientGUI extends JFrame implements ActionListener, WindowListener {
 
-  /** Creates a new instance of ClientGUI */
   private JLabel ipaddressLabel;
   private JLabel usernameLabel;
   private JLabel portLabel;
@@ -26,15 +26,15 @@ public class ClientGUI
   private JTextField portText;
 
   private JButton registerButton;
-
   private JButton readyButton;
 
   private JPanel registerPanel;
   public static JPanel gameStatusPanel;
   private Client client;
 
-  int width = 1400, height = 910;
-  boolean allClientsReady = true;
+  private final int width = 1400;
+  private final int height = 910;
+  private boolean allClientsReady = true;
   private GameBoardPanel boardPanel;
   private GameChatPanel chatPanel;
   private InputManager inputManager;
@@ -47,15 +47,18 @@ public class ClientGUI
 
   private JButton sendMessage;
 
+  /**
+   * Creates a new instance of ClientGUI.
+   */
   public ClientGUI() {
     setTitle("Mice and Cats in a Network Game");
     setSize(width, height);
     setLocation(60, 100);
     getContentPane().setBackground(Color.BLACK);
-
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLayout(null);
     addWindowListener(this);
+
     registerPanel = new JPanel();
     registerPanel.setBackground(Color.YELLOW);
     registerPanel.setSize(400, 200);
@@ -82,13 +85,11 @@ public class ClientGUI
 
     registerButton = new JButton("Register");
     registerButton.setBounds(90, 130, 220, 25);
-
     registerButton.addActionListener(this);
     registerButton.setFocusable(true);
 
     readyButton = new JButton("Ready");
     readyButton.setBounds(90, 160, 220, 25);
-
     readyButton.addActionListener(this);
     readyButton.setEnabled(false);
 
@@ -107,7 +108,6 @@ public class ClientGUI
 
     boardPanel = new GameBoardPanel(60, 33, 750, 800);
     chatPanel = new GameChatPanel(850, 260, 400, 573);
-
     chatPanel.add(sendMessage);
 
     client = new Client(boardPanel, chatPanel);
@@ -119,6 +119,7 @@ public class ClientGUI
     setVisible(true);
   }
 
+  @Override
   public void actionPerformed(ActionEvent e) {
     Object obj = e.getSource();
     host = ipaddressText.getText();
@@ -151,10 +152,10 @@ public class ClientGUI
       } catch (IOException ex) {
         ex.printStackTrace();
         JOptionPane.showMessageDialog(
-          this,
-          "The Server is not running, try again later!",
-          "Mice and Cats in a Network Game",
-          JOptionPane.INFORMATION_MESSAGE
+                this,
+                "The Server is not running, try again later!",
+                "Mice and Cats in a Network Game",
+                JOptionPane.INFORMATION_MESSAGE
         );
         System.out.println("The Server is not running!");
         registerButton.setEnabled(true);
@@ -173,10 +174,10 @@ public class ClientGUI
         }
       } catch (RuntimeException ex) {
         JOptionPane.showMessageDialog(
-          this,
-          "The Server is not handshaking, try again later!",
-          "Mice and Cats in a Network Game",
-          JOptionPane.INFORMATION_MESSAGE
+                this,
+                "The Server is not handshaking, try again later!",
+                "Mice and Cats in a Network Game",
+                JOptionPane.INFORMATION_MESSAGE
         );
         System.out.println("The Server is not ready Handshake!");
         readyButton.setEnabled(true);
@@ -190,10 +191,10 @@ public class ClientGUI
           boardPanel.addKeyListener(inputManager);
         } else {
           JOptionPane.showMessageDialog(
-            this,
-            "The players are not ready, try again later!",
-            "Mice and Cats in a Network Game",
-            JOptionPane.INFORMATION_MESSAGE
+                  this,
+                  "The players are not ready, try again later!",
+                  "Mice and Cats in a Network Game",
+                  JOptionPane.INFORMATION_MESSAGE
           );
           System.out.println("all Clients are not ready!");
           readyButton.setEnabled(true);
@@ -216,10 +217,10 @@ public class ClientGUI
         }
       } catch (Exception ex) {
         JOptionPane.showMessageDialog(
-          this,
-          "The message was not sent. The message should only contain the tunnel number from 1 to 5. Try again later!",
-          "Mice and Cats in a Network Game",
-          JOptionPane.INFORMATION_MESSAGE
+                this,
+                "The message was not sent. The message should only contain the tunnel number from 1 to 5. Try again later!",
+                "Mice and Cats in a Network Game",
+                JOptionPane.INFORMATION_MESSAGE
         );
         System.out.println("The message has not been sent " + ex.getMessage());
       }
@@ -228,27 +229,39 @@ public class ClientGUI
     }
   }
 
+  @Override
   public void windowOpened(WindowEvent e) {}
 
+  @Override
   public void windowClosing(WindowEvent e) {
     JOptionPane.showConfirmDialog(
-      this,
-      "Are you sure you want to exit ?",
-      "Mice and Cats in a Network Game!",
-      JOptionPane.YES_NO_OPTION
+            this,
+            "Are you sure you want to exit ?",
+            "Mice and Cats in a Network Game!",
+            JOptionPane.YES_NO_OPTION
     );
   }
 
+  @Override
   public void windowClosed(WindowEvent e) {}
 
+  @Override
   public void windowIconified(WindowEvent e) {}
 
+  @Override
   public void windowDeiconified(WindowEvent e) {}
 
+  @Override
   public void windowActivated(WindowEvent e) {}
 
+  @Override
   public void windowDeactivated(WindowEvent e) {}
 
+  /**
+   * Changes the client ID on the board and chat panels.
+   *
+   * @param clientId The client ID to set.
+   */
   public void changeClientId(String clientId) {
     boardPanel.add(clientId);
     chatPanel.add(clientId);

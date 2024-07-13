@@ -1,12 +1,13 @@
 package at.ac.tuwien.foop.server.game.cats;
 
 import at.ac.tuwien.foop.server.game.Configuration;
+import at.ac.tuwien.foop.server.game.state.Cat;
 import at.ac.tuwien.foop.server.game.state.Mouse;
 
 import java.util.List;
 import java.util.Optional;
 
-public class TunnelCamperCat extends AbstractCat {
+public class TunnelCamperCat extends Cat {
     private final double[] tunnelToGuard;
 
     public TunnelCamperCat(Configuration configuration, double[] position) {

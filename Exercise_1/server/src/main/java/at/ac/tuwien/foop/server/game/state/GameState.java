@@ -20,6 +20,7 @@ public class GameState {
     private List<Cat> cats = new ArrayList<>();
     private LocalDateTime gameStart;
     private Duration gameDuration = Duration.of(3, ChronoUnit.MINUTES);
+    @Setter
     private GameStatus gameStatus = GameStatus.INIT;
 
     public void addMouse(UUID clientId, Mouse mouse) {

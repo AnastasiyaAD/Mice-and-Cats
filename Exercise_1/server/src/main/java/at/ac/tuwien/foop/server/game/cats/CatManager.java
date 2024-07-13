@@ -8,7 +8,7 @@ import java.util.Random;
 import java.util.List;
 
 public class CatManager implements ICatManager {
-    private final List<IServerCatState> cats = new ArrayList<IServerCatState>();
+    private final List<Cat> cats = new ArrayList<>();
     private List<int[]> getTunnelEntranceCoordinates(GameState gameState) {
         var tunnels = gameState.getGameField().getTunnels().values();
         return tunnels
@@ -27,7 +27,7 @@ public class CatManager implements ICatManager {
     }
 
     @Override
-    public void spawnCats(Configuration configuration, GameState gameState) {
+    public List<Cat> spawnCats(Configuration configuration, GameState gameState) {
         var entrances = getTunnelEntranceCoordinates(gameState);
         // Random number generator
         Random rand = new Random();
@@ -45,6 +45,7 @@ public class CatManager implements ICatManager {
             var cat = new TunnelCamperCat(configuration, intCoordinatesToDoubleCoords(randomEntrance));
             cats.add(cat);
         }
+        return cats;
     }
 
     private double[] intCoordinatesToDoubleCoords(int[] coords) {
@@ -53,7 +54,7 @@ public class CatManager implements ICatManager {
 
     @Override
     public void updateCats(GameState gameState) {
-        for (var cat:this.cats) {
+        for (var cat:gameState.getCats()) {
             var m = cat.move(gameState);
             if (m.isPresent()) {
                 var mouseSpawnPosition = gameState.getTunnelRespawnPosition();
@@ -63,11 +64,5 @@ public class CatManager implements ICatManager {
                 m.get().setCurrentLevel(level);
             }
         }
-        gameState.setCats(cats.stream().map(c -> {
-            Cat cr = new Cat();
-            var pos = c.getPos();
-            cr.setPos(pos);
-            return cr;
-        }).toList());
     }
 }

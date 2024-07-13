@@ -9,6 +9,9 @@ import java.util.List;
 import javax.swing.*;
 import lombok.Setter;
 
+/**
+ * The panel representing the game board for the "Mice and Cats in a Network Game".
+ */
 public class GameBoardPanel extends JPanel {
 
   private int fieldPositionX;
@@ -18,12 +21,16 @@ public class GameBoardPanel extends JPanel {
   private final int height;
   private static int scale = 50;
   private String clientId;
-  // FIXME: Why is this static?
   private HashMap<String, Mouse> mice = new HashMap<>();
   private List<Cat> cats = new ArrayList<>();
 
   /**
-   * Creates a new instance of GameBoardPanel
+   * Creates a new instance of GameBoardPanel.
+   *
+   * @param x      The x position of the game field.
+   * @param y      The y position of the game field.
+   * @param width  The width of the game field.
+   * @param height The height of the game field.
    */
   public GameBoardPanel(int x, int y, int width, int height) {
     this.fieldPositionX = x;
@@ -37,6 +44,11 @@ public class GameBoardPanel extends JPanel {
   @Setter
   private String name;
 
+  /**
+   * Updates the game board with the current game state.
+   *
+   * @param gameState The current game state.
+   */
   public void updateBoard(GameStateDto gameState) {
     state = gameState.status().name();
     var mice = gameState.mice();
@@ -45,7 +57,6 @@ public class GameBoardPanel extends JPanel {
     for (var mouse : mice) {
       String id = mouse.clientId().toString();
       var clientMouse = this.mice.get(id);
-      // Add mouse if not already encountered
       if (clientMouse == null) {
         clientMouse = new Mouse();
         this.mice.put(id, clientMouse);
@@ -53,10 +64,10 @@ public class GameBoardPanel extends JPanel {
       int middleMouse = clientMouse.getSize() / 2;
 
       clientMouse.setXpoistion(
-        (int) (mouse.position()[0] * fieldScaleX) + fieldPositionX - middleMouse
+              (int) (mouse.position()[0] * fieldScaleX) + fieldPositionX - middleMouse
       );
       clientMouse.setYposition(
-        (int) (mouse.position()[1] * fieldScaleY) + fieldPositionY - middleMouse
+              (int) (mouse.position()[1] * fieldScaleY) + fieldPositionY - middleMouse
       );
       clientMouse.setDirection(1);
       clientMouse.setTunnel((int) mouse.level());
@@ -65,108 +76,135 @@ public class GameBoardPanel extends JPanel {
     this.repaint();
   }
 
+  /**
+   * Sets the positions of the cats on the game board.
+   *
+   * @param gameState The current game state.
+   */
   private void setCatPosition(GameStateDto gameState) {
     if (this.cats.isEmpty()) {
       this.cats =
-        gameState
-          .cats()
-          .stream()
-          .map(c ->
-            new Cat(
-              ((int) Math.round(c.position()[0] * scale - fieldPositionX)),
-              ((int) Math.round(c.position()[1] * scale - fieldPositionY))
-            )
-          )
-          .toList();
+              gameState
+                      .cats()
+                      .stream()
+                      .map(c ->
+                              new Cat(
+                                      ((int) Math.round(c.position()[0] * scale - fieldPositionX)),
+                                      ((int) Math.round(c.position()[1] * scale - fieldPositionY))
+                              )
+                      )
+                      .toList();
     } else {
       for (int i = 0; i < this.cats.size(); i++) {
         var cat = this.cats.get(i);
         int middleCat = cat.getSize() / 2;
         var serverCatPosition = gameState.cats().get(i).position();
         cat.setXPosition(
-          (int) Math.round(
-            serverCatPosition[0] * scale + fieldPositionX - middleCat
-          )
+                (int) Math.round(
+                        serverCatPosition[0] * scale + fieldPositionX - middleCat
+                )
         );
         cat.setYPosition(
-          (int) Math.round(
-            serverCatPosition[1] * scale + fieldPositionY - middleCat
-          )
+                (int) Math.round(
+                        serverCatPosition[1] * scale + fieldPositionY - middleCat
+                )
         );
       }
     }
   }
 
+  /**
+   * Draws the underground portion of the game board for a given tunnel.
+   *
+   * @param g      The Graphics2D object for drawing.
+   * @param tunnel The tunnel level to draw.
+   */
   private void drawUnderground(Graphics2D g, int tunnel) {
     g.drawImage(
-      new ImageIcon(
-        MessageFormat.format(
-          "Exercise_1/public/playing_field/tunnel_{0}.png",
-          tunnel
-        )
-      )
-        .getImage(),
-      fieldPositionX,
-      fieldPositionY,
-      null
+            new ImageIcon(
+                    MessageFormat.format(
+                            "Exercise_1/public/playing_field/tunnel_{0}.png",
+                            tunnel
+                    )
+            )
+                    .getImage(),
+            fieldPositionX,
+            fieldPositionY,
+            null
     );
     for (var mouse : this.mice.values()) {
       if (mouse.getTunnel() == tunnel) {
         g.drawImage(
-          mouse.getBuffImage(),
-          mouse.getXposition(),
-          mouse.getYposition(),
-          this
+                mouse.getBuffImage(),
+                mouse.getXposition(),
+                mouse.getYposition(),
+                this
         );
       }
     }
   }
 
+  /**
+   * Draws the game over screen.
+   *
+   * @param g The Graphics2D object for drawing.
+   */
   private void drawGameOver(Graphics2D g) {
     g.drawImage(
-      new ImageIcon("Exercise_1/public/gameover.png").getImage(),
-      fieldPositionX,
-      fieldPositionY,
-      null
+            new ImageIcon("Exercise_1/public/gameover.png").getImage(),
+            fieldPositionX,
+            fieldPositionY,
+            null
     );
   }
 
+  /**
+   * Draws the game won screen.
+   *
+   * @param g The Graphics2D object for drawing.
+   */
   private void drawGameWon(Graphics2D g) {
     g.drawImage(
-      new ImageIcon("Exercise_1/public/victory.png").getImage(),
-      fieldPositionX,
-      fieldPositionY,
-      null
+            new ImageIcon("Exercise_1/public/victory.png").getImage(),
+            fieldPositionX,
+            fieldPositionY,
+            null
     );
   }
 
+  /**
+   * Draws the surface portion of the game board.
+   *
+   * @param g The Graphics2D object for drawing.
+   */
   private void drawSurface(Graphics2D g) {
     g.drawImage(
-      new ImageIcon("Exercise_1/public/playing_field/grass.png").getImage(),
-      fieldPositionX,
-      fieldPositionY,
-      null
+            new ImageIcon("Exercise_1/public/playing_field/grass.png").getImage(),
+            fieldPositionX,
+            fieldPositionY,
+            null
     );
     for (var mouse : this.mice.values()) {
       if (mouse.getTunnel() == 0) {
         g.drawImage(
-          mouse.getBuffImage(),
-          mouse.getXposition(),
-          mouse.getYposition(),
-          this
+                mouse.getBuffImage(),
+                mouse.getXposition(),
+                mouse.getYposition(),
+                this
         );
       }
     }
     for (var cat : cats) {
       g.drawImage(
-        cat.getImageBuff(),
-        cat.getXPosition(),
-        cat.getYPosition(),
-        this
+              cat.getImageBuff(),
+              cat.getXPosition(),
+              cat.getYPosition(),
+              this
       );
     }
   }
 
+  @Override
   public void paintComponent(Graphics gr) {
     super.paintComponent(gr);
     Graphics2D g = (Graphics2D) gr;
@@ -203,6 +241,11 @@ public class GameBoardPanel extends JPanel {
     repaint();
   }
 
+  /**
+   * Sets the client ID for the game board panel.
+   *
+   * @param clientName The client ID to set.
+   */
   public void add(String clientName) {
     clientId = clientName;
   }

@@ -1,8 +1,9 @@
 package at.ac.tuwien.foop.server.game.cats;
 
 import at.ac.tuwien.foop.server.game.Configuration;
+import at.ac.tuwien.foop.server.game.state.Cat;
 
-public class TrackerCat extends AbstractCat {
+public class TrackerCat extends Cat {
 
     public TrackerCat(Configuration configuration, double[] position) {
         super(configuration, position);
@@ -10,6 +11,6 @@ public class TrackerCat extends AbstractCat {
 
     @Override
     protected double[] getDefaultPosition() {
-        return this.position; // TrackerCat has no specific default position
+        return this.pos; // TrackerCat has no specific default position
     }
 }
