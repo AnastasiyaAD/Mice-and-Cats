@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {MOUSE}."
+	description: "Player class for the game"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -8,7 +8,7 @@ class
 	MOUSE
 create
 	make
-feature
+feature  
     position_x: INTEGER
     	-- position x on the a symbol on the playing field
     position_y: INTEGER
@@ -35,7 +35,7 @@ feature
     	end
     move_up
     	do
-    		if position_y > 0 then
+    		if position_y > 0 then -- moving the player with checking the boundaries of the playing field
     			set_position_y(position_y - 1)
     		end
     	end
@@ -66,8 +66,8 @@ feature
     		create rand.make
     		width_field := x
     		hight_field := y
-    		rand_x := rand.get(x-1)
-    		rand_y := rand.get(y-1)
+			rand_x := rand.get(x-1) -- a pseudorandom number from 0 to width -1
+    		rand_y := rand.get(y-1) -- a pseudorandom number from 0 to hight -1
 			set_position_x(rand_x)
 			set_position_y(rand_y)
     	end

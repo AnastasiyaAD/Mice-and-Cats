@@ -1,5 +1,5 @@
-note
-	description: "Summary description for {FIELD}."
+﻿note
+	description: "This class is the game field. It contains the field, the tunnels, the player and the cat."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,7 +12,7 @@ inherit
 create
 	make
 
-feature
+feature 
 	player: MOUSE
     tunnel_1: TUNNEL
     tunnel_2: TUNNEL
@@ -27,15 +27,15 @@ feature
 		local
 			speed: DOUBLE
 		do
-			width := 22
-			hight := 11
-			speed := 3.5
+			width := 22 -- the size of the playing field
+			hight := 11 -- the size of the playing field
+			speed := 3.5 -- refers to cats
 
-			create player.make(width, hight)
-			create tunnel_1.make(width, hight//2)
-			create cat.make(width\\2, hight, speed)
-			create tunnel_2.make(width//2, hight)
-			tunnels:= <<tunnel_1,tunnel_2>>
+			create player.make(width, hight) -- creating an instance of the mouse class with a pseudo-random location on the playing field
+			create tunnel_1.make(width, hight//2) -- creating an instance of the tunnel class with a pseudo-random location on the playing field
+			create cat.make(width\\2, hight, speed) -- creating an instance of the cat class with a pseudo-random location on the playing field
+			create tunnel_2.make(width//2, hight) -- creating an instance of the tunnel class with a pseudo-random location on the playing field
+			tunnels:= <<tunnel_1,tunnel_2>> -- creating an array of tunnel entrances
 			number_caught := 0
 
 
@@ -65,7 +65,7 @@ feature
    		end
 
 
-    is_tunnel: BOOLEAN
+    is_tunnel: BOOLEAN -- checking the intersection of the coordinates of the tunnel entrance and the player
     	local
         	value: BOOLEAN
         do
@@ -78,7 +78,7 @@ feature
 			Result := value
         end
 
-    print_field --create new gamefield
+    print_field --create new gamefield with cat, player, tunnels
 		local
 	    i: INTEGER
 	    j: INTEGER
@@ -88,12 +88,12 @@ feature
 				i := 0
 			until
 				i >= hight
-			loop
+			loop -- a cycle for passing along the Y axis
 					from
 						j := 0
 					until
 						j >= width
-					loop
+					loop -- a cycle for passing along the X axis
 						print_dot := true
 						across tunnels as t loop -- print tunnels
 			    			if i = t.item.get_position_y and j = t.item.get_position_x then

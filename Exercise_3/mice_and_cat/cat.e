@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {CAT}."
+	description: "Cat class for the game"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -79,8 +79,8 @@ feature
     		rand: RANDGENERATOR
     	do
     		create rand.make
-    		rand_x := rand.get(x-1)
-    		rand_y := rand.get(y-1)
+    		rand_x := rand.get(x-1) -- a pseudorandom number from 0 to width -1
+    		rand_y := rand.get(y-1) -- a pseudorandom number from 0 to hight -1
 			set_position_x(rand_x)
 			set_position_y(rand_y)
 			speed := s

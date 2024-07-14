@@ -12,10 +12,10 @@ inherit
 create
 	make
 
-feature {NONE}
-	t: TIME
-	time_out: TIME
-	s:INTEGER
+feature {NONE}  -- Implementation
+	t: TIME -- current time
+	time_out: TIME -- the time when the timer will end
+	s:INTEGER -- the number of seconds until the timer ends
 	timer:TIME
 	make
 		local
@@ -32,7 +32,7 @@ feature {NONE}
 			terminal.make_term_raw
 			create t.make_now
 			create time_out.make_now
-			time_out.minute_add (1)
+			time_out.minute_add (1) -- number of minutes per game
 			create timer.make_now
 			create field.make
 			player := field.get_player
@@ -44,7 +44,7 @@ feature {NONE}
 				inspect read_char   -- mouse movement is not by arrows, but by S W D A  to exit, you need to press Q
 					when 'a' then
 						player.move_left
-						cat.move (player.get_position_x, player.get_position_y)
+						cat.move (player.get_position_x, player.get_position_y) -- calculation of the cat's next move based on the player's coordinates
 					when 'd' then
 						player.move_right
 						cat.move (player.get_position_x, player.get_position_y)
@@ -67,15 +67,16 @@ feature {NONE}
 					status := "%N%N !!! GAME OVER !!! "
 					exit := True
 				end
-				field.caught
-				field.print_field
+				field.caught -- checking for the caught of the player
+				field.print_field -- displaying the updated playing field on the console
 				print("%NTIMER: ")
-				s := time_out.relative_duration (t).seconds_count
+				s := time_out.relative_duration (t).seconds_count -- calculating the seconds between the current time and the end of the timer
 				timer.make_by_seconds (s)
-				print(timer.formatted_out ("mi:ss")) --print Timer
+				print(timer.formatted_out ("mi:ss")) -- converting seconds to the format minutes : seconds
 				print("  CAUGHT: ")
 				print(field.get_caught)
-				sleep (1000 * 1000 * 600)
+				print("%N%N O - mouse %N X - cat %N T - tunnel")
+				sleep (1000 * 1000 * 600) ---  an appropriate frequency (without flickering)
 			end
 			print(status)
 		end

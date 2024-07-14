@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {TERMINAL}."
+	description: "This class provides a simple interface to the terminal. It is used to set the terminal to non-blocking mode and to read a single character from the terminal."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
