@@ -3,6 +3,8 @@
 >
 > Third Programming Task
 
+![Screenshot](screenshot.png)
+
 ## It is necessary to install:
 > 
 > XQuartz
