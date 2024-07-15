@@ -10,6 +10,18 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+/**
+ * Class representing the state of the game.
+ * Manages game field, mice, cats, and snapshots.
+ *
+ * Object invariants:
+ * - The game field must not be null.
+ * - The mice map must not contain duplicate UUIDs.
+ * - The cats list must not be null.
+ *
+ * Precondition:
+ * - The gameStatus must be set before starting the game.
+ */
 @Data
 public class GameState {
 
@@ -23,6 +35,18 @@ public class GameState {
     @Setter
     private GameStatus gameStatus = GameStatus.INIT;
 
+    /**
+     * Adds a mouse to the game state.
+     *
+     * @param clientId the UUID of the client
+     * @param mouse the mouse to add
+     *
+     * @throws RuntimeException if the mouse already exists
+     *
+     * @pre clientId != null
+     * @pre mouse != null
+     * @post the mouse is added to the mice map
+     */
     public void addMouse(UUID clientId, Mouse mouse) {
         if (this.mice.containsKey(clientId)) {
             System.out.println("Mouse exists, cannot add");
@@ -36,16 +60,42 @@ public class GameState {
         this.mice.put(clientId, mouse);
     }
 
+    /**
+     * Adds a snapshot of the cat positions for a given level.
+     *
+     * @param level the level of the snapshot
+     * @param cats the list of cats
+     *
+     * @pre cats != null
+     * @post a snapshot is added to the catSnapshots map
+     */
     public void addSnapshot(int level, List<Cat> cats) {
         var snapshot = new CatSnapshot(cats.stream().map(Cat::getPos).toList());
         catSnapshots.put(level, snapshot);
     }
 
+    /**
+     * Clears expired snapshots from the catSnapshots map.
+     *
+     * @param expirationTime the duration after which snapshots expire
+     *
+     * @pre expirationTime != null
+     * @post expired snapshots are removed from the catSnapshots map
+     */
     public void clearExpiredSnapshots(Duration expirationTime) {
-        var expired = catSnapshots.entrySet().stream().filter(snapshot -> Duration.between(snapshot.getValue().getTimeStamp(), LocalDateTime.now()).minus(expirationTime).isNegative()).toList();
+        var expired = catSnapshots.entrySet().stream()
+                .filter(snapshot -> Duration.between(snapshot.getValue().getTimeStamp(), LocalDateTime.now()).minus(expirationTime).isNegative())
+                .toList();
         expired.forEach(expiredSnapshot -> catSnapshots.remove(expiredSnapshot.getKey()));
     }
 
+    /**
+     * Gets the respawn position for a mouse in a tunnel.
+     *
+     * @return the tunnel respawn position
+     *
+     * @post a valid TunnelPosition is returned
+     */
     public TunnelPosition getTunnelRespawnPosition() {
         Set<Integer> tunnels = gameField.getTunnels().keySet();
 
@@ -89,8 +139,16 @@ public class GameState {
         return new TunnelPosition(selectedTunnel, tunnelNode);
     }
 
+    /**
+     * Retrieves a mouse by its client ID.
+     *
+     * @param clientId the UUID of the client
+     * @return the mouse associated with the client ID
+     *
+     * @pre clientId != null
+     * @post the mouse is returned if it exists
+     */
     public Mouse getMouse(UUID clientId) {
         return this.mice.get(clientId);
     }
-
 }
