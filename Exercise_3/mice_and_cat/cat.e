@@ -7,36 +7,43 @@ note
 class
 	CAT
 
+inherit
+    POSITION
+
 create
 	make
-feature
-	single_math: SINGLE_MATH
-    once
+
+feature{NONE}
+
+    single_math: SINGLE_MATH -- library for .sqrt
+    once -- mix single and double precision reals (SINGLE_MATH for REAL_32 and DOUBLE_MATH for REAL_64)
         create Result
     end
+
+feature
+
     speed : DOUBLE
-    position_x: INTEGER
-    	-- position x on the a symbol on the playing field
-    position_y: INTEGER
-    	-- position y on the a symbol on the playing field
+	max_x,max_y:INTEGER
 
-    set_position_x (new_position_x: INTEGER )
+    make(cat_x,cat_y:INTEGER; s:DOUBLE)
+    	local
+    		rand: RANDGENERATOR
+    		rand_x: INTEGER
+    		rand_y: INTEGER
     	do
-    		position_x := new_position_x
-    	end
-    set_position_y (new_position_y: INTEGER )
-    	do
-    		position_y := new_position_y
-    	end
+    		create rand.make
 
-    get_position_x: INTEGER
-    	do
-    		Result := position_x
-    	end
-    get_position_y: INTEGER
-    	do
-    		Result := position_y
-    	end
+    		max_x := cat_x
+    		max_y := cat_y
+
+    		speed := s
+
+			rand_x := rand.get(cat_x - 1) -- a pseudorandom number from 0 to width -1
+    		rand_y := rand.get(cat_y - 1) -- a pseudorandom number from 0 to hight -1
+
+			set_position_x(rand_x)
+			set_position_y(rand_y)
+		end
     move(mouse_x,mouse_y: INTEGER)
     	local
     		dx: INTEGER
@@ -51,7 +58,6 @@ feature
     		new_y: INTEGER
 
 	    do
-
 	    	dx := mouse_x - position_x
 	    	dy := mouse_y - position_y
 
@@ -72,17 +78,8 @@ feature
 
 	    end
 
-    make(x,y:INTEGER; s: DOUBLE)
-    	local
-    		rand_x: INTEGER
-    		rand_y: INTEGER
-    		rand: RANDGENERATOR
-    	do
-    		create rand.make
-    		rand_x := rand.get(x-1) -- a pseudorandom number from 0 to width -1
-    		rand_y := rand.get(y-1) -- a pseudorandom number from 0 to hight -1
-			set_position_x(rand_x)
-			set_position_y(rand_y)
-			speed := s
-    	end
+invariant
+	0 <= position_x and position_x < max_x
+	0 <= position_y and position_y < max_y
+	speed > 0
 end

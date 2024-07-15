@@ -9,36 +9,35 @@ class
 
 inherit
 	EXECUTION_ENVIRONMENT
+	POSITION
 create
 	make
 
-feature 
-	player: MOUSE
-    tunnel_1: TUNNEL
-    tunnel_2: TUNNEL
-    width: INTEGER
-    hight: INTEGER
-    tunnels: ARRAY[TUNNEL]
-    number_caught: INTEGER
+feature{APPLICATION}
 
+	player: MOUSE -- the player
+    tunnel_1: TUNNEL -- the first entrance to the tunnel
+    tunnel_2: TUNNEL -- the second entrance to the tunnel
+    width: INTEGER -- the width of the playing field
+    height: INTEGER -- the height of the playing field
+    tunnels: ARRAY[TUNNEL] -- the array of tunnel entrances
+    number_caught: INTEGER -- the mouse capture counter
+    cat: CAT -- the player's opponent
 
-    cat: CAT
 	make
 		local
 			speed: DOUBLE
 		do
-			width := 22 -- the size of the playing field
-			hight := 11 -- the size of the playing field
-			speed := 3.5 -- refers to cats
+			width := 22
+			height := 11
+			speed := 3.5 -- the speed of movement of cats on the playing field
 
-			create player.make(width, hight) -- creating an instance of the mouse class with a pseudo-random location on the playing field
-			create tunnel_1.make(width, hight//2) -- creating an instance of the tunnel class with a pseudo-random location on the playing field
-			create cat.make(width\\2, hight, speed) -- creating an instance of the cat class with a pseudo-random location on the playing field
-			create tunnel_2.make(width//2, hight) -- creating an instance of the tunnel class with a pseudo-random location on the playing field
+			create cat.make(width, height, speed) -- creating an instance of the cat class with a pseudo-random location on the playing field
+			create player.make(width, height) -- creating an instance of the mouse class with a pseudo-random location on the playing field
+			create tunnel_1.make(width, height//2) -- creating an instance of the tunnel class with a pseudo-random location on the playing field
+			create tunnel_2.make(width//2, height) -- creating an instance of the tunnel class with a pseudo-random location on the playing field
 			tunnels:= <<tunnel_1,tunnel_2>> -- creating an array of tunnel entrances
-			number_caught := 0
-
-
+			number_caught := 0 -- reset the counter
 		end
 
 	get_player: MOUSE
@@ -51,19 +50,18 @@ feature
             Result := cat
         end
 
-    caught -- moving the mouse to a random location
-    	do
-			if player.get_position_y = cat.get_position_y and player.get_position_x = cat.get_position_x then
-				number_caught := number_caught + 1
-				player.make(width, hight)
-			end
-        end
-
-   get_caught: INTEGER
+    get_caught: INTEGER
    		do
    			Result := number_caught
    		end
 
+    caught -- moving the mouse to a random location
+    	do
+			if player.get_position_y = cat.get_position_y and player.get_position_x = cat.get_position_x then
+				number_caught := number_caught + 1
+				player.make(width, height) -- set a new pseudo-random location on the playing field
+       		end
+        end
 
     is_tunnel: BOOLEAN -- checking the intersection of the coordinates of the tunnel entrance and the player
     	local
@@ -87,7 +85,7 @@ feature
 			from
 				i := 0
 			until
-				i >= hight
+				i >= height
 			loop -- a cycle for passing along the Y axis
 					from
 						j := 0
