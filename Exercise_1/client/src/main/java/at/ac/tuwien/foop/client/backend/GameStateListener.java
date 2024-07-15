@@ -26,6 +26,8 @@ public class GameStateListener implements Runnable {
     /**
      * Runs the listener loop, reading messages from the server and passing them to the client.
      */
+    // Pre: Client is ready to send messages
+    // Post: Whole new game frame is displayed
     @Override
     public void run() {
         long lastTime = System.nanoTime();

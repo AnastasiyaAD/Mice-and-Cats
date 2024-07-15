@@ -61,6 +61,9 @@ public class Client implements IClient, AutoCloseable {
      * @throws IOException          If an I/O error occurs when creating the socket.
      * @throws UnknownHostException If the IP address of the host could not be determined.
      */
+    // Pre: Valid host and port to game server
+    // Post: Socket to game server is established
+    // Post: Client starts listening to any updates from the server
     @Override
     public void connect(String host, int port) throws IOException, UnknownHostException {
         socket = new Socket(host, port);
@@ -76,6 +79,7 @@ public class Client implements IClient, AutoCloseable {
      * @param username The username to register with.
      * @return The UUID of the registered client.
      */
+    // Post server registers that said client with username is participating in game
     public UUID register(String username) {
         var handshakeRequest = HandshakeRequestDto.registerHandshakeRequest(username);
         try {
@@ -93,6 +97,8 @@ public class Client implements IClient, AutoCloseable {
      *
      * @param username The username to be set as ready.
      */
+    // Pre: InitializeReady has to be called before
+    // Post: Server knows client is ready
     public void initiateReady(String username) {
         var handshakeRequest = HandshakeRequestDto.readyHandshakeRequest();
         try {

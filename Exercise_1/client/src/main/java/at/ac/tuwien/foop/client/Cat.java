@@ -19,7 +19,7 @@ public class Cat {
     this.yPosition = yPosition;
     loadCatImage();
   }
-
+  // pre: Cat image exists
   private void loadCatImage() {
     var icon = new ImageIcon("Exercise_1/public/cat/cat_back_1.png").getImage();
     ImageBuff =
