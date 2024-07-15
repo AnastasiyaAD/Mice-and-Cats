@@ -52,10 +52,10 @@ public class Tunnel {
         var nodeX = node.getPosition()[0];
         var nodeY = node.getPosition()[1];
         double characterSizeHalf = characterSize / 2;
-        var westBoundsCheck = x - (node.isWestConnection() && accountForConnections ? 0 : characterSizeHalf) >= nodeX;
-        var eastBoundsCheck = x + (node.isEastConnection() && accountForConnections ? 0 : characterSizeHalf) <= nodeX + 1;
-        var northBoundsCheck = y - (node.isNorthConnection() && accountForConnections ? 0 : characterSizeHalf) >= nodeY;
-        var southBoundsCheck = y + (node.isSouthConnection() && accountForConnections ? 0 : characterSizeHalf) <= nodeY + 1;
+        var westBoundsCheck = x - (node.isWestConnection() && accountForConnections ? 0 : characterSizeHalf) >= nodeX - 0.1;
+        var eastBoundsCheck = x + (node.isEastConnection() && accountForConnections ? 0 : characterSizeHalf) <= nodeX + 1.1;
+        var northBoundsCheck = y - (node.isNorthConnection() && accountForConnections ? 0 : characterSizeHalf) >= nodeY - 0.1;
+        var southBoundsCheck = y + (node.isSouthConnection() && accountForConnections ? 0 : characterSizeHalf) <= nodeY + 1.1;
         return westBoundsCheck && eastBoundsCheck && northBoundsCheck && southBoundsCheck;
     }
 

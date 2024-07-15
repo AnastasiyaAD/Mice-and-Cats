@@ -189,7 +189,8 @@ public class Client implements IClient, AutoCloseable {
      */
     @Override
     public void receive(String json) {
-        for (var dir : this.directions) {
+        var set = new HashSet<>(this.directions);
+        for (var dir : set) {
             this.sendDirection(dir);
         }
         try {

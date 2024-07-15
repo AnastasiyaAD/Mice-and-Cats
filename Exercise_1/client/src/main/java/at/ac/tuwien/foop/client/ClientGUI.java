@@ -39,7 +39,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
   private GameChatPanel chatPanel;
   private InputManager inputManager;
 
-  private String host;
+  private String host = "temp";
   private int port;
   private String username;
   private UUID clientId;
@@ -58,7 +58,6 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener 
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLayout(null);
     addWindowListener(this);
-
     registerPanel = new JPanel();
     registerPanel.setBackground(Color.YELLOW);
     registerPanel.setSize(400, 200);
