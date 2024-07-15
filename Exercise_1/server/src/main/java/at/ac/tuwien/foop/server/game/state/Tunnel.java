@@ -64,6 +64,7 @@ public class Tunnel {
      *
      * @return A random non-door tunnel node.
      */
+    // pre: tunnels are initialized
     public TunnelNode getRandomNonDoorNode() {
         var nonDoorNodes = tunnelNodeList.stream().filter(x -> !x.isDoorNode()).toList();
         var random = new Random();
