@@ -105,10 +105,11 @@ public class GameChatPanel extends JPanel {
   }
   private void updateVote(List<MouseDto> mice) {
     this.textField.setEditable(true);
+    var playerMouse = this.mice.get(clientId);
+    int playerTunnel = playerMouse.getTunnel();
     for (var mouse : mice) {
       String id = mouse.clientId().toString();
       var clientMouse = this.mice.get(id);
-      int playerTunnel = clientMouse.getTunnel();
 
       //chat only for mice in one tunnel without messages from the player himself
       if (mouse.level() == playerTunnel && !id.equals(clientId)) {
