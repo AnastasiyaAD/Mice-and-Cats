@@ -182,6 +182,8 @@ public class GameManager {
                     if (currentLevel == 0) {
                         mouse.setCurrentLevel(tunnelEntry.getKey());
                         gameState.addSnapshot(tunnelEntry.getKey(), gameState.getCats());
+                        System.out.println("Setting snapshot");
+                        System.out.println(gameState.getCatSnapshots().get(tunnelEntry.getKey()));
                     } else {
                         mouse.setCurrentLevel(0);
                     }

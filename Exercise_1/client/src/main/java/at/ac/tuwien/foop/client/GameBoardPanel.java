@@ -23,6 +23,7 @@ public class GameBoardPanel extends JPanel {
   private String clientId;
   private HashMap<String, Mouse> mice = new HashMap<>();
   private List<Cat> cats = new ArrayList<>();
+  private boolean catSeenInTunnel = false;
 
   /**
    * Creates a new instance of GameBoardPanel.
@@ -82,6 +83,15 @@ public class GameBoardPanel extends JPanel {
    * @param gameState The current game state.
    */
   private void setCatPosition(GameStateDto gameState) {
+    var myMouse = this.mice.get(this.clientId);
+    var myTunnel = myMouse.getTunnel();
+    var seenCats = gameState.catSnapshots().get(myTunnel);
+    if (seenCats != null) {
+      System.out.println(seenCats);
+      this.catSeenInTunnel = true;
+    } else {
+      this.catSeenInTunnel = false;
+    }
     if (this.cats.isEmpty()) {
       this.cats =
               gameState
@@ -98,7 +108,13 @@ public class GameBoardPanel extends JPanel {
       for (int i = 0; i < this.cats.size(); i++) {
         var cat = this.cats.get(i);
         int middleCat = cat.getSize() / 2;
-        var serverCatPosition = gameState.cats().get(i).position();
+        // Set position if snapshot
+        double[] serverCatPosition;
+        if (seenCats != null) {
+          serverCatPosition = seenCats.catPositions().get(i);
+        } else {
+          serverCatPosition = gameState.cats().get(i).position();
+        }
         cat.setXPosition(
                 (int) Math.round(
                         serverCatPosition[0] * scale + fieldPositionX - middleCat
@@ -120,6 +136,7 @@ public class GameBoardPanel extends JPanel {
    * @param tunnel The tunnel level to draw.
    */
   private void drawUnderground(Graphics2D g, int tunnel) {
+
     g.drawImage(
             new ImageIcon(
                     MessageFormat.format(
@@ -138,6 +155,16 @@ public class GameBoardPanel extends JPanel {
                 mouse.getBuffImage(),
                 mouse.getXposition(),
                 mouse.getYposition(),
+                this
+        );
+      }
+    }
+    if (this.catSeenInTunnel) {
+      for (var cat : cats) {
+        g.drawImage(
+                cat.getImageBuff(),
+                cat.getXPosition(),
+                cat.getYPosition(),
                 this
         );
       }
